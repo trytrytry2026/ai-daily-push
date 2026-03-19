@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 日报 — 归档</title>
+<style>
+  :root {
+    --bg: #f5f7fa;
+    --card-bg: #ffffff;
+    --text: #1a1a2e;
+    --text-secondary: #64748b;
+    --accent: #3b82f6;
+    --accent-light: #dbeafe;
+    --border: #e2e8f0;
+    --gradient-start: #667eea;
+    --gradient-end: #764ba2;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .header {
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    color: white;
+    padding: 2rem 1.5rem;
+    text-align: center;
+  }
+  .header h1 { font-size: 1.75rem; font-weight: 700; }
+  .header .subtitle {
+    font-size: 0.9rem;
+    opacity: 0.85;
+    margin-top: 0.3rem;
+  }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  .latest-banner {
+    display: block;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  }
+  .latest-banner:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  }
+  .latest-banner .label {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .latest-banner .title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-top: 0.25rem;
+  }
+  .latest-banner .arrow {
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    opacity: 0.8;
+  }
+
+  .section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  .archive-list {
+    list-style: none;
+  }
+  .archive-list li {
+    border-bottom: 1px solid var(--border);
+  }
+  .archive-list li:last-child {
+    border-bottom: none;
+  }
+  .archive-list a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 0.5rem;
+    text-decoration: none;
+    color: var(--text);
+    transition: background 0.15s;
+    border-radius: 6px;
+  }
+  .archive-list a:hover {
+    background: var(--accent-light);
+  }
+  .archive-date {
+    font-weight: 500;
+  }
+  .archive-arrow {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-secondary);
+  }
+
+  .footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+  }
+
+  @media (max-width: 480px) {
+    .header { padding: 1.5rem 1rem; }
+    .header h1 { font-size: 1.4rem; }
+    .container { padding: 1rem 0.75rem 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>AI 日报</h1>
+  <div class="subtitle">每日精选 AI 行业资讯与论文</div>
+</div>
+
+<div class="container">
+
+  {% if latest %}
+  <a href="{{ latest.url }}" class="latest-banner">
+    <div class="label">最新一期</div>
+    <div class="title">AI 日报 · {{ latest.date }}</div>
+    <div class="arrow">点击查看 →</div>
+  </a>
+  {% endif %}
+
+  {% if archives %}
+  <div class="section-title">往期归档</div>
+  <ul class="archive-list">
+    {% for item in archives %}
+    <li>
+      <a href="{{ item.url }}">
+        <span class="archive-date">{{ item.date }}</span>
+        <span class="archive-arrow">→</span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <div class="empty-state">
+    <p>暂无历史日报</p>
+  </div>
+  {% endif %}
+
+</div>
+
+<div class="footer">
+  <p>AI 日报 — 自动更新</p>
+</div>
+
+</body>
+</html>

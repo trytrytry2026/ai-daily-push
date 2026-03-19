@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 日报 | {{ date_display }}</title>
+<style>
+  :root {
+    --bg: #f0f2f5;
+    --card-bg: #ffffff;
+    --text: #1a1a2e;
+    --text-secondary: #5a6577;
+    --accent: #4f6ef7;
+    --accent-light: #eef1ff;
+    --border: #e5e8ed;
+    --red: #ef4444; --red-bg: #fef2f2;
+    --orange: #f97316; --orange-bg: #fff7ed;
+    --blue: #3b82f6; --blue-bg: #eff6ff;
+    --green: #22c55e; --green-bg: #f0fdf4;
+    --purple: #8b5cf6; --purple-bg: #f5f3ff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .header {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2d1b69 50%, #1a1a2e 100%);
+    color: white; padding: 2.5rem 1.5rem 2rem; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .header::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(circle at 30% 50%, rgba(79,110,247,0.15) 0%, transparent 50%),
+                radial-gradient(circle at 70% 50%, rgba(139,92,246,0.1) 0%, transparent 50%);
+  }
+  .header-content { position: relative; z-index: 1; }
+  .header-logo { font-size: 2rem; margin-bottom: 0.25rem; }
+  .header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: 2px; }
+  .header .date { font-size: 1rem; opacity: 0.85; margin-top: 0.4rem; font-weight: 300; }
+  .header .stats {
+    display: inline-flex; gap: 1.5rem; margin-top: 1rem; font-size: 0.8rem; opacity: 0.7;
+  }
+  .container { max-width: 700px; margin: 0 auto; padding: 0 1rem 3rem; }
+  .section-title {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 1.05rem; font-weight: 600; margin: 1.5rem 0 0.75rem; padding-left: 0.25rem;
+  }
+  .news-card {
+    background: var(--card-bg); border-radius: 14px; padding: 1.15rem 1.25rem;
+    margin-bottom: 0.65rem; border: 1px solid var(--border); position: relative; cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04); transition: box-shadow 0.25s, transform 0.25s;
+  }
+  .news-card:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.08); transform: translateY(-2px); border-color: var(--accent); }
+  .card-top-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+  .news-rank {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 24px; height: 24px; border-radius: 8px; font-size: 0.75rem; font-weight: 800; flex-shrink: 0;
+  }
+  .news-rank.top1 { background: linear-gradient(135deg, #ef4444, #f97316); color: #fff; }
+  .news-rank.top2 { background: linear-gradient(135deg, #f97316, #eab308); color: #fff; }
+  .news-rank.top3 { background: linear-gradient(135deg, #eab308, #84cc16); color: #fff; }
+  .news-rank.normal { background: var(--accent-light); color: var(--accent); }
+  .tag {
+    display: inline-block; padding: 0.1rem 0.45rem; border-radius: 4px;
+    font-size: 0.7rem; font-weight: 600; line-height: 1.6;
+  }
+  .tag-red { background: var(--red-bg); color: var(--red); }
+  .tag-orange { background: var(--orange-bg); color: var(--orange); }
+  .tag-blue { background: var(--blue-bg); color: var(--blue); }
+  .tag-purple { background: var(--purple-bg); color: var(--purple); }
+  .tag-green { background: var(--green-bg); color: var(--green); }
+  .news-title { font-size: 1rem; font-weight: 650; line-height: 1.55; margin-bottom: 0.35rem; }
+  .news-card:hover .news-title { color: var(--accent); }
+  .news-desc {
+    font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .card-bottom-row { display: flex; align-items: center; justify-content: space-between; margin-top: 0.6rem; }
+  .source-badge { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; color: var(--text-secondary); }
+  .source-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; background: var(--accent); }
+  .read-more { font-size: 0.78rem; color: var(--accent); text-decoration: none; font-weight: 500; position: relative; z-index: 2; }
+  .news-card a.card-link { position: absolute; inset: 0; z-index: 1; }
+  .paper-card {
+    background: var(--card-bg); border-radius: 14px; padding: 1rem 1.25rem;
+    margin-bottom: 0.6rem; border: 1px solid var(--border); border-left: 3px solid var(--purple);
+  }
+  .paper-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+  .paper-title { font-size: 0.92rem; font-weight: 600; line-height: 1.5; }
+  .paper-title a { color: var(--text); text-decoration: none; }
+  .paper-title a:hover { color: var(--accent); }
+  .paper-desc { font-size: 0.82rem; color: var(--text-secondary); margin-top: 0.25rem; line-height: 1.55; }
+  .archive-btn {
+    display: block; text-align: center; padding: 0.85rem; margin-top: 1.5rem;
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
+    color: var(--accent); text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: all 0.2s;
+  }
+  .archive-btn:hover { background: var(--accent); color: #fff; }
+  .footer { text-align: center; padding: 2rem 1rem; font-size: 0.78rem; color: #94a3b8; border-top: 1px solid var(--border); margin-top: 1rem; }
+  @media (max-width: 480px) {
+    .header { padding: 1.8rem 1rem 1.5rem; }
+    .header h1 { font-size: 1.3rem; }
+    .container { padding: 0 0.75rem 2rem; }
+    .news-card { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-content">
+    <div class="header-logo">🤖</div>
+    <h1>AI 日报</h1>
+    <div class="date">{{ date_display }}</div>
+    <div class="stats">
+      <span>📰 {{ news_list|length }} 条资讯</span>
+      {% if paper_list %}<span>📄 {{ paper_list|length }} 篇论文</span>{% endif %}
+      <span>🔗 链接已验证</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  {% if news_list %}
+  <div class="section-title">📰 今日要闻</div>
+
+  {% for item in news_list %}
+  <div class="news-card" onclick="window.open('{{ item.url }}','_blank')">
+    <a class="card-link" href="{{ item.url }}" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      {% if loop.index == 1 %}
+      <span class="news-rank top1">{{ loop.index }}</span>
+      {% elif loop.index == 2 %}
+      <span class="news-rank top2">{{ loop.index }}</span>
+      {% elif loop.index == 3 %}
+      <span class="news-rank top3">{{ loop.index }}</span>
+      {% else %}
+      <span class="news-rank normal">{{ loop.index }}</span>
+      {% endif %}
+      <span class="tag tag-blue">{{ item.source }}</span>
+    </div>
+    <div class="news-title">{{ item.title }}</div>
+    {% if item.description %}
+    <div class="news-desc">{{ item.description }}</div>
+    {% endif %}
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>{{ item.source }}</span>
+      <a class="read-more" href="{{ item.url }}" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  {% endfor %}
+
+  {% else %}
+  <div style="text-align:center; padding:3rem 1rem; color:var(--text-secondary);">今日暂无符合条件的 AI 资讯</div>
+  {% endif %}
+
+  {% if paper_list %}
+  <div class="section-title">📄 AI 论文精选</div>
+  {% for paper in paper_list %}
+  <div class="paper-card">
+    <div class="paper-title"><a href="{{ paper.url }}" target="_blank" rel="noopener">{{ paper.title }}</a></div>
+    {% if paper.description %}
+    <div class="paper-desc">{{ paper.description }}</div>
+    {% endif %}
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <a href="/index.html" class="archive-btn">📅 查看往期日报</a>
+</div>
+
+<div class="footer">
+  <p>AI 日报 · 自动生成于 {{ generated_at }} · 数据来源：机器之心 / IT之家 / 36氪 / arXiv</p>
+</div>
+
+</body>
+</html>

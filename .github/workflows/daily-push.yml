@@ -1,0 +1,39 @@
+name: AI Daily Report
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # UTC 00:00 = 北京时间 08:00
+  workflow_dispatch:       # 支持手动触发（测试用）
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate Daily Report
+        run: python main.py
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          SITE_BASE_URL: ${{ secrets.SITE_BASE_URL }}
+
+      - name: Commit & Push Generated Pages
+        run: |
+          git config user.name "AI Daily Bot"
+          git config user.email "bot@ai-daily.local"
+          git add site/
+          git diff --staged --quiet || git commit -m "daily: $(date -u +%Y-%m-%d) AI 日报"
+          git push
