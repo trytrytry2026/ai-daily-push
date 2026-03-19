@@ -34,7 +34,10 @@ def summarize_articles(articles: list[RawArticle]) -> list[ProcessedArticle]:
         logger.warning("未配置 DEEPSEEK_API_KEY，使用原始标题")
         return [_fallback(a) for a in articles]
 
-    client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com")
+    client = OpenAI(
+        api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com",
+        timeout=30.0, max_retries=2,
+    )
     results = []
 
     for article in articles:
@@ -42,7 +45,7 @@ def summarize_articles(articles: list[RawArticle]) -> list[ProcessedArticle]:
             processed = _summarize_one(client, article)
             results.append(processed)
         except Exception as e:
-            logger.error(f"摘要生成失败: {article.title} -> {e}")
+            logger.error(f"摘要生成失败: {article.title[:40]} -> {e}")
             results.append(_fallback(article))
 
     return results

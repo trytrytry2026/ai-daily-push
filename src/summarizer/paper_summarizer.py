@@ -30,7 +30,10 @@ def summarize_papers(papers: list[RawArticle], max_count: int = 10) -> list[Proc
         logger.warning("未配置 DEEPSEEK_API_KEY，使用原始标题")
         return [_fallback(p) for p in papers]
 
-    client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com")
+    client = OpenAI(
+        api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com",
+        timeout=30.0, max_retries=2,
+    )
     results = []
 
     for paper in papers:

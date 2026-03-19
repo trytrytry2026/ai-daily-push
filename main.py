@@ -2,10 +2,9 @@
 AI 日报 — 每日自动采集 AI 资讯 + 论文，生成精美网页日报
 """
 import logging
-import sys
 from datetime import datetime, timezone, timedelta
 
-from src.config import PRIORITY_RSS_FEEDS, SECONDARY_RSS_FEEDS, MAX_PAPER_COUNT
+from src.config import PRIORITY_RSS_FEEDS, SECONDARY_RSS_FEEDS, MAX_PAPER_COUNT, MAX_NEWS_COUNT
 from src.collector.rss_collector import RSSCollector
 from src.collector.web_collector import Kr36Collector, BaiduNewsCollector
 from src.collector.cn_paper_collector import CnPaperCollector
@@ -28,13 +27,19 @@ def main():
     since = now - timedelta(hours=24)
     logger.info(f"=== AI 日报生成开始 === 采集时间范围: {since.isoformat()} ~ {now.isoformat()}")
 
-    # ── 1. 采集新闻 ──
-    news_list = _collect_and_process_news(since)
+    news_list = []
+    paper_list = []
 
-    # ── 2. 采集论文（独立流程） ──
-    paper_list = _collect_and_process_papers()
+    try:
+        news_list = _collect_and_process_news(since)
+    except Exception as e:
+        logger.error(f"新闻采集流程异常: {e}")
 
-    # ── 3. 生成日报 HTML ──
+    try:
+        paper_list = _collect_and_process_papers()
+    except Exception as e:
+        logger.error(f"论文采集流程异常: {e}")
+
     rel_path = generate_daily_page(
         news_list=news_list,
         paper_list=paper_list,
@@ -102,18 +107,13 @@ def _collect_and_process_papers():
     return paper_list
 
 
-def _generate_empty_page(now):
-    from src.generator.page_builder import generate_daily_page
-    generate_daily_page(news_list=[], paper_list=[], date=now)
-
-
 def _truncate_to_limit(articles, max_chars=3000):
     """确保总输出字符不超限"""
     total = 0
     result = []
     for a in articles:
-        chars = len(a.title) + len(a.description) + len(a.source) + 20  # 20 for formatting overhead
-        if total + chars > max_chars and len(result) >= 10:
+        chars = len(a.title) + len(a.description) + len(a.source) + 20
+        if total + chars > max_chars and len(result) >= MAX_NEWS_COUNT:
             break
         total += chars
         result.append(a)

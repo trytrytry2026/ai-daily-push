@@ -210,12 +210,12 @@ def ensure_app_depth_mix(articles: list[RawArticle]) -> list[RawArticle]:
 
 
 def validate_urls(articles: list[RawArticle]) -> list[RawArticle]:
-    """校验 URL 是否可访问（HEAD 请求）"""
+    """校验 URL 是否可访问（HEAD 请求，5s 超时）"""
     result = []
     for article in articles:
         try:
             resp = requests.head(
-                article.url, timeout=REQUEST_TIMEOUT,
+                article.url, timeout=5,
                 allow_redirects=True,
                 headers={"User-Agent": "Mozilla/5.0"},
             )
@@ -223,7 +223,9 @@ def validate_urls(articles: list[RawArticle]) -> list[RawArticle]:
                 result.append(article)
             else:
                 logger.warning(f"URL 不可达 ({resp.status_code}): {article.url}")
+        except requests.Timeout:
+            result.append(article)
         except Exception:
             logger.warning(f"URL 请求失败: {article.url}")
-            result.append(article)  # 网络超时不一定是链接失效，保留
+            result.append(article)
     return result

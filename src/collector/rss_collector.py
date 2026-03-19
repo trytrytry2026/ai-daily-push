@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 from time import mktime
 
 import feedparser
+import requests
 
 from src.collector.base import BaseCollector
 from src.config import REQUEST_TIMEOUT, USER_AGENT
@@ -21,11 +22,12 @@ class RSSCollector(BaseCollector):
     def fetch(self, since: datetime) -> list[RawArticle]:
         logger.info(f"[{self.name}] 开始采集 RSS: {self.feed_url}")
         try:
-            feed = feedparser.parse(
-                self.feed_url,
-                agent=USER_AGENT,
-                request_headers={"Accept": "application/rss+xml, application/xml, text/xml"},
+            resp = requests.get(
+                self.feed_url, timeout=REQUEST_TIMEOUT,
+                headers={"User-Agent": USER_AGENT, "Accept": "application/rss+xml, application/xml, text/xml"},
             )
+            resp.raise_for_status()
+            feed = feedparser.parse(resp.content)
         except Exception as e:
             logger.error(f"[{self.name}] RSS 采集失败: {e}")
             return []

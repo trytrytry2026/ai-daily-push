@@ -32,15 +32,31 @@ PAPER_SEARCH_QUERIES = [
     "多模态 论文",
 ]
 
-PAPER_KEYWORDS = [
+AI_MUST_KEYWORDS = [
+    "ai", "人工智能", "大模型", "深度学习", "机器学习",
+    "transformer", "gpt", "llm", "bert", "diffusion",
+    "多模态", "智能体", "agent", "具身智能", "自动驾驶",
+    "算力", "芯片", "gpu", "神经网络", "自然语言处理",
+    "计算机视觉", "语音识别", "aigc", "生成式",
+    "rag", "向量", "embedding", "token",
+    "机器人", "robotics", "强化学习",
+]
+
+PAPER_BONUS_KEYWORDS = [
     "论文", "研究", "算法", "架构", "框架", "开源",
-    "突破", "提出", "发现", "验证", "实验",
-    "模型", "大模型", "深度学习", "机器学习",
-    "transformer", "gpt", "llm", "bert",
-    "多模态", "扩散", "生成", "推理", "训练",
-    "智能体", "agent", "具身智能", "数据集",
+    "突破", "提出", "数据集", "benchmark", "评测", "sota",
     "技术报告", "技术解读", "论文速递", "论文推荐",
-    "参数", "benchmark", "评测", "sota",
+]
+
+PAPER_NEGATIVE_KEYWORDS = [
+    "医疗", "医学", "药物", "临床", "患者", "癌症", "肿瘤",
+    "心脏", "血液", "细胞", "基因", "蛋白", "手术",
+    "牙周", "抑郁", "焦虑", "阿尔茨海默",
+    "股票", "分红", "股本", "涨停", "跌停", "基金",
+    "利润", "营收", "财报", "净利", "毛利",
+    "足球", "篮球", "体育", "奥运", "世界杯",
+    "房地产", "楼市", "房价",
+    "娱乐", "综艺", "选秀", "明星",
 ]
 
 
@@ -79,10 +95,12 @@ class CnPaperCollector(BaseCollector):
         results = []
         for name, feed_url in PAPER_RSS_FEEDS.items():
             try:
-                feed = feedparser.parse(
-                    feed_url, agent=USER_AGENT,
-                    request_headers={"Accept": "application/rss+xml, application/xml, text/xml"},
+                resp = requests.get(
+                    feed_url, timeout=REQUEST_TIMEOUT,
+                    headers={"User-Agent": USER_AGENT, "Accept": "application/rss+xml, application/xml, text/xml"},
                 )
+                resp.raise_for_status()
+                feed = feedparser.parse(resp.content)
                 if not feed.entries:
                     logger.warning(f"[{self.name}] RSS {name} 无条目")
                     continue
@@ -105,7 +123,7 @@ class CnPaperCollector(BaseCollector):
                         continue
 
                     text = f"{title} {summary}".lower()
-                    if not any(kw in text for kw in PAPER_KEYWORDS):
+                    if not self._is_ai_paper(text):
                         continue
 
                     results.append(RawArticle(
@@ -179,6 +197,9 @@ class CnPaperCollector(BaseCollector):
             if "百度" in title and "搜索" in title:
                 continue
 
+            if not self._is_ai_paper(title.lower()):
+                continue
+
             pub_time = self._extract_date_from_url(link)
 
             papers.append(RawArticle(
@@ -190,6 +211,13 @@ class CnPaperCollector(BaseCollector):
             ))
 
         return papers
+
+    @staticmethod
+    def _is_ai_paper(text: str) -> bool:
+        """必须命中至少一个 AI 强相关词，且不命中任何负面词"""
+        if any(neg in text for neg in PAPER_NEGATIVE_KEYWORDS):
+            return False
+        return any(kw in text for kw in AI_MUST_KEYWORDS)
 
     @staticmethod
     def _parse_rss_time(entry) -> datetime | None:
