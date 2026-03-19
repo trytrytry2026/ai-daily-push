@@ -1,6 +1,6 @@
 import logging
 
-from src.config import INDUSTRY_KEYWORDS, COMPANY_KEYWORDS
+from src.config import INDUSTRY_KEYWORDS, COMPANY_KEYWORDS, PRIORITY_SOURCES
 from src.models import RawArticle
 
 logger = logging.getLogger(__name__)
@@ -18,9 +18,11 @@ INDUSTRY_WEIGHT = {
     "AI应用": 1, "AIGC": 1, "RAG": 1,
 }
 
+SOURCE_BOOST = 5
+
 
 def rank_articles(articles: list[RawArticle]) -> list[RawArticle]:
-    """按热度评分排序"""
+    """按热度评分排序，优先来源获得加分"""
     for article in articles:
         article.keywords = getattr(article, "keywords", [])
         score = _calc_score(article)
@@ -34,6 +36,9 @@ def rank_articles(articles: list[RawArticle]) -> list[RawArticle]:
 def _calc_score(article: RawArticle) -> float:
     text = f"{article.title} {article.summary}".lower()
     score = 0.0
+
+    if article.source in PRIORITY_SOURCES:
+        score += SOURCE_BOOST
 
     for kw, w in COMPANY_WEIGHT.items():
         if kw.lower() in text:

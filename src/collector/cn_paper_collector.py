@@ -1,7 +1,8 @@
-"""中文 AI 论文/研究采集器 — 多源采集国内科技媒体的论文解读"""
+"""中文 AI 论文/研究采集器 — 多源采集国内科技媒体的论文解读与研究报道"""
 import logging
 import re
 from datetime import datetime, timezone, timedelta
+from time import mktime
 
 import feedparser
 import requests
@@ -12,30 +13,34 @@ from src.models import RawArticle
 
 logger = logging.getLogger(__name__)
 
-
 PAPER_RSS_FEEDS = {
     "机器之心": "https://www.jiqizhixin.com/rss",
     "量子位": "https://www.qbitai.com/feed",
+    "虎嗅": "https://www.huxiu.com/rss/0.xml",
+    "钛媒体": "https://www.tmtpost.com/feed",
+    "36氪": "https://36kr.com/feed",
 }
 
 PAPER_SEARCH_QUERIES = [
-    "AI论文解读",
-    "大模型最新研究",
-    "人工智能研究突破",
-    "深度学习最新论文",
-    "AI技术论文",
-    "大模型论文",
-    "智能体研究",
-    "多模态模型研究",
+    "AI论文 最新",
+    "大模型 研究突破",
+    "人工智能 论文解读",
+    "AI 最新研究成果",
+    "大模型 技术突破",
+    "深度学习 研究进展",
+    "AI Agent 研究",
+    "多模态 论文",
 ]
 
 PAPER_KEYWORDS = [
-    "论文", "研究", "模型", "算法", "架构", "框架",
-    "突破", "提出", "方法", "技术", "开源",
-    "AI", "人工智能", "大模型", "深度学习", "机器学习",
-    "神经网络", "transformer", "gpt", "llm",
+    "论文", "研究", "算法", "架构", "框架", "开源",
+    "突破", "提出", "发现", "验证", "实验",
+    "模型", "大模型", "深度学习", "机器学习",
+    "transformer", "gpt", "llm", "bert",
     "多模态", "扩散", "生成", "推理", "训练",
     "智能体", "agent", "具身智能", "数据集",
+    "技术报告", "技术解读", "论文速递", "论文推荐",
+    "参数", "benchmark", "评测", "sota",
 ]
 
 
@@ -59,7 +64,7 @@ class CnPaperCollector(BaseCollector):
         seen_titles = set()
         unique = []
         for p in all_papers:
-            title_key = re.sub(r"[\s\W]+", "", p.title)[:25]
+            title_key = re.sub(r"[\s\W]+", "", p.title)[:20]
             if title_key in seen_titles:
                 continue
             seen_titles.add(title_key)
@@ -70,7 +75,7 @@ class CnPaperCollector(BaseCollector):
         return unique
 
     def _fetch_from_rss(self, since: datetime) -> list[RawArticle]:
-        """从 RSS 源采集论文/研究相关文章"""
+        """从多个 RSS 源采集论文/研究相关文章"""
         results = []
         for name, feed_url in PAPER_RSS_FEEDS.items():
             try:
@@ -78,6 +83,11 @@ class CnPaperCollector(BaseCollector):
                     feed_url, agent=USER_AGENT,
                     request_headers={"Accept": "application/rss+xml, application/xml, text/xml"},
                 )
+                if not feed.entries:
+                    logger.warning(f"[{self.name}] RSS {name} 无条目")
+                    continue
+
+                count = 0
                 for entry in feed.entries:
                     pub_time = self._parse_rss_time(entry)
                     if pub_time and pub_time < since:
@@ -105,6 +115,9 @@ class CnPaperCollector(BaseCollector):
                         source=name,
                         publish_time=pub_time or datetime.now(timezone.utc),
                     ))
+                    count += 1
+
+                logger.info(f"[{self.name}] RSS {name}: {count} 篇研究相关")
             except Exception as e:
                 logger.warning(f"[{self.name}] RSS {name} 采集失败: {e}")
         return results
@@ -123,6 +136,7 @@ class CnPaperCollector(BaseCollector):
             except Exception as e:
                 logger.warning(f"[{self.name}] 搜索 '{query}' 异常: {e}")
 
+        logger.info(f"[{self.name}] 百度搜索总计 {len(all_results)} 篇")
         return all_results
 
     def _search_one(self, query: str, begin_ts: int, end_ts: int, now: datetime) -> list[RawArticle]:
@@ -146,22 +160,23 @@ class CnPaperCollector(BaseCollector):
         html = resp.text
 
         papers = []
+        all_matches = []
         patterns = [
-            r'<h3[^>]*class="news-title[^"]*"[^>]*>\s*<a[^>]*href="([^"]+)"[^>]*>(.*?)</a>',
-            r'<h3[^>]*>\s*<a[^>]*href="([^"]+)"[^>]*data-click[^>]*>(.*?)</a>',
-            r'<a[^>]*href="(https?://[^"]+)"[^>]*class="[^"]*news[^"]*"[^>]*>(.*?)</a>',
+            r'<h3[^>]*>\s*<a[^>]*href="([^"]+)"[^>]*>(.*?)</a>',
+            r'href="(https?://[^"]+)"[^>]*>([\u4e00-\u9fff][\s\S]*?)</a>',
         ]
-
-        matches = []
         for pat in patterns:
             found = re.findall(pat, html, re.DOTALL)
-            matches.extend(found)
             if found:
+                all_matches = found
                 break
 
-        for link, title_html in matches[:8]:
+        for link, title_html in all_matches[:10]:
             title = re.sub(r"<[^>]+>", "", title_html).strip()
-            if not title or not link or len(title) < 8:
+            title = re.sub(r"\s+", " ", title)
+            if not title or not link or len(title) < 6:
+                continue
+            if "百度" in title and "搜索" in title:
                 continue
 
             pub_time = self._extract_date_from_url(link)
@@ -170,7 +185,7 @@ class CnPaperCollector(BaseCollector):
                 title=title,
                 summary="",
                 url=link,
-                source="百度学术",
+                source="资讯搜索",
                 publish_time=pub_time or now,
             ))
 
@@ -178,7 +193,6 @@ class CnPaperCollector(BaseCollector):
 
     @staticmethod
     def _parse_rss_time(entry) -> datetime | None:
-        from time import mktime
         for attr in ("published_parsed", "updated_parsed"):
             parsed = getattr(entry, attr, None)
             if parsed:

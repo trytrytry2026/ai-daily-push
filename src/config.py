@@ -28,10 +28,18 @@ NEGATIVE_KEYWORDS = [
     "个人观点", "本文仅代表",
 ]
 
-RSS_FEEDS = {
+PRIORITY_RSS_FEEDS = {
+    "虎嗅": "https://www.huxiu.com/rss/0.xml",
+    "钛媒体": "https://www.tmtpost.com/feed",
+    "猎云网": "https://www.lieyunwang.com/feed",
+}
+
+SECONDARY_RSS_FEEDS = {
     "机器之心": "https://www.jiqizhixin.com/rss",
     "IT之家": "https://www.ithome.com/rss/",
 }
+
+PRIORITY_SOURCES = ["36氪", "虎嗅", "钛媒体", "猎云网"]
 
 MAX_NEWS_COUNT = 10
 MIN_APP_DEPTH_COUNT = 3   # 至少 3 条 AI 应用/深度分析类新闻

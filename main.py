@@ -5,7 +5,7 @@ import logging
 import sys
 from datetime import datetime, timezone, timedelta
 
-from src.config import RSS_FEEDS, MAX_PAPER_COUNT
+from src.config import PRIORITY_RSS_FEEDS, SECONDARY_RSS_FEEDS, MAX_PAPER_COUNT
 from src.collector.rss_collector import RSSCollector
 from src.collector.web_collector import Kr36Collector, BaiduNewsCollector
 from src.collector.cn_paper_collector import CnPaperCollector
@@ -49,9 +49,11 @@ def _collect_and_process_news(since: datetime):
     """新闻采集 → 排序 → 过滤 → URL校验 → LLM摘要 → 字符控制"""
     collectors = [
         Kr36Collector(),
-        BaiduNewsCollector(),
     ]
-    for name, feed_url in RSS_FEEDS.items():
+    for name, feed_url in PRIORITY_RSS_FEEDS.items():
+        collectors.append(RSSCollector(name=name, feed_url=feed_url))
+    collectors.append(BaiduNewsCollector())
+    for name, feed_url in SECONDARY_RSS_FEEDS.items():
         collectors.append(RSSCollector(name=name, feed_url=feed_url))
 
     all_articles = []
