@@ -8,7 +8,7 @@ from datetime import datetime, timezone, timedelta
 from src.config import RSS_FEEDS, MAX_PAPER_COUNT
 from src.collector.rss_collector import RSSCollector
 from src.collector.web_collector import Kr36Collector, BaiduNewsCollector
-from src.collector.arxiv_collector import ArxivCollector
+from src.collector.cn_paper_collector import CnPaperCollector
 from src.filter.pipeline import run_filter_pipeline, validate_urls
 from src.ranker.hot_ranker import rank_articles
 from src.summarizer.deepseek import summarize_articles
@@ -82,9 +82,9 @@ def _collect_and_process_news(since: datetime):
 
 
 def _collect_and_process_papers():
-    """论文采集 → 去重 → LLM翻译为中文标题+描述"""
+    """中文论文采集 → 去重 → LLM精炼摘要"""
     try:
-        collector = ArxivCollector()
+        collector = CnPaperCollector()
         since_papers = datetime.now(timezone.utc) - timedelta(days=7)
         raw_papers = collector.fetch(since_papers)
     except Exception as e:
@@ -95,7 +95,7 @@ def _collect_and_process_papers():
         logger.warning("未采集到论文")
         return []
 
-    logger.info(f"采集到 {len(raw_papers)} 篇原始论文，开始翻译为中文...")
+    logger.info(f"采集到 {len(raw_papers)} 篇中文论文解读，开始精炼摘要...")
     paper_list = summarize_papers(raw_papers, max_count=MAX_PAPER_COUNT)
     return paper_list
 

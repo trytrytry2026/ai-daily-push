@@ -18,9 +18,12 @@ logger = logging.getLogger(__name__)
 def run_filter_pipeline(articles: list[RawArticle], since: datetime) -> list[RawArticle]:
     """
     过滤 Pipeline：
-    时间过滤 → 关键词匹配 → 质量过滤 → 去重 → 公司多样性控制 → 截取
+    URL日期校验 → 时间过滤 → 关键词匹配 → 质量过滤 → 去重 → 公司多样性控制 → 截取
     """
     logger.info(f"过滤前共 {len(articles)} 条文章")
+
+    articles = validate_article_date(articles, since)
+    logger.info(f"  URL日期校验后: {len(articles)} 条")
 
     articles = filter_by_time(articles, since)
     logger.info(f"  时间过滤后: {len(articles)} 条")
@@ -43,6 +46,41 @@ def run_filter_pipeline(articles: list[RawArticle], since: datetime) -> list[Raw
     articles = articles[:MAX_NEWS_COUNT]
     logger.info(f"最终保留 {len(articles)} 条文章")
     return articles
+
+
+def validate_article_date(articles: list[RawArticle], since: datetime) -> list[RawArticle]:
+    """通过 URL 中的日期模式检测并丢弃明显过时的文章"""
+    date_pattern = re.compile(r'/(20\d{2})[-/](0[1-9]|1[0-2])[-/](0[1-9]|[12]\d|3[01])')
+    year_month_pattern = re.compile(r'/(20\d{2})[-/](0[1-9]|1[0-2])/')
+
+    cutoff = since - timedelta(days=1)
+    now = datetime.now(timezone.utc)
+    result = []
+
+    for article in articles:
+        url = article.url
+        match = date_pattern.search(url)
+        if match:
+            try:
+                url_date = datetime(
+                    int(match.group(1)), int(match.group(2)), int(match.group(3)),
+                    tzinfo=timezone.utc,
+                )
+                if url_date < cutoff:
+                    logger.info(f"  丢弃旧文章 (URL日期 {url_date.date()}): {article.title[:40]}")
+                    continue
+            except ValueError:
+                pass
+        else:
+            match_ym = year_month_pattern.search(url)
+            if match_ym:
+                year, month = int(match_ym.group(1)), int(match_ym.group(2))
+                if year < now.year or (year == now.year and month < now.month - 1):
+                    logger.info(f"  丢弃旧文章 (URL月份 {year}-{month:02d}): {article.title[:40]}")
+                    continue
+
+        result.append(article)
+    return result
 
 
 def filter_by_time(articles: list[RawArticle], since: datetime) -> list[RawArticle]:

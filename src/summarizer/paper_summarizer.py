@@ -1,4 +1,4 @@
-"""论文摘要翻译模块 — 将英文论文标题和摘要翻译成中文"""
+"""论文摘要模块 — 将采集到的中文论文解读精炼为标题+描述"""
 import json
 import logging
 
@@ -9,25 +9,25 @@ from src.models import RawArticle, ProcessedArticle
 
 logger = logging.getLogger(__name__)
 
-PAPER_SYSTEM_PROMPT = """你是一位AI领域的科技编辑，负责将英文AI论文翻译成通俗易懂的中文摘要，面向非技术背景的企业管理者。
+PAPER_SYSTEM_PROMPT = """你是一位AI领域的科技编辑，负责将AI论文/研究相关的文章精炼成简洁摘要，面向非技术背景的企业管理者。
 
 要求：
-1. 中文标题：用一句话概括论文核心发现/贡献，25字以内，要通俗易懂、有信息量
-2. 中文描述：用大白话解释这篇论文做了什么、有什么价值，60字以内，不要堆砌术语
+1. 标题：用一句话概括论文/研究的核心发现或价值，20-28字，通俗易懂、有信息量
+2. 描述：用大白话解释这篇研究做了什么、有什么价值，50-70字，不要堆砌术语
 
 输出严格的JSON格式（不要markdown代码块）：
-{"title": "中文标题", "desc": "中文描述"}"""
+{"title": "标题", "desc": "描述"}"""
 
-PAPER_USER_TEMPLATE = """英文标题：{title}
-英文摘要：{summary}"""
+PAPER_USER_TEMPLATE = """文章标题：{title}
+文章内容：{summary}"""
 
 
 def summarize_papers(papers: list[RawArticle], max_count: int = 10) -> list[ProcessedArticle]:
-    """翻译论文为中文标题+描述，返回最多 max_count 篇"""
+    """精炼论文解读为标题+描述，返回最多 max_count 篇"""
     papers = papers[:max_count]
 
     if not DEEPSEEK_API_KEY:
-        logger.warning("未配置 DEEPSEEK_API_KEY，使用原始英文标题")
+        logger.warning("未配置 DEEPSEEK_API_KEY，使用原始标题")
         return [_fallback(p) for p in papers]
 
     client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com")
@@ -35,16 +35,16 @@ def summarize_papers(papers: list[RawArticle], max_count: int = 10) -> list[Proc
 
     for paper in papers:
         try:
-            processed = _translate_one(client, paper)
+            processed = _summarize_one(client, paper)
             results.append(processed)
         except Exception as e:
-            logger.error(f"论文翻译失败: {paper.title[:50]} -> {e}")
+            logger.error(f"论文摘要失败: {paper.title[:50]} -> {e}")
             results.append(_fallback(paper))
 
     return results
 
 
-def _translate_one(client: OpenAI, paper: RawArticle) -> ProcessedArticle:
+def _summarize_one(client: OpenAI, paper: RawArticle) -> ProcessedArticle:
     user_msg = PAPER_USER_TEMPLATE.format(
         title=paper.title,
         summary=paper.summary[:400] if paper.summary else "无摘要",
@@ -76,7 +76,7 @@ def _translate_one(client: OpenAI, paper: RawArticle) -> ProcessedArticle:
         title=title,
         description=desc,
         url=paper.url,
-        source="arXiv",
+        source=paper.source,
         publish_time=paper.publish_time,
     )
 
@@ -86,6 +86,6 @@ def _fallback(paper: RawArticle) -> ProcessedArticle:
         title=paper.title,
         description=paper.summary[:150] if paper.summary else "",
         url=paper.url,
-        source="arXiv",
+        source=paper.source,
         publish_time=paper.publish_time,
     )

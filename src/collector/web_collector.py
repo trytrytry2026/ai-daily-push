@@ -1,6 +1,6 @@
 import logging
 import re
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 import requests
 
@@ -72,11 +72,11 @@ class Kr36Collector(BaseCollector):
 
 
 class BaiduNewsCollector(BaseCollector):
-    """百度资讯搜索采集器 — 搜索 AI 相关关键词"""
+    """百度资讯搜索采集器 — 搜索 AI 相关关键词，限定最近 1 天"""
 
     name = "百度资讯"
 
-    SEARCH_QUERIES = ["AI大模型", "人工智能应用", "智能体Agent", "AI芯片算力"]
+    SEARCH_QUERIES = ["AI大模型 最新", "人工智能应用 今日", "智能体Agent 最新", "AI芯片算力 今日"]
 
     def fetch(self, since: datetime) -> list[RawArticle]:
         logger.info(f"[{self.name}] 开始采集")
@@ -88,13 +88,19 @@ class BaiduNewsCollector(BaseCollector):
         return all_articles
 
     def _search(self, query: str, since: datetime) -> list[RawArticle]:
+        now = datetime.now(timezone.utc)
+        begin_ts = int(since.timestamp())
+        end_ts = int(now.timestamp())
+
         url = "https://www.baidu.com/s"
         params = {
             "wd": query,
             "tn": "news",
-            "rtt": "1",
+            "rtt": "4",
             "bsst": "1",
             "cl": "2",
+            "medium": "0",
+            "gpc": f"stf={begin_ts},{end_ts}|stftype=2",
         }
         headers = {
             "User-Agent": USER_AGENT,
@@ -112,15 +118,32 @@ class BaiduNewsCollector(BaseCollector):
         articles = []
         pattern = r'<h3[^>]*class="news-title[^"]*"[^>]*>\s*<a[^>]*href="([^"]+)"[^>]*>(.*?)</a>'
         matches = re.findall(pattern, html, re.DOTALL)
-        for link, title_html in matches[:10]:
+        for link, title_html in matches[:8]:
             title = re.sub(r"<[^>]+>", "", title_html).strip()
             if not title or not link:
                 continue
+
+            pub_time = self._extract_date_from_url(link)
+            if pub_time and pub_time < since - timedelta(days=1):
+                logger.info(f"[{self.name}] 跳过旧文章: {title[:30]}")
+                continue
+
             articles.append(RawArticle(
                 title=title,
                 summary="",
                 url=link,
                 source=self.name,
-                publish_time=datetime.now(timezone.utc),
+                publish_time=pub_time or now,
             ))
         return articles
+
+    @staticmethod
+    def _extract_date_from_url(url: str) -> datetime | None:
+        """尝试从 URL 中提取日期"""
+        m = re.search(r'(20\d{2})[-/](0[1-9]|1[0-2])[-/](0[1-9]|[12]\d|3[01])', url)
+        if m:
+            try:
+                return datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)), tzinfo=timezone.utc)
+            except ValueError:
+                pass
+        return None
