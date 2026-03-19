@@ -18,6 +18,7 @@
     --blue: #3b82f6; --blue-bg: #eff6ff;
     --green: #22c55e; --green-bg: #f0fdf4;
     --purple: #8b5cf6; --purple-bg: #f5f3ff;
+    --teal: #14b8a6; --teal-bg: #f0fdfa;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -44,10 +45,63 @@
     display: inline-flex; gap: 1.5rem; margin-top: 1rem; font-size: 0.8rem; opacity: 0.7;
   }
   .container { max-width: 700px; margin: 0 auto; padding: 0 1rem 3rem; }
-  .section-title {
-    display: flex; align-items: center; gap: 0.5rem;
-    font-size: 1.05rem; font-weight: 600; margin: 1.5rem 0 0.75rem; padding-left: 0.25rem;
+
+  /* ===== Audio Player ===== */
+  
+  .audio-player {
+    background: var(--card-bg); border-radius: 14px; padding: 1rem 1.25rem;
+    margin: 1rem 0; border: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   }
+  .audio-header {
+    display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem;
+    font-size: 0.9rem; font-weight: 600; color: var(--accent);
+  }
+  .audio-controls { display: flex; align-items: center; gap: 0.75rem; }
+  .audio-btn {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--purple));
+    border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 1.1rem; flex-shrink: 0; transition: transform 0.15s;
+  }
+  .audio-btn:hover { transform: scale(1.08); }
+  .audio-progress-wrap { flex: 1; display: flex; flex-direction: column; gap: 0.2rem; }
+  .audio-progress {
+    width: 100%; height: 6px; border-radius: 3px; appearance: none; -webkit-appearance: none;
+    background: var(--border); outline: none; cursor: pointer;
+  }
+  .audio-progress::-webkit-slider-thumb {
+    appearance: none; -webkit-appearance: none; width: 14px; height: 14px;
+    border-radius: 50%; background: var(--accent); cursor: pointer; margin-top: -4px;
+  }
+  .audio-progress::-webkit-slider-runnable-track { height: 6px; border-radius: 3px; }
+  .audio-time-row { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-secondary); }
+  .speed-btn {
+    padding: 0.2rem 0.5rem; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--card-bg); color: var(--text-secondary); font-size: 0.72rem;
+    cursor: pointer; font-weight: 600; transition: all 0.15s; flex-shrink: 0;
+  }
+  .speed-btn:hover, .speed-btn.active { background: var(--accent-light); color: var(--accent); border-color: var(--accent); }
+  
+
+  /* ===== Section Headers ===== */
+  .section-header {
+    display: flex; align-items: center; gap: 0.65rem;
+    margin: 1.8rem 0 1rem; padding: 0.75rem 1rem;
+    background: var(--card-bg); border-radius: 12px;
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+  }
+  .section-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;
+  }
+  .section-icon.news { background: linear-gradient(135deg, var(--blue-bg), var(--accent-light)); }
+  .section-icon.paper { background: linear-gradient(135deg, var(--purple-bg), var(--teal-bg)); }
+  .section-text h2 { font-size: 1.05rem; font-weight: 700; line-height: 1.3; }
+  .section-text p { font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.1rem; }
+
+  /* ===== News Cards ===== */
   .news-card {
     background: var(--card-bg); border-radius: 14px; padding: 1.15rem 1.25rem;
     margin-bottom: 0.65rem; border: 1px solid var(--border); position: relative; cursor: pointer;
@@ -83,15 +137,31 @@
   .source-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; background: var(--accent); }
   .read-more { font-size: 0.78rem; color: var(--accent); text-decoration: none; font-weight: 500; position: relative; z-index: 2; }
   .news-card a.card-link { position: absolute; inset: 0; z-index: 1; }
+
+  /* ===== Paper Cards ===== */
   .paper-card {
     background: var(--card-bg); border-radius: 14px; padding: 1rem 1.25rem;
     margin-bottom: 0.6rem; border: 1px solid var(--border); border-left: 3px solid var(--purple);
+    transition: box-shadow 0.2s, transform 0.2s;
   }
-  .paper-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+  .paper-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); transform: translateY(-1px); }
+  .paper-idx {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 22px; height: 22px; border-radius: 6px; font-size: 0.7rem; font-weight: 700;
+    background: var(--purple-bg); color: var(--purple); margin-right: 0.4rem;
+  }
   .paper-title { font-size: 0.92rem; font-weight: 600; line-height: 1.5; }
   .paper-title a { color: var(--text); text-decoration: none; }
   .paper-title a:hover { color: var(--accent); }
   .paper-desc { font-size: 0.82rem; color: var(--text-secondary); margin-top: 0.25rem; line-height: 1.55; }
+  .paper-source { font-size: 0.72rem; color: var(--text-secondary); margin-top: 0.35rem; opacity: 0.8; }
+
+  /* ===== Divider ===== */
+  .section-divider {
+    height: 1px; background: linear-gradient(to right, transparent, var(--border), transparent);
+    margin: 1.5rem 0 0;
+  }
+
   .archive-btn {
     display: block; text-align: center; padding: 0.85rem; margin-top: 1.5rem;
     background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
@@ -104,6 +174,7 @@
     .header h1 { font-size: 1.3rem; }
     .container { padding: 0 0.75rem 2rem; }
     .news-card { padding: 1rem; }
+    .section-header { padding: 0.6rem 0.8rem; }
   }
 </style>
 </head>
@@ -116,8 +187,8 @@
     <div class="date">2026年03月19日 周四</div>
     <div class="stats">
       <span>📰 10 条资讯</span>
-      <span>📄 10 篇论文</span>
-      <span>🔗 链接已验证</span>
+      
+      <span>🎧 语音播报</span>
     </div>
   </div>
 </div>
@@ -125,38 +196,44 @@
 <div class="container">
 
   
-  <div class="section-title">📰 今日要闻</div>
-
-  
-  <div class="news-card" onclick="window.open('https://www.tmtpost.com/7920897.html','_blank')">
-    <a class="card-link" href="https://www.tmtpost.com/7920897.html" target="_blank" rel="noopener"></a>
-    <div class="card-top-row">
-      
-      <span class="news-rank top1">1</span>
-      
-      <span class="tag tag-blue">钛媒体</span>
-    </div>
-    <div class="news-title">中国AI应用繁荣背后：底层技术差距成创新天花板</div>
-    
-    <div class="news-desc">OpenClaw等应用在中国市场的火爆，凸显了国内AI产业在场景落地和用户体验上的敏捷优势。然而，这种应用层的繁荣正日益受限于底层核心技术的差距，若无法突破，将制约长期创新高度与产业自主性。</div>
-    
-    <div class="card-bottom-row">
-      <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
-      <a class="read-more" href="https://www.tmtpost.com/7920897.html" target="_blank" rel="noopener">阅读原文 →</a>
+  <div class="audio-player" id="audioPlayerCard">
+    <div class="audio-header">🎧 语音播报 · 听 AI 日报</div>
+    <audio id="dailyAudio" src="/audio/2026-03-19.mp3" preload="metadata"></audio>
+    <div class="audio-controls">
+      <button class="audio-btn" id="playBtn" onclick="togglePlay()">▶</button>
+      <div class="audio-progress-wrap">
+        <input type="range" class="audio-progress" id="progressBar" value="0" min="0" max="100" step="0.1" oninput="seekAudio(this.value)">
+        <div class="audio-time-row">
+          <span id="currentTime">00:00</span>
+          <span id="totalTime">00:00</span>
+        </div>
+      </div>
+      <button class="speed-btn" id="speedBtn" onclick="cycleSpeed()">1x</button>
     </div>
   </div>
+  
+
+  
+  <div class="section-header">
+    <div class="section-icon news">📰</div>
+    <div class="section-text">
+      <h2>AI 资讯</h2>
+      <p>今日热门 AI 新闻精选，10 条</p>
+    </div>
+  </div>
+
   
   <div class="news-card" onclick="window.open('https://finance.eastmoney.com/a/202603183676149884.html','_blank')">
     <a class="card-link" href="https://finance.eastmoney.com/a/202603183676149884.html" target="_blank" rel="noopener"></a>
     <div class="card-top-row">
       
-      <span class="news-rank top2">2</span>
+      <span class="news-rank top1">1</span>
       
       <span class="tag tag-blue">百度资讯</span>
     </div>
-    <div class="news-title">出海营销进入分钟级竞争，AI全链路自动化成企业出海新门槛</div>
+    <div class="news-title">出海营销进入分钟级竞争，AI全链路优化成企业出海新门槛</div>
     
-    <div class="news-desc">钛动科技Navos将出海营销全链路压缩至分钟级，意味着从市场洞察到广告投放的决策周期被彻底颠覆。这不仅是效率提升，更标志着AI应用正从单点工具演变为系统性竞争壁垒，反应慢的企业将面临被淘汰风险。</div>
+    <div class="news-desc">钛动科技Navos将出海营销全链路优化至分钟级，意味着数据洞察、创意生成到投放决策的响应速度大幅提升。这不仅是效率革命，更将出海竞争推向实时化，企业若无法跟上AI驱动的敏捷营销节奏，可能面临市场份额流失的风险。</div>
     
     <div class="card-bottom-row">
       <span class="source-badge"><span class="source-dot"></span>百度资讯</span>
@@ -168,13 +245,13 @@
     <a class="card-link" href="https://www.ithome.com/0/930/701.htm" target="_blank" rel="noopener"></a>
     <div class="card-top-row">
       
-      <span class="news-rank top3">3</span>
+      <span class="news-rank top2">2</span>
       
       <span class="tag tag-blue">IT之家</span>
     </div>
-    <div class="news-title">Token从技术单位跃升为薪酬货币，AI生产力正重塑工程师价值体系</div>
+    <div class="news-title">Token薪酬化：AI生产力货币化，工程师薪资结构面临重构</div>
     
-    <div class="news-desc">黄仁勋提议将token纳入工程师薪酬，奥尔特曼视其为未来全民收入形式，标志着AI基础计量单位正演变为价值交换媒介。这不仅将重构技术人才激励模式，更预示着一个以计算量为核心的新型经济体系正在形成。</div>
+    <div class="news-desc">黄仁勋与奥尔特曼等科技领袖将token从技术单位提升为价值载体，建议纳入工程师薪酬。这标志着AI生产力正被直接量化与货币化，可能重塑技术人才评估体系，并推动‘按token付费’成为企业成本核算新标准。</div>
     
     <div class="card-bottom-row">
       <span class="source-badge"><span class="source-dot"></span>IT之家</span>
@@ -182,35 +259,17 @@
     </div>
   </div>
   
-  <div class="news-card" onclick="window.open('https://www.tmtpost.com/7920854.html','_blank')">
-    <a class="card-link" href="https://www.tmtpost.com/7920854.html" target="_blank" rel="noopener"></a>
-    <div class="card-top-row">
-      
-      <span class="news-rank normal">4</span>
-      
-      <span class="tag tag-blue">钛媒体</span>
-    </div>
-    <div class="news-title">巨头抢跑Skill市场：生态焦虑下的镜像策略暴露技术短板</div>
-    
-    <div class="news-desc">腾讯选择镜像而非自建Skill生态，与字节、阿里形成竞争态势，反映出国内大厂在AI应用层生态布局上的集体焦虑和底层技术储备的不足。</div>
-    
-    <div class="card-bottom-row">
-      <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
-      <a class="read-more" href="https://www.tmtpost.com/7920854.html" target="_blank" rel="noopener">阅读原文 →</a>
-    </div>
-  </div>
-  
   <div class="news-card" onclick="window.open('http://www.huxiu.com/article/4843465.html?f=wangzhan','_blank')">
     <a class="card-link" href="http://www.huxiu.com/article/4843465.html?f=wangzhan" target="_blank" rel="noopener"></a>
     <div class="card-top-row">
       
-      <span class="news-rank normal">5</span>
+      <span class="news-rank top3">3</span>
       
       <span class="tag tag-blue">虎嗅</span>
     </div>
-    <div class="news-title">小牛电动AI化转型：两轮车装上汽车大脑，但科技叙事难解市场困局</div>
+    <div class="news-title">小牛电动AI战略转型：从设计驱动到参数内卷，两轮车智能化面临价值拷问</div>
     
-    <div class="news-desc">小牛电动发布搭载高通数字底盘、激光雷达的旗舰车型，试图用汽车级智能化重塑品牌。然而，从设计驱动转向参数内卷，暴露出其在激烈市场竞争中寻找新增长点的焦虑，科技叙事能否转化为实际销量仍是未知数。</div>
+    <div class="news-desc">小牛电动发布搭载高通芯片、激光雷达等汽车级硬件的旗舰车型，试图以AI重构人车关系。但行业观察指出，当品牌从设计调性转向参数竞赛时，需警惕科技叙事能否真正转化为用户价值与市场竞争力。</div>
     
     <div class="card-bottom-row">
       <span class="source-badge"><span class="source-dot"></span>虎嗅</span>
@@ -222,13 +281,13 @@
     <a class="card-link" href="http://www.huxiu.com/article/4843210.html?f=wangzhan" target="_blank" rel="noopener"></a>
     <div class="card-top-row">
       
-      <span class="news-rank normal">6</span>
+      <span class="news-rank normal">4</span>
       
       <span class="tag tag-blue">虎嗅</span>
     </div>
-    <div class="news-title">Token经济崛起：大厂争夺AI时代“数字石油”定价权</div>
+    <div class="news-title">Token经济崛起：AI时代的“数字工资”如何重塑商业逻辑</div>
     
-    <div class="news-desc">Token作为AI计算的核心度量单位，正从技术参数演变为关键商业资源。大厂布局实为争夺AI服务定价权与生态控制权，这或将重塑整个产业链的价值分配格局。</div>
+    <div class="news-desc">Token作为AI处理的最小语义单位，正成为大厂争夺的新战场。生成100汉字需130-150个Token，这种量化机制将改变内容生产、算力分配和商业模式，企业需重新评估AI成本与价值交换体系。</div>
     
     <div class="card-bottom-row">
       <span class="source-badge"><span class="source-dot"></span>虎嗅</span>
@@ -240,13 +299,13 @@
     <a class="card-link" href="https://www.ithome.com/0/930/724.htm" target="_blank" rel="noopener"></a>
     <div class="card-top-row">
       
-      <span class="news-rank normal">7</span>
+      <span class="news-rank normal">5</span>
       
       <span class="tag tag-blue">IT之家</span>
     </div>
-    <div class="news-title">地平线J7P芯片剑指2027年，国产智驾算力首次明确超越英伟达Thor</div>
+    <div class="news-title">地平线J7P芯片2027年量产，国产智驾算力首次明确超越英伟达Thor</div>
     
-    <div class="news-desc">地平线下一代征程7系列芯片最高性能版本J7P目标算力大幅超越英伟达Thor-X，并计划于2027年量产。这不仅标志着国产智驾芯片在性能对标上迈出关键一步，其2024年即将量产的舱驾一体芯片“星空”也预示着车企降本与体验升级的新路径。</div>
+    <div class="news-desc">地平线下一代智驾芯片J7P目标算力大幅超越英伟达Thor-X，并计划于2027年量产。这标志着国产芯片首次在公开路线图上设定明确的算力超越目标，或将重塑高阶智驾市场的竞争格局，降低车企对海外供应链的依赖。</div>
     
     <div class="card-bottom-row">
       <span class="source-badge"><span class="source-dot"></span>IT之家</span>
@@ -254,17 +313,35 @@
     </div>
   </div>
   
+  <div class="news-card" onclick="window.open('https://www.tmtpost.com/7921374.html','_blank')">
+    <a class="card-link" href="https://www.tmtpost.com/7921374.html" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">6</span>
+      
+      <span class="tag tag-blue">钛媒体</span>
+    </div>
+    <div class="news-title">OpenAI自降API成本90%，大模型应用门槛或将全面降低</div>
+    
+    <div class="news-desc">OpenAI将GPT-4o API价格大幅下调至原价的十分之一，处理百万token仅需1.25美元。此举将显著降低企业AI应用开发与运营成本，可能引发行业价格战，加速AI技术在各行各业的规模化落地。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
+      <a class="read-more" href="https://www.tmtpost.com/7921374.html" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
   <div class="news-card" onclick="window.open('https://www.ithome.com/0/930/651.htm','_blank')">
     <a class="card-link" href="https://www.ithome.com/0/930/651.htm" target="_blank" rel="noopener"></a>
     <div class="card-top-row">
       
-      <span class="news-rank normal">8</span>
+      <span class="news-rank normal">7</span>
       
       <span class="tag tag-blue">IT之家</span>
     </div>
-    <div class="news-title">小米万亿MoE模型登顶OpenRouter，AI开发者用API投票认可</div>
+    <div class="news-title">小米万亿MoE模型登顶OpenRouter，AI Agent时代基座模型竞争加剧</div>
     
-    <div class="news-desc">小米匿名发布的MiMo-V2-Pro在OpenRouter平台迅速登顶日榜和周榜，该平台是全球最大的大模型API聚合平台，调用量直接反映开发者对模型能力、速度与成本综合实力的认可。这表明小米的万亿参数MoE模型在面向Agent时代的基座模型竞争中，已获得初步市场验证。</div>
+    <div class="news-desc">小米MiMo-V2-Pro在匿名发布后迅速成为全球最大API聚合平台周榜第一，其万亿参数MoE架构和混合注意力设计，标志着国产大模型在面向AI Agent的基座模型领域已具备全球竞争力。</div>
     
     <div class="card-bottom-row">
       <span class="source-badge"><span class="source-dot"></span>IT之家</span>
@@ -272,21 +349,21 @@
     </div>
   </div>
   
-  <div class="news-card" onclick="window.open('https://www.tmtpost.com/7921190.html','_blank')">
-    <a class="card-link" href="https://www.tmtpost.com/7921190.html" target="_blank" rel="noopener"></a>
+  <div class="news-card" onclick="window.open('https://www.tmtpost.com/7921186.html','_blank')">
+    <a class="card-link" href="https://www.tmtpost.com/7921186.html" target="_blank" rel="noopener"></a>
     <div class="card-top-row">
       
-      <span class="news-rank normal">9</span>
+      <span class="news-rank normal">8</span>
       
       <span class="tag tag-blue">钛媒体</span>
     </div>
-    <div class="news-title">免费音乐冲击付费模式，腾讯音乐市值蒸发背后是行业定价权转移</div>
+    <div class="news-title">腾讯音乐估值修复背后：AI音乐创作正重塑行业价值逻辑</div>
     
-    <div class="news-desc">汽水音乐以免费模式挑战腾讯音乐付费墙，反映流媒体行业正从内容付费转向广告+免费模式竞争，可能重塑用户付费习惯和平台盈利结构。</div>
+    <div class="news-desc">腾讯音乐被重新估价，反映市场正重新审视AI技术对音乐产业价值链的重构能力，从内容生产到分发变现的全面智能化升级成为估值新锚点。</div>
     
     <div class="card-bottom-row">
       <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
-      <a class="read-more" href="https://www.tmtpost.com/7921190.html" target="_blank" rel="noopener">阅读原文 →</a>
+      <a class="read-more" href="https://www.tmtpost.com/7921186.html" target="_blank" rel="noopener">阅读原文 →</a>
     </div>
   </div>
   
@@ -294,13 +371,13 @@
     <a class="card-link" href="https://www.tmtpost.com/7920957.html" target="_blank" rel="noopener"></a>
     <div class="card-top-row">
       
-      <span class="news-rank normal">10</span>
+      <span class="news-rank normal">9</span>
       
       <span class="tag tag-blue">钛媒体</span>
     </div>
-    <div class="news-title">腾讯投资逻辑转向：从流量收割到技术赋能，AI时代战略重心迁移</div>
+    <div class="news-title">腾讯投资逻辑转向：从流量扩张到技术深耕，互联网巨头战略分水岭显现</div>
     
-    <div class="news-desc">腾讯调整投资主线，从依赖流量和规模优势的‘旧世界’模式，转向以AI等核心技术为驱动的产业赋能。这标志着其增长逻辑从平台扩张转向深度创新，将深刻影响其估值体系与生态构建方式。</div>
+    <div class="news-desc">腾讯调整投资主线，从追求流量和生态扩张转向聚焦核心技术突破，这标志着中国互联网行业增长模式从规模驱动转向价值驱动，将深刻影响科技投资风向和产业竞争格局。</div>
     
     <div class="card-bottom-row">
       <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
@@ -308,90 +385,78 @@
     </div>
   </div>
   
+  <div class="news-card" onclick="window.open('https://baijiahao.baidu.com/s?id=1860000533794007204&amp;wfr=spider&amp;for=pc','_blank')">
+    <a class="card-link" href="https://baijiahao.baidu.com/s?id=1860000533794007204&amp;wfr=spider&amp;for=pc" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">10</span>
+      
+      <span class="tag tag-blue">百度资讯</span>
+    </div>
+    <div class="news-title">云巨头AI算力涨价背后：成本压力倒逼行业重构三大技术基石</div>
+    
+    <div class="news-desc">百度智能云与阿里云接连上调AI算力服务价格，反映出大模型训练带来的巨大成本压力。机构分析指出，这或将推动行业在芯片架构、液冷技术和算力调度三大方向进行根本性重构，以寻求效率与成本的平衡。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>百度资讯</span>
+      <a class="read-more" href="https://baijiahao.baidu.com/s?id=1860000533794007204&amp;wfr=spider&amp;for=pc" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
 
   
 
-  
-  <div class="section-title">📄 AI 研究与论文</div>
-  
-  <div class="paper-card">
-    <div class="paper-title"><a href="https://36kr.com/newsflashes/3729635732143745?f=rss" target="_blank" rel="noopener">生成式AI应用去年为苹果贡献近9亿美元订阅收入，ChatGPT占大头</a></div>
-    
-    <div class="paper-desc">研究发现，生成式AI应用去年通过苹果App Store创造了大量收入，其中ChatGPT贡献了约四分之三，显示AI应用已成为苹果重要的收入来源。</div>
-    
-  </div>
-  
-  <div class="paper-card">
-    <div class="paper-title"><a href="https://www.qbitai.com/2026/03/389311.html" target="_blank" rel="noopener">飞书推出企业级AI助手，覆盖个人办公与业务系统</a></div>
-    
-    <div class="paper-desc">飞书发布多款企业级AI助手，能帮员工处理日常任务，还能连接业务系统，同时升级了官方插件，让AI更懂企业需求。</div>
-    
-  </div>
-  
-  <div class="paper-card">
-    <div class="paper-title"><a href="https://www.tmtpost.com/7921071.html" target="_blank" rel="noopener">AI技术发展导致部分AI岗位被自动化取代</a></div>
-    
-    <div class="paper-desc">这篇研究指出，随着AI技术不断进步，一些原本由人类执行的AI相关工作正被AI系统自动化，这可能导致相关岗位减少，提醒企业需关注技术变革对人力资源的影响。</div>
-    
-  </div>
-  
-  <div class="paper-card">
-    <div class="paper-title"><a href="https://www.qbitai.com/2026/03/389305.html" target="_blank" rel="noopener">蚂蚁数科推出“龙虾卫士”，为AI智能体提供三大安全保障</a></div>
-    
-    <div class="paper-desc">这项研究开发了一个名为“龙虾卫士”的安全系统，专门保护AI智能体（如OpenClaw）的运作。它通过让AI决策过程可解释、可控制和可追溯，帮助企业安全地部署AI应用，降低风险。</div>
-    
-  </div>
-  
-  <div class="paper-card">
-    <div class="paper-title"><a href="https://www.qbitai.com/2026/03/389301.html" target="_blank" rel="noopener">钉钉推出AI硬件与创新工场，助力开发者打造智能产品</a></div>
-    
-    <div class="paper-desc">钉钉发布多款AI硬件设备，并启动AI创新工场计划，旨在为开发者提供工具和支持，帮助他们快速开发出适应AI时代的创新产品，推动企业智能化转型。</div>
-    
-  </div>
-  
-  <div class="paper-card">
-    <div class="paper-title"><a href="https://www.tmtpost.com/7920955.html" target="_blank" rel="noopener">AI推理计算需求激增，产业正转向追求更高效率</a></div>
-    
-    <div class="paper-desc">这篇研究指出，AI推理的计算量正飞速增长，整个行业因此开始重新调整，专注于开发更高效的推理技术，以应对成本与能耗挑战。</div>
-    
-  </div>
-  
-  <div class="paper-card">
-    <div class="paper-title"><a href="https://www.qbitai.com/2026/03/389188.html" target="_blank" rel="noopener">AI球球呼吁开源脑机接口，推动科技文明共享发展</a></div>
-    
-    <div class="paper-desc">AI球球发起倡议，号召全球开放脑机接口技术，让前沿科技不再被少数公司垄断，促进全人类共同进步。</div>
-    
-  </div>
-  
-  <div class="paper-card">
-    <div class="paper-title"><a href="https://www.tmtpost.com/7920897.html" target="_blank" rel="noopener">中国AI应用繁荣但底层技术仍存差距，需加强基础创新</a></div>
-    
-    <div class="paper-desc">这篇文章指出，虽然中国AI应用场景丰富、落地快，但支撑这些应用的底层技术仍有不足，强调需要加强基础创新以提升竞争力。</div>
-    
-  </div>
-  
-  <div class="paper-card">
-    <div class="paper-title"><a href="https://www.tmtpost.com/7920719.html" target="_blank" rel="noopener">中国正打造全球AI工厂，以技术、市场和话语权赢得国运优势</a></div>
-    
-    <div class="paper-desc">这篇文章探讨了中国如何通过构建全球AI工厂，服务全球用户，从而在技术、市场和国际话语权上占据优势，成为国家发展的关键战略。</div>
-    
-  </div>
-  
-  <div class="paper-card">
-    <div class="paper-title"><a href="https://36kr.com/p/3729251466542728?f=rss" target="_blank" rel="noopener">机器人端侧通信大脑获千万融资，让机器人在复杂网络下稳定工作</a></div>
-    
-    <div class="paper-desc">一家初创公司开发了机器人端侧通信智能系统，能感知网络环境并动态调整策略，解决了无线网络不稳定导致的机器人协同问题，已获千万级投资用于产品迭代。</div>
-    
-  </div>
-  
   
 
   <a href="/index.html" class="archive-btn">📅 查看往期日报</a>
 </div>
 
 <div class="footer">
-  <p>AI 日报 · 自动生成于 2026-03-19 18:00 · 数据来源：36氪 / 虎嗅 / 钛媒体 / 猎云网 / 机器之心 / IT之家</p>
+  <p>AI 日报 · 自动生成于 2026-03-19 18:30 · 数据来源：36氪 / 虎嗅 / 钛媒体 / 猎云网 / 机器之心 / IT之家</p>
 </div>
+
+
+<script>
+(function(){
+  var audio = document.getElementById('dailyAudio');
+  var playBtn = document.getElementById('playBtn');
+  var progressBar = document.getElementById('progressBar');
+  var currentTimeEl = document.getElementById('currentTime');
+  var totalTimeEl = document.getElementById('totalTime');
+  var speedBtn = document.getElementById('speedBtn');
+  var speeds = [1, 1.25, 1.5, 2];
+  var speedIdx = 0;
+
+  function fmt(s) {
+    var m = Math.floor(s / 60);
+    var sec = Math.floor(s % 60);
+    return (m < 10 ? '0' : '') + m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  audio.addEventListener('loadedmetadata', function() { totalTimeEl.textContent = fmt(audio.duration); });
+  audio.addEventListener('timeupdate', function() {
+    if (audio.duration) {
+      progressBar.value = (audio.currentTime / audio.duration) * 100;
+      currentTimeEl.textContent = fmt(audio.currentTime);
+    }
+  });
+  audio.addEventListener('ended', function() { playBtn.textContent = '▶'; });
+
+  window.togglePlay = function() {
+    if (audio.paused) { audio.play(); playBtn.textContent = '⏸'; }
+    else { audio.pause(); playBtn.textContent = '▶'; }
+  };
+  window.seekAudio = function(val) {
+    if (audio.duration) audio.currentTime = (val / 100) * audio.duration;
+  };
+  window.cycleSpeed = function() {
+    speedIdx = (speedIdx + 1) % speeds.length;
+    audio.playbackRate = speeds[speedIdx];
+    speedBtn.textContent = speeds[speedIdx] + 'x';
+  };
+})();
+</script>
+
 
 </body>
 </html>
