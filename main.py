@@ -13,6 +13,7 @@ from src.ranker.hot_ranker import rank_articles
 from src.summarizer.deepseek import summarize_articles
 from src.summarizer.paper_summarizer import summarize_papers
 from src.generator.page_builder import generate_daily_page
+from src.audio.tts_generator import generate_daily_audio
 
 logging.basicConfig(
     level=logging.INFO,
@@ -40,10 +41,18 @@ def main():
     except Exception as e:
         logger.error(f"论文采集流程异常: {e}")
 
+    audio_url = None
+    try:
+        date_str = now.strftime("%Y-%m-%d")
+        audio_url = generate_daily_audio(news_list, paper_list, date_str)
+    except Exception as e:
+        logger.error(f"语音生成异常: {e}")
+
     rel_path = generate_daily_page(
         news_list=news_list,
         paper_list=paper_list,
         date=now,
+        audio_url=audio_url,
     )
 
     logger.info(f"=== AI 日报生成完成 === 页面路径: site/{rel_path}")

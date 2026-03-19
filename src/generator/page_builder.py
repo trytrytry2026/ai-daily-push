@@ -22,6 +22,7 @@ def generate_daily_page(
     news_list: list[ProcessedArticle],
     paper_list: list[ProcessedArticle],
     date: datetime,
+    audio_url: str | None = None,
 ) -> str:
     """生成当天日报 HTML 页面，返回相对 URL 路径"""
     env = Environment(loader=FileSystemLoader(str(TEMPLATES_DIR)))
@@ -37,6 +38,7 @@ def generate_daily_page(
         date_display=date_display,
         news_list=news_list,
         paper_list=paper_list,
+        audio_url=f"/{audio_url}" if audio_url else None,
         generated_at=datetime.now(BJT).strftime("%Y-%m-%d %H:%M"),
     )
 

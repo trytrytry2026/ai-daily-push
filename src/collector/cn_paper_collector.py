@@ -1,7 +1,7 @@
-"""中文 AI 论文/研究采集器 — 多源采集国内科技媒体的论文解读与研究报道"""
+"""中文 AI 论文采集器 — 严格只采集论文解读/论文推荐类文章"""
 import logging
 import re
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
 from time import mktime
 
 import feedparser
@@ -16,36 +16,33 @@ logger = logging.getLogger(__name__)
 PAPER_RSS_FEEDS = {
     "机器之心": "https://www.jiqizhixin.com/rss",
     "量子位": "https://www.qbitai.com/feed",
-    "虎嗅": "https://www.huxiu.com/rss/0.xml",
-    "钛媒体": "https://www.tmtpost.com/feed",
-    "36氪": "https://36kr.com/feed",
 }
 
 PAPER_SEARCH_QUERIES = [
-    "AI论文 最新",
-    "大模型 研究突破",
-    "人工智能 论文解读",
-    "AI 最新研究成果",
-    "大模型 技术突破",
-    "深度学习 研究进展",
-    "AI Agent 研究",
-    "多模态 论文",
+    "site:jiqizhixin.com 论文解读",
+    "site:qbitai.com 论文",
+    "AI论文解读 最新",
+    "大模型论文 arXiv 解读",
+    "深度学习 论文速递",
+    "人工智能 论文推荐",
+    "AI 论文精读",
+    "大模型 论文导读",
+]
+
+PAPER_TITLE_MUST = [
+    "论文", "paper", "arxiv", "研究发现", "研究表明", "研究证实",
+    "论文解读", "论文速递", "论文推荐", "论文精读", "论文导读",
+    "学术", "研究团队", "实验证明", "实验表明",
+    "开源模型", "开源框架", "技术报告",
 ]
 
 AI_MUST_KEYWORDS = [
     "ai", "人工智能", "大模型", "深度学习", "机器学习",
     "transformer", "gpt", "llm", "bert", "diffusion",
-    "多模态", "智能体", "agent", "具身智能", "自动驾驶",
-    "算力", "芯片", "gpu", "神经网络", "自然语言处理",
+    "多模态", "智能体", "agent", "具身智能",
+    "算力", "神经网络", "自然语言处理",
     "计算机视觉", "语音识别", "aigc", "生成式",
-    "rag", "向量", "embedding", "token",
-    "机器人", "robotics", "强化学习",
-]
-
-PAPER_BONUS_KEYWORDS = [
-    "论文", "研究", "算法", "架构", "框架", "开源",
-    "突破", "提出", "数据集", "benchmark", "评测", "sota",
-    "技术报告", "技术解读", "论文速递", "论文推荐",
+    "rag", "强化学习", "机器人",
 ]
 
 PAPER_NEGATIVE_KEYWORDS = [
@@ -53,17 +50,23 @@ PAPER_NEGATIVE_KEYWORDS = [
     "心脏", "血液", "细胞", "基因", "蛋白", "手术",
     "牙周", "抑郁", "焦虑", "阿尔茨海默",
     "股票", "分红", "股本", "涨停", "跌停", "基金",
-    "利润", "营收", "财报", "净利", "毛利",
-    "足球", "篮球", "体育", "奥运", "世界杯",
+    "利润", "营收", "财报", "净利", "毛利", "市值蒸发",
+    "足球", "篮球", "体育", "奥运",
     "房地产", "楼市", "房价",
     "娱乐", "综艺", "选秀", "明星",
+    "融资", "ipo", "上市", "估值",
+]
+
+NEWS_TITLE_REJECT = [
+    "发布", "推出", "上线", "官宣", "售价", "优惠",
+    "获得融资", "完成融资", "获投", "股价",
 ]
 
 
 class CnPaperCollector(BaseCollector):
-    """多源中文 AI 论文/研究采集器"""
+    """严格采集 AI 论文解读类中文文章"""
 
-    name = "中文论文"
+    name = "论文解读"
 
     def fetch(self, since: datetime) -> list[RawArticle]:
         logger.info(f"[{self.name}] 开始采集，时间范围: {since.date()} 至今")
@@ -91,7 +94,6 @@ class CnPaperCollector(BaseCollector):
         return unique
 
     def _fetch_from_rss(self, since: datetime) -> list[RawArticle]:
-        """从多个 RSS 源采集论文/研究相关文章"""
         results = []
         for name, feed_url in PAPER_RSS_FEEDS.items():
             try:
@@ -122,8 +124,7 @@ class CnPaperCollector(BaseCollector):
                     if not title or not link:
                         continue
 
-                    text = f"{title} {summary}".lower()
-                    if not self._is_ai_paper(text):
+                    if not self._is_paper_article(title, summary):
                         continue
 
                     results.append(RawArticle(
@@ -135,13 +136,12 @@ class CnPaperCollector(BaseCollector):
                     ))
                     count += 1
 
-                logger.info(f"[{self.name}] RSS {name}: {count} 篇研究相关")
+                logger.info(f"[{self.name}] RSS {name}: {count} 篇论文相关")
             except Exception as e:
                 logger.warning(f"[{self.name}] RSS {name} 采集失败: {e}")
         return results
 
     def _fetch_from_search(self, since: datetime) -> list[RawArticle]:
-        """从百度搜索采集论文相关文章"""
         all_results = []
         now = datetime.now(timezone.utc)
         begin_ts = int(since.timestamp())
@@ -154,7 +154,7 @@ class CnPaperCollector(BaseCollector):
             except Exception as e:
                 logger.warning(f"[{self.name}] 搜索 '{query}' 异常: {e}")
 
-        logger.info(f"[{self.name}] 百度搜索总计 {len(all_results)} 篇")
+        logger.info(f"[{self.name}] 搜索总计 {len(all_results)} 篇")
         return all_results
 
     def _search_one(self, query: str, begin_ts: int, end_ts: int, now: datetime) -> list[RawArticle]:
@@ -178,11 +178,11 @@ class CnPaperCollector(BaseCollector):
         html = resp.text
 
         papers = []
-        all_matches = []
         patterns = [
             r'<h3[^>]*>\s*<a[^>]*href="([^"]+)"[^>]*>(.*?)</a>',
             r'href="(https?://[^"]+)"[^>]*>([\u4e00-\u9fff][\s\S]*?)</a>',
         ]
+        all_matches = []
         for pat in patterns:
             found = re.findall(pat, html, re.DOTALL)
             if found:
@@ -197,27 +197,40 @@ class CnPaperCollector(BaseCollector):
             if "百度" in title and "搜索" in title:
                 continue
 
-            if not self._is_ai_paper(title.lower()):
+            if not self._is_paper_article(title, ""):
                 continue
 
             pub_time = self._extract_date_from_url(link)
-
             papers.append(RawArticle(
                 title=title,
                 summary="",
                 url=link,
-                source="资讯搜索",
+                source="论文搜索",
                 publish_time=pub_time or now,
             ))
 
         return papers
 
-    @staticmethod
-    def _is_ai_paper(text: str) -> bool:
-        """必须命中至少一个 AI 强相关词，且不命中任何负面词"""
+    @classmethod
+    def _is_paper_article(cls, title: str, summary: str) -> bool:
+        """严格判定：必须是论文/研究解读类文章"""
+        text = f"{title} {summary}".lower()
+
         if any(neg in text for neg in PAPER_NEGATIVE_KEYWORDS):
             return False
-        return any(kw in text for kw in AI_MUST_KEYWORDS)
+
+        title_lower = title.lower()
+        is_news_only = any(kw in title_lower for kw in NEWS_TITLE_REJECT)
+        has_paper_signal = any(kw in text for kw in PAPER_TITLE_MUST)
+
+        if is_news_only and not has_paper_signal:
+            return False
+
+        has_ai = any(kw in text for kw in AI_MUST_KEYWORDS)
+        if not has_ai:
+            return False
+
+        return has_paper_signal
 
     @staticmethod
     def _parse_rss_time(entry) -> datetime | None:
