@@ -1,4 +1,4 @@
-"""中文 AI 论文采集器 — 严格只采集论文解读/论文推荐类文章"""
+"""中文 AI 论文/研究解读采集器 — 从专业科技媒体采集论文解读与前沿研究"""
 import logging
 import re
 from datetime import datetime, timezone
@@ -19,30 +19,38 @@ PAPER_RSS_FEEDS = {
 }
 
 PAPER_SEARCH_QUERIES = [
-    "site:jiqizhixin.com 论文解读",
+    "site:jiqizhixin.com 论文",
     "site:qbitai.com 论文",
-    "AI论文解读 最新",
-    "大模型论文 arXiv 解读",
+    "site:jiqizhixin.com 研究",
+    "site:qbitai.com 研究",
+    "AI论文解读 最新 2026",
+    "大模型 论文 arXiv",
+    "人工智能 研究突破 论文",
     "深度学习 论文速递",
-    "人工智能 论文推荐",
-    "AI 论文精读",
-    "大模型 论文导读",
 ]
 
-PAPER_TITLE_MUST = [
-    "论文", "paper", "arxiv", "研究发现", "研究表明", "研究证实",
-    "论文解读", "论文速递", "论文推荐", "论文精读", "论文导读",
-    "学术", "研究团队", "实验证明", "实验表明",
-    "开源模型", "开源框架", "技术报告",
+PAPER_STRONG_SIGNALS = [
+    "论文", "paper", "arxiv", "论文解读", "论文速递", "论文推荐",
+    "论文精读", "论文导读", "技术报告",
+]
+
+PAPER_RESEARCH_SIGNALS = [
+    "研究", "提出", "模型", "方法", "算法", "架构", "框架",
+    "实验", "数据集", "benchmark", "评测", "sota",
+    "开源", "突破", "发现", "证明", "表明",
+    "训练", "推理", "微调", "预训练", "fine-tune",
+    "attention", "transformer", "diffusion", "moe",
+    "参数", "性能", "准确率", "效果",
 ]
 
 AI_MUST_KEYWORDS = [
     "ai", "人工智能", "大模型", "深度学习", "机器学习",
     "transformer", "gpt", "llm", "bert", "diffusion",
     "多模态", "智能体", "agent", "具身智能",
-    "算力", "神经网络", "自然语言处理",
-    "计算机视觉", "语音识别", "aigc", "生成式",
-    "rag", "强化学习", "机器人",
+    "算力", "神经网络", "自然语言处理", "nlp",
+    "计算机视觉", "cv", "语音识别", "aigc", "生成式",
+    "rag", "强化学习", "机器人", "moe",
+    "视觉语言", "世界模型", "reasoning", "推理",
 ]
 
 PAPER_NEGATIVE_KEYWORDS = [
@@ -54,17 +62,16 @@ PAPER_NEGATIVE_KEYWORDS = [
     "足球", "篮球", "体育", "奥运",
     "房地产", "楼市", "房价",
     "娱乐", "综艺", "选秀", "明星",
-    "融资", "ipo", "上市", "估值",
 ]
 
-NEWS_TITLE_REJECT = [
-    "发布", "推出", "上线", "官宣", "售价", "优惠",
-    "获得融资", "完成融资", "获投", "股价",
+NEWS_ONLY_REJECT = [
+    "售价", "优惠", "获得融资", "完成融资", "获投",
+    "股价", "涨幅", "跌幅", "市值",
 ]
 
 
 class CnPaperCollector(BaseCollector):
-    """严格采集 AI 论文解读类中文文章"""
+    """采集 AI 论文解读与前沿研究类中文文章"""
 
     name = "论文解读"
 
@@ -89,7 +96,7 @@ class CnPaperCollector(BaseCollector):
             seen_titles.add(title_key)
             unique.append(p)
 
-        unique.sort(key=lambda p: p.publish_time, reverse=True)
+        unique.sort(key=lambda p: self._paper_score(p), reverse=True)
         logger.info(f"[{self.name}] 去重后共 {len(unique)} 篇")
         return unique
 
@@ -124,7 +131,7 @@ class CnPaperCollector(BaseCollector):
                     if not title or not link:
                         continue
 
-                    if not self._is_paper_article(title, summary):
+                    if not self._is_rss_paper(title, summary):
                         continue
 
                     results.append(RawArticle(
@@ -136,7 +143,7 @@ class CnPaperCollector(BaseCollector):
                     ))
                     count += 1
 
-                logger.info(f"[{self.name}] RSS {name}: {count} 篇论文相关")
+                logger.info(f"[{self.name}] RSS {name}: {count} 篇研究相关")
             except Exception as e:
                 logger.warning(f"[{self.name}] RSS {name} 采集失败: {e}")
         return results
@@ -197,7 +204,7 @@ class CnPaperCollector(BaseCollector):
             if "百度" in title and "搜索" in title:
                 continue
 
-            if not self._is_paper_article(title, ""):
+            if not self._is_search_paper(title):
                 continue
 
             pub_time = self._extract_date_from_url(link)
@@ -212,25 +219,60 @@ class CnPaperCollector(BaseCollector):
         return papers
 
     @classmethod
-    def _is_paper_article(cls, title: str, summary: str) -> bool:
-        """严格判定：必须是论文/研究解读类文章"""
+    def _is_rss_paper(cls, title: str, summary: str) -> bool:
+        """RSS 来源过滤（机器之心/量子位本身就是AI媒体，适度放宽）"""
         text = f"{title} {summary}".lower()
 
         if any(neg in text for neg in PAPER_NEGATIVE_KEYWORDS):
             return False
 
         title_lower = title.lower()
-        is_news_only = any(kw in title_lower for kw in NEWS_TITLE_REJECT)
-        has_paper_signal = any(kw in text for kw in PAPER_TITLE_MUST)
-
-        if is_news_only and not has_paper_signal:
+        if any(kw in title_lower for kw in NEWS_ONLY_REJECT):
             return False
 
         has_ai = any(kw in text for kw in AI_MUST_KEYWORDS)
         if not has_ai:
             return False
 
-        return has_paper_signal
+        has_strong = any(kw in text for kw in PAPER_STRONG_SIGNALS)
+        if has_strong:
+            return True
+
+        research_hits = sum(1 for kw in PAPER_RESEARCH_SIGNALS if kw in text)
+        return research_hits >= 2
+
+    @classmethod
+    def _is_search_paper(cls, title: str) -> bool:
+        """搜索结果过滤（较严格，标题须有论文/研究信号）"""
+        text = title.lower()
+
+        if any(neg in text for neg in PAPER_NEGATIVE_KEYWORDS):
+            return False
+        if any(kw in text for kw in NEWS_ONLY_REJECT):
+            return False
+
+        has_ai = any(kw in text for kw in AI_MUST_KEYWORDS)
+        if not has_ai:
+            return False
+
+        has_strong = any(kw in text for kw in PAPER_STRONG_SIGNALS)
+        has_research = any(kw in text for kw in PAPER_RESEARCH_SIGNALS)
+        return has_strong or has_research
+
+    @staticmethod
+    def _paper_score(article: RawArticle) -> float:
+        """论文相关度排序打分"""
+        text = f"{article.title} {article.summary}".lower()
+        score = 0.0
+        for kw in PAPER_STRONG_SIGNALS:
+            if kw in text:
+                score += 3
+        for kw in PAPER_RESEARCH_SIGNALS:
+            if kw in text:
+                score += 1
+        if article.source in ("机器之心", "量子位"):
+            score += 2
+        return score
 
     @staticmethod
     def _parse_rss_time(entry) -> datetime | None:
