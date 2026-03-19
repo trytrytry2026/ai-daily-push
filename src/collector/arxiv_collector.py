@@ -33,7 +33,7 @@ class ArxivCollector(BaseCollector):
     name = "arXiv"
 
     def fetch(self, since: datetime) -> list[RawArticle]:
-        logger.info(f"[{self.name}] 开始采集论文")
+        logger.info(f"[{self.name}] 开始采集论文，时间范围: {since.isoformat()} 至今")
         all_papers = []
 
         for query in ARXIV_SEARCH_QUERIES:
@@ -43,12 +43,15 @@ class ArxivCollector(BaseCollector):
         seen_ids = set()
         unique = []
         for p in all_papers:
+            if p.publish_time < since:
+                continue
             paper_id = re.sub(r"v\d+$", "", p.url.split("/abs/")[-1])
             if paper_id not in seen_ids:
                 seen_ids.add(paper_id)
                 unique.append(p)
 
-        logger.info(f"[{self.name}] 采集到 {len(unique)} 篇去重后的论文")
+        unique.sort(key=lambda p: p.publish_time, reverse=True)
+        logger.info(f"[{self.name}] 采集到 {len(unique)} 篇近一周去重后的论文")
         return unique
 
     def _search(self, query: str, max_results: int = 10) -> list[RawArticle]:

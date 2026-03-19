@@ -33,8 +33,8 @@ RSS_FEEDS = {
     "IT之家": "https://www.ithome.com/rss/",
 }
 
-MAX_NEWS_COUNT = 15
-MIN_APP_DEPTH_COUNT = 5   # 至少 5 条 AI 应用/深度分析类新闻
+MAX_NEWS_COUNT = 10
+MIN_APP_DEPTH_COUNT = 3   # 至少 3 条 AI 应用/深度分析类新闻
 MAX_PAPER_COUNT = 10
 MAX_TOTAL_CHARS = 3000
 REQUEST_TIMEOUT = 15

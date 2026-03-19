@@ -25,7 +25,7 @@ logger = logging.getLogger("main")
 
 def main():
     now = datetime.now(timezone.utc)
-    since = now - timedelta(hours=36)
+    since = now - timedelta(hours=24)
     logger.info(f"=== AI 日报生成开始 === 采集时间范围: {since.isoformat()} ~ {now.isoformat()}")
 
     # ── 1. 采集新闻 ──
@@ -73,7 +73,7 @@ def _collect_and_process_news(since: datetime):
 
     if not filtered:
         logger.warning("过滤后无文章，放宽条件重试...")
-        filtered = all_articles[:15]
+        filtered = all_articles[:10]
 
     filtered = validate_urls(filtered)
     news_list = summarize_articles(filtered)

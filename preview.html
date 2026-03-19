@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 日报 | 2026年03月19日</title>
+<style>
+  :root {
+    --bg: #f0f2f5;
+    --card-bg: #ffffff;
+    --text: #1a1a2e;
+    --text-secondary: #5a6577;
+    --accent: #4f6ef7;
+    --accent-light: #eef1ff;
+    --border: #e5e8ed;
+    --red: #ef4444;
+    --red-bg: #fef2f2;
+    --orange: #f97316;
+    --orange-bg: #fff7ed;
+    --blue: #3b82f6;
+    --blue-bg: #eff6ff;
+    --green: #22c55e;
+    --green-bg: #f0fdf4;
+    --purple: #8b5cf6;
+    --purple-bg: #f5f3ff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .header {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2d1b69 50%, #1a1a2e 100%);
+    color: white;
+    padding: 2.5rem 1.5rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 50%, rgba(79,110,247,0.15) 0%, transparent 50%),
+                radial-gradient(circle at 70% 50%, rgba(139,92,246,0.1) 0%, transparent 50%);
+    animation: glow 8s ease-in-out infinite alternate;
+  }
+  @keyframes glow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(3deg); }
+  }
+  .header-content { position: relative; z-index: 1; }
+  .header-logo {
+    font-size: 2rem;
+    margin-bottom: 0.25rem;
+  }
+  .header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+  .header .date {
+    font-size: 1rem;
+    opacity: 0.85;
+    margin-top: 0.4rem;
+    font-weight: 300;
+  }
+  .header .stats {
+    display: inline-flex;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    opacity: 0.7;
+  }
+  .header .stats span {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 1rem 3rem;
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.75rem;
+    color: var(--text);
+    padding-left: 0.25rem;
+  }
+
+  /* ── 新闻卡片 ── */
+  .news-card {
+    background: var(--card-bg);
+    border-radius: 14px;
+    padding: 1.15rem 1.25rem;
+    margin-bottom: 0.65rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+    transition: box-shadow 0.25s, transform 0.25s;
+    border: 1px solid var(--border);
+    position: relative;
+    cursor: pointer;
+  }
+  .news-card:hover {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+    border-color: var(--accent);
+  }
+
+  .card-top-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .news-rank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .news-rank.top1 { background: linear-gradient(135deg, #ef4444, #f97316); color: #fff; }
+  .news-rank.top2 { background: linear-gradient(135deg, #f97316, #eab308); color: #fff; }
+  .news-rank.top3 { background: linear-gradient(135deg, #eab308, #84cc16); color: #fff; }
+  .news-rank.normal { background: var(--accent-light); color: var(--accent); }
+
+  .tag {
+    display: inline-block;
+    padding: 0.1rem 0.45rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    line-height: 1.6;
+  }
+  .tag-red { background: var(--red-bg); color: var(--red); }
+  .tag-orange { background: var(--orange-bg); color: var(--orange); }
+  .tag-blue { background: var(--blue-bg); color: var(--blue); }
+  .tag-purple { background: var(--purple-bg); color: var(--purple); }
+  .tag-green { background: var(--green-bg); color: var(--green); }
+
+  .news-title {
+    font-size: 1rem;
+    font-weight: 650;
+    line-height: 1.55;
+    color: var(--text);
+    margin-bottom: 0.35rem;
+  }
+  .news-card:hover .news-title { color: var(--accent); }
+
+  .news-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-bottom-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.6rem;
+  }
+
+  .source-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+  .source-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .source-dot.s36kr { background: #2563eb; }
+  .source-dot.sjiqizhi { background: #7c3aed; }
+  .source-dot.sithome { background: #d97706; }
+  .source-dot.ssina { background: #dc2626; }
+  .source-dot.ssohu { background: #059669; }
+
+  .read-more {
+    font-size: 0.78rem;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+  }
+  .read-more:hover { opacity: 0.7; }
+
+  .news-card a.card-link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  .read-more { position: relative; z-index: 2; }
+
+  /* ── 论文卡片 ── */
+  .paper-card {
+    background: var(--card-bg);
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 0.6rem;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--purple);
+    transition: box-shadow 0.25s;
+  }
+  .paper-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  }
+  .paper-title {
+    font-size: 0.92rem;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+  .paper-title a {
+    color: var(--text);
+    text-decoration: none;
+  }
+  .paper-title a:hover { color: var(--accent); }
+  .paper-desc {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+    line-height: 1.55;
+  }
+  .paper-meta {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    margin-top: 0.35rem;
+  }
+
+  /* ── 底部 ── */
+  .archive-btn {
+    display: block;
+    text-align: center;
+    padding: 0.85rem;
+    margin-top: 1.5rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+  }
+  .archive-btn:hover { background: var(--accent); color: #fff; }
+
+  .footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    font-size: 0.78rem;
+    color: #94a3b8;
+    border-top: 1px solid var(--border);
+    margin-top: 1rem;
+  }
+
+  .preview-notice {
+    margin: 1rem auto;
+    max-width: 700px;
+    padding: 0.65rem 1rem;
+    background: #fef3c7;
+    color: #92400e;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  @media (max-width: 480px) {
+    .header { padding: 1.8rem 1rem 1.5rem; }
+    .header h1 { font-size: 1.3rem; }
+    .container { padding: 0 0.75rem 2rem; }
+    .news-card { padding: 1rem; }
+    .news-title { font-size: 0.93rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-content">
+    <div class="header-logo">🤖</div>
+    <h1>AI 日报</h1>
+    <div class="date">2026年03月19日 · 星期四</div>
+    <div class="stats">
+      <span>📰 15 条资讯</span>
+      <span>📄 10 篇论文</span>
+      <span>🔗 全部链接已验证</span>
+    </div>
+  </div>
+</div>
+
+<div class="preview-notice">⚠️ 预览页面 — 以下为真实新闻链接，可直接点击验证。正式上线后每天自动更新</div>
+
+<div class="container">
+
+  <div class="section-title">📰 今日要闻</div>
+
+  <!-- 1 · 深度 -->
+  <div class="news-card" onclick="window.open('https://finance.sina.com.cn/jjxw/2026-03-11/doc-inhqrrth2392720.shtml','_blank')">
+    <a class="card-link" href="https://finance.sina.com.cn/jjxw/2026-03-11/doc-inhqrrth2392720.shtml" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      <span class="news-rank top1">1</span>
+      <span class="tag tag-red">AI应用</span>
+      <span class="tag tag-green">深度</span>
+    </div>
+    <div class="news-title">AI 医疗步入深水区：诊断时间从 20 分钟压到 3 分钟，但仅 23% 企业见到真金白银</div>
+    <div class="news-desc">AI 影像诊断已压缩主动脉夹层确诊时间至 3 分钟、减少医生 30%-50% 工作量，但基层承接能力不足、数据孤岛未打通、商业化仍是「无米之炊」</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot ssina"></span>新浪财经 · 深度报道</span>
+      <a class="read-more" href="https://finance.sina.com.cn/jjxw/2026-03-11/doc-inhqrrth2392720.shtml" target="_blank">阅读原文 →</a>
+    </div>
+  </div>
+
+  <!-- 2 · 深度 -->
+  <div class="news-card" onclick="window.open('https://finance.sina.com.cn/jjxw/2026-03-14/doc-inhqyaqs4200816.shtml','_blank')">
+    <a class="card-link" href="https://finance.sina.com.cn/jjxw/2026-03-14/doc-inhqyaqs4200816.shtml" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      <span class="news-rank top2">2</span>
+      <span class="tag tag-orange">AI应用</span>
+      <span class="tag tag-green">深度</span>
+    </div>
+    <div class="news-title">全民「养龙虾」？当 AI 学会独立干活，「一人公司」批量涌现背后的机遇与隐忧</div>
+    <div class="news-desc">AI Agent 不再只是聊天机器人，开始自主拆解任务、调用工具、执行完整工作流。纺织企业省下 1000 工时，化工企业创造 2.4 亿效益——但白领岗位替代风险也在加速</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot ssina"></span>新浪财经 · 深度报道</span>
+      <a class="read-more" href="https://finance.sina.com.cn/jjxw/2026-03-14/doc-inhqyaqs4200816.shtml" target="_blank">阅读原文 →</a>
+    </div>
+  </div>
+
+  <!-- 3 · 深度 -->
+  <div class="news-card" onclick="window.open('https://finance.sina.com.cn/cj/2026-03-11/doc-inhqqixz5763166.shtml','_blank')">
+    <a class="card-link" href="https://finance.sina.com.cn/cj/2026-03-11/doc-inhqqixz5763166.shtml" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      <span class="news-rank top3">3</span>
+      <span class="tag tag-purple">AI应用</span>
+      <span class="tag tag-green">深度</span>
+    </div>
+    <div class="news-title">德勤报告揭真相：企业 AI 是「摆设」还是「解药」？37% 企业仅在表面使用</div>
+    <div class="news-desc">港大与德勤联合调研显示，47.5% 工业企业已用大模型，但仅 4% 实现转型目标。核心卡点：业务需求不匹配、单工位改造成本 10 万起、收益难以量化</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot ssina"></span>新浪财经 · 深度调研</span>
+      <a class="read-more" href="https://finance.sina.com.cn/cj/2026-03-11/doc-inhqqixz5763166.shtml" target="_blank">阅读原文 →</a>
+    </div>
+  </div>
+
+  <!-- 4 · 深度 -->
+  <div class="news-card" onclick="window.open('https://finance.sina.com.cn/jjxw/2026-03-18/doc-inhrknav7567595.shtml','_blank')">
+    <a class="card-link" href="https://finance.sina.com.cn/jjxw/2026-03-18/doc-inhrknav7567595.shtml" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      <span class="news-rank normal">4</span>
+      <span class="tag tag-blue">AI应用</span>
+      <span class="tag tag-orange">教育</span>
+    </div>
+    <div class="news-title">AI + 教育走入「应用深水区」：从智能批改到重构学习场景，数据飞轮开始转起来</div>
+    <div class="news-desc">企业从「工具层面」升级到重构学习场景，用真实教学数据喂养模型、用模型反哺个性化学习体验，垂直数据资产正在加速商业破局</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot ssina"></span>新浪财经 · 行业分析</span>
+      <a class="read-more" href="https://finance.sina.com.cn/jjxw/2026-03-18/doc-inhrknav7567595.shtml" target="_blank">阅读原文 →</a>
+    </div>
+  </div>
+
+  <!-- 5 · 深度 -->
+  <div class="news-card" onclick="window.open('https://view.inews.qq.com/a/20260316A05RS400','_blank')">
+    <a class="card-link" href="https://view.inews.qq.com/a/20260316A05RS400" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      <span class="news-rank normal">5</span>
+      <span class="tag tag-purple">AI应用</span>
+      <span class="tag tag-green">深度</span>
+    </div>
+    <div class="news-title">AI 应用标杆企业实测：美的 5000 人配 Agent 成本降 40%，周大福满意度升 35%</div>
+    <div class="news-desc">联想、字节、阿里全栈布局，迈富时、华为垂直深耕——从客服到制造到政务，多领域落地效果实测盘点</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot ssohu"></span>腾讯新闻 · 行业盘点</span>
+      <a class="read-more" href="https://view.inews.qq.com/a/20260316A05RS400" target="_blank">阅读原文 →</a>
+    </div>
+  </div>
+
+  <!-- 6 · 深度 -->
+  <div class="news-card" onclick="window.open('https://finance.sina.com.cn/jjxw/2026-03-16/doc-inhreknt8796049.shtml','_blank')">
+    <a class="card-link" href="https://finance.sina.com.cn/jjxw/2026-03-16/doc-inhreknt8796049.shtml" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      <span class="news-rank normal">6</span>
+      <span class="tag tag-orange">算力</span>
+      <span class="tag tag-green">深度</span>
+    </div>
+    <div class="news-title">算力需求爆发的代价：数据中心用电已占全国 1.68%，2030 年将飙升至 5.3%</div>
+    <div class="news-desc">全球数据中心 2030 年总容量将翻倍至 200GW，总投资 3 万亿美元。液冷从「可选」变「标配」，单机柜功率从 20KW 飙升到 100KW+</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot ssina"></span>新浪财经 · 趋势分析</span>
+      <a class="read-more" href="https://finance.sina.com.cn/jjxw/2026-03-16/doc-inhreknt8796049.shtml" target="_blank">阅读原文 →</a>
+    </div>
+  </div>
+
+  <!-- 7 -->
+  <div class="news-card" onclick="window.open('https://www.huawei.com/cn/news/2026/3/mwc-superpod-ai','_blank')">
+    <a class="card-link" href="https://www.huawei.com/cn/news/2026/3/mwc-superpod-ai" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      <span class="news-rank normal">7</span>
+      <span class="tag tag-red">华为</span>
+      <span class="tag tag-orange">算力</span>
+    </div>
+    <div class="news-title">华为发布 Atlas 950 超算节点：8192 颗昇腾芯片，算力号称超英伟达近 7 倍</div>
+    <div class="news-desc">MWC 2026 上发布 SuperPod 智算节点，总算力 8 EFLOPS，统一内存 1152TB，开源 CANN 架构适配 PyTorch 等主流框架</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot s36kr"></span>华为官网</span>
+      <a class="read-more" href="https://www.huawei.com/cn/news/2026/3/mwc-superpod-ai" target="_blank">阅读原文 →</a>
+    </div>
+  </div>
+
+  <!-- 8 -->
+  <div class="news-card" onclick="window.open('https://finance.sina.com.cn/tech/roll/2026-03-14/doc-inhqxmsv0571293.shtml','_blank')">
+    <a class="card-link" href="https://finance.sina.com.cn/tech/roll/2026-03-14/doc-inhqxmsv0571293.shtml" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      <span class="news-rank normal">8</span>
+      <span class="tag tag-blue">DeepSeek</span>
+      <span class="tag tag-purple">腾讯</span>
+    </div>
+    <div class="news-title">DeepSeek V4 与腾讯新混元将同期 4 月发布，万亿参数级正面对决</div>
+    <div class="news-desc">V4 支持百万 Token 上下文、原生多模态、深度适配国产芯片；腾讯首席 AI 科学家姚顺雨同步发布 30B 新混元模型</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot ssina"></span>新浪科技</span>
+      <a class="read-more" href="https://finance.sina.com.cn/tech/roll/2026-03-14/doc-inhqxmsv0571293.shtml" target="_blank">阅读原文 →</a>
+    </div>
+  </div>
+
+  <!-- 9 -->
+  <div class="news-card" onclick="window.open('https://www.stcn.com/article/detail/1611709.html','_blank')">
+    <a class="card-link" href="https://www.stcn.com/article/detail/1611709.html" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      <span class="news-rank normal">9</span>
+      <span class="tag tag-green">OpenAI</span>
+      <span class="tag tag-blue">谷歌</span>
+    </div>
+    <div class="news-title">OpenAI GPT-5.4 与 Google Gemini 3.1 同日发布：一个操控电脑，一个极致便宜</div>
+    <div class="news-desc">GPT-5.4 原生电脑操作能力在 OSWorld 测试超越人类（75% vs 72.4%）；Gemini 3.1 Flash Lite 百万 Token 仅 $0.25，企业大规模接入成本骤降</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot ssina"></span>证券时报</span>
+      <a class="read-more" href="https://www.stcn.com/article/detail/1611709.html" target="_blank">阅读原文 →</a>
+    </div>
+  </div>
+
+  <!-- 10 -->
+  <div class="news-card" onclick="window.open('https://finance.sina.com.cn/tech/roll/2026-03-16/doc-inhrawmk3181677.shtml','_blank')">
+    <a class="card-link" href="https://finance.sina.com.cn/tech/roll/2026-03-16/doc-inhrawmk3181677.shtml" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      <span class="news-rank normal">10</span>
+      <span class="tag tag-blue">DeepSeek</span>
+      <span class="tag tag-purple">腾讯</span>
+    </div>
+    <div class="news-title">DeepSeek vs 腾讯：技术至上 vs 生态为王，国产 AI 两条突围路线谁能跑通？</div>
+    <div class="news-desc">DeepSeek 专注硬核技术突破和国产芯片适配；腾讯依托微信十亿用户生态 + 推行 CL-bench 评测标准抢话语权。两种模式本质上是「实力路线」与「标准路线」的博弈</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot ssina"></span>新浪科技 · 深度分析</span>
+      <a class="read-more" href="https://finance.sina.com.cn/tech/roll/2026-03-16/doc-inhrawmk3181677.shtml" target="_blank">阅读原文 →</a>
+    </div>
+  </div>
+
+  <!-- 11 -->
+  <div class="news-card" onclick="window.open('https://finance.sina.com.cn/roll/2026-03-12/doc-inhqstev8716801.shtml','_blank')">
+    <a class="card-link" href="https://finance.sina.com.cn/roll/2026-03-12/doc-inhqstev8716801.shtml" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      <span class="news-rank normal">11</span>
+      <span class="tag tag-orange">英伟达</span>
+      <span class="tag tag-blue">央行</span>
+    </div>
+    <div class="news-title">央行定调金融 AI「积极稳妥推进」，黄仁勋称 AI 基建还需投资数万亿美元</div>
+    <div class="news-desc">央行明确要求安全有序推进金融领域 AI 应用、释放数字化智能化动能；同日黄仁勋表示 AI 基础设施投资远未到头，未来还需万亿级投入</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot ssina"></span>新浪财经</span>
+      <a class="read-more" href="https://finance.sina.com.cn/roll/2026-03-12/doc-inhqstev8716801.shtml" target="_blank">阅读原文 →</a>
+    </div>
+  </div>
+
+  <!-- 12 -->
+  <div class="news-card" onclick="window.open('https://companies.caixin.com/2026-03-17/102423758.html','_blank')">
+    <a class="card-link" href="https://companies.caixin.com/2026-03-17/102423758.html" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      <span class="news-rank normal">12</span>
+      <span class="tag tag-green">英伟达</span>
+      <span class="tag tag-orange">Agent</span>
+    </div>
+    <div class="news-title">英伟达企业级智能体 NemoClaw 出炉：2027 年全球 AI 数据中心营收将达万亿美元</div>
+    <div class="news-desc">英伟达发布企业级 Agent 开发平台 NemoClaw，目标让企业零代码构建自主智能体；并预测 AI 数据中心市场将在 2027 年迈入万亿美元级</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot" style="background:#0284c7"></span>财新网</span>
+      <a class="read-more" href="https://companies.caixin.com/2026-03-17/102423758.html" target="_blank">阅读原文 →</a>
+    </div>
+  </div>
+
+  <!-- 13 · 深度 -->
+  <div class="news-card" onclick="window.open('https://www.sohu.com/a/981828067_122588838','_blank')">
+    <a class="card-link" href="https://www.sohu.com/a/981828067_122588838" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      <span class="news-rank normal">13</span>
+      <span class="tag tag-purple">AI应用</span>
+      <span class="tag tag-green">深度</span>
+    </div>
+    <div class="news-title">AI 数字员工规模化落地千行百业：重庆数字干警破案 6 万条，诈骗率降 90%</div>
+    <div class="news-desc">从政务到制造到零售，AI 数字员工从概念走向规模部署——重庆公安「数字干警」、美的 5000 人配备 Agent、零售智能导购提升转化率 40%</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot ssohu"></span>搜狐科技 · 行业盘点</span>
+      <a class="read-more" href="https://www.sohu.com/a/981828067_122588838" target="_blank">阅读原文 →</a>
+    </div>
+  </div>
+
+  <!-- 14 -->
+  <div class="news-card" onclick="window.open('https://cloud.tencent.com/developer/article/2633178','_blank')">
+    <a class="card-link" href="https://cloud.tencent.com/developer/article/2633178" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      <span class="news-rank normal">14</span>
+      <span class="tag tag-blue">DeepSeek</span>
+      <span class="tag tag-purple">大模型</span>
+    </div>
+    <div class="news-title">DeepSeek V4 架构深度解析：「条件记忆」机制如何重塑大模型范式</div>
+    <div class="news-desc">Engram 条件记忆创新计算与存储分离，原生多模态融合支持文图视频联合理解，有望成为首个完全运行在国产算力生态上的万亿参数模型</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot ssohu"></span>腾讯云社区 · 技术解析</span>
+      <a class="read-more" href="https://cloud.tencent.com/developer/article/2633178" target="_blank">阅读原文 →</a>
+    </div>
+  </div>
+
+  <!-- 15 -->
+  <div class="news-card" onclick="window.open('https://www.sohu.com/a/986883450_362225','_blank')">
+    <a class="card-link" href="https://www.sohu.com/a/986883450_362225" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      <span class="news-rank normal">15</span>
+      <span class="tag tag-blue">谷歌</span>
+      <span class="tag tag-orange">大模型</span>
+    </div>
+    <div class="news-title">谷歌 Gemini 3 深度思考模型升级：推理能力突破，200 万 Token 上下文在路上</div>
+    <div class="news-desc">SWE-Bench 代码评估 63.8%，在「人类最后考试」中拿下最高分 18.8%，支持 100 万 Token 上下文将升级至 200 万</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot ssohu"></span>搜狐科技</span>
+      <a class="read-more" href="https://www.sohu.com/a/986883450_362225" target="_blank">阅读原文 →</a>
+    </div>
+  </div>
+
+
+  <div class="section-title">📄 AI 论文精选（中文解读）</div>
+
+  <!-- 论文1 -->
+  <div class="paper-card" onclick="window.open('https://c.m.163.com/news/a/KNJ8ASQ90511AQHO.html','_blank')" style="cursor:pointer;">
+    <div class="card-top-row">
+      <span class="tag tag-orange">CVPR 2026</span>
+      <span class="tag tag-purple">字节跳动</span>
+    </div>
+    <div class="paper-title"><a href="https://c.m.163.com/news/a/KNJ8ASQ90511AQHO.html" target="_blank">字节世界模型新作 VideoWorld 2：仅靠视觉学习真实世界知识</a></div>
+    <div class="paper-desc">不依赖语言模型，纯视觉学习即可完成折纸、搭积木等复杂手工任务，成功率超 Sora 2、Veo 3 超 70%</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot" style="background:#d97706"></span>网易 · 中文解读</span>
+      <a class="read-more" href="https://c.m.163.com/news/a/KNJ8ASQ90511AQHO.html" target="_blank">阅读解读 →</a>
+    </div>
+  </div>
+
+  <!-- 论文2 -->
+  <div class="paper-card" onclick="window.open('https://www.infoq.cn/article/Xr6XspENqsQuZuVvwQqQ','_blank')" style="cursor:pointer;">
+    <div class="card-top-row">
+      <span class="tag tag-red">Nature 正刊</span>
+      <span class="tag tag-blue">智源研究院</span>
+    </div>
+    <div class="paper-title"><a href="https://www.infoq.cn/article/Xr6XspENqsQuZuVvwQqQ" target="_blank">智源多模态大模型 Emu3 登 Nature：自回归成为生成式 AI 统一路线</a></div>
+    <div class="paper-desc">中国 AI 机构成果首登 Nature 正刊，用「预测下一个词元」统一文本、图像、视频生成，确立自回归多模态范式</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot" style="background:#059669"></span>InfoQ · 中文解读</span>
+      <a class="read-more" href="https://www.infoq.cn/article/Xr6XspENqsQuZuVvwQqQ" target="_blank">阅读解读 →</a>
+    </div>
+  </div>
+
+  <!-- 论文3 -->
+  <div class="paper-card" onclick="window.open('https://www.163.com/dy/article/KIA0PKGA055284JB.html','_blank')" style="cursor:pointer;">
+    <div class="card-top-row">
+      <span class="tag tag-blue">DeepSeek</span>
+      <span class="tag tag-green">训练优化</span>
+    </div>
+    <div class="paper-title"><a href="https://www.163.com/dy/article/KIA0PKGA055284JB.html" target="_blank">DeepSeek 最新论文：破解大模型训练拥堵难题</a></div>
+    <div class="paper-desc">提出全新的训练通信优化方案，解决千卡以上 GPU 集群训练时的网络拥堵瓶颈，训练效率显著提升</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot" style="background:#d97706"></span>网易 · 中文解读</span>
+      <a class="read-more" href="https://www.163.com/dy/article/KIA0PKGA055284JB.html" target="_blank">阅读解读 →</a>
+    </div>
+  </div>
+
+  <!-- 论文4 -->
+  <div class="paper-card" onclick="window.open('https://c.m.163.com/news/a/KNJEM3VQ0511DTVV.html','_blank')" style="cursor:pointer;">
+    <div class="card-top-row">
+      <span class="tag tag-purple">微软</span>
+      <span class="tag tag-orange">多模态</span>
+    </div>
+    <div class="paper-title"><a href="https://c.m.163.com/news/a/KNJEM3VQ0511DTVV.html" target="_blank">微软 Phi-4-Vision 15B：小模型挑战大模型，数学推理 + 界面识别</a></div>
+    <div class="paper-desc">仅 15B 参数实现与大 10 倍模型相当的性能，用精选 200 亿 Token 数据打破「越大越好」迷思</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot" style="background:#d97706"></span>网易 · 中文解读</span>
+      <a class="read-more" href="https://c.m.163.com/news/a/KNJEM3VQ0511DTVV.html" target="_blank">阅读解读 →</a>
+    </div>
+  </div>
+
+  <!-- 论文5 -->
+  <div class="paper-card" onclick="window.open('https://c.m.163.com/news/a/KJ315ISV0511AQHO.html','_blank')" style="cursor:pointer;">
+    <div class="card-top-row">
+      <span class="tag tag-green">强化学习</span>
+      <span class="tag tag-blue">大模型训练</span>
+    </div>
+    <div class="paper-title"><a href="https://c.m.163.com/news/a/KJ315ISV0511AQHO.html" target="_blank">2026 年大模型训练下半场：强化学习成为主流范式</a></div>
+    <div class="paper-desc">继 OpenAI o1 和 DeepSeek R1 之后，强化学习驱动的「慢思考」能力成为训练核心，端到端效率提升 500%</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot" style="background:#d97706"></span>网易 · 中文解读</span>
+      <a class="read-more" href="https://c.m.163.com/news/a/KJ315ISV0511AQHO.html" target="_blank">阅读解读 →</a>
+    </div>
+  </div>
+
+  <!-- 论文6 -->
+  <div class="paper-card" onclick="window.open('https://www.163.com/dy/article/KO50LM380511AQHO.html','_blank')" style="cursor:pointer;">
+    <div class="card-top-row">
+      <span class="tag tag-orange">注意力机制</span>
+      <span class="tag tag-blue">哈工深</span>
+    </div>
+    <div class="paper-title"><a href="https://www.163.com/dy/article/KO50LM380511AQHO.html" target="_blank">哈工深提出模长感知线性注意力 NaLaFormer：显存直降 92.3%</a></div>
+    <div class="paper-desc">通过 Norm×Direction 分解方法实现线性复杂度的同时保持高精度，处理 7 万+ Token 超分辨率任务显存降低 92%</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot" style="background:#d97706"></span>网易 · 中文解读</span>
+      <a class="read-more" href="https://www.163.com/dy/article/KO50LM380511AQHO.html" target="_blank">阅读解读 →</a>
+    </div>
+  </div>
+
+  <!-- 论文7 -->
+  <div class="paper-card" onclick="window.open('https://www.mlpod.com/1314.html','_blank')" style="cursor:pointer;">
+    <div class="card-top-row">
+      <span class="tag tag-red">DeepMind</span>
+      <span class="tag tag-green">智能体</span>
+    </div>
+    <div class="paper-title"><a href="https://www.mlpod.com/1314.html" target="_blank">谷歌 DeepMind 联合 MIT 发布智能体 Scaling Law：180 项实验揭示关键规律</a></div>
+    <div class="paper-desc">多智能体系统「不是越多越好」——中心化协作提升 80.8%，但序列推理任务反而下降 39%-70%</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot" style="background:#7c3aed"></span>机器学习POD · 中文解读</span>
+      <a class="read-more" href="https://www.mlpod.com/1314.html" target="_blank">阅读解读 →</a>
+    </div>
+  </div>
+
+  <!-- 论文8 -->
+  <div class="paper-card" onclick="window.open('https://wangsen.site/2026/03/05/Agentic-Reasoning-for-LLMs/','_blank')" style="cursor:pointer;">
+    <div class="card-top-row">
+      <span class="tag tag-purple">Meta</span>
+      <span class="tag tag-green">Agent</span>
+    </div>
+    <div class="paper-title"><a href="https://wangsen.site/2026/03/05/Agentic-Reasoning-for-LLMs/" target="_blank">大模型智能体推理综述：从规划、工具到多智能体协作的三层架构</a></div>
+    <div class="paper-desc">伊利诺伊大学、Meta、DeepMind 联合综述，系统阐述 LLM 向自主智能体转变的推理框架</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot" style="background:#3b82f6"></span>技术博客 · 中文解读</span>
+      <a class="read-more" href="https://wangsen.site/2026/03/05/Agentic-Reasoning-for-LLMs/" target="_blank">阅读解读 →</a>
+    </div>
+  </div>
+
+  <!-- 论文9 -->
+  <div class="paper-card" onclick="window.open('https://arxiv.org/abs/2603.11709','_blank')" style="cursor:pointer;">
+    <div class="card-top-row">
+      <span class="tag tag-green">Agent</span>
+      <span class="tag tag-orange">教育 AI</span>
+    </div>
+    <div class="paper-title"><a href="https://arxiv.org/abs/2603.11709" target="_blank">教育 AI 智能体的 Scaling Law：330+ 配置、1100+ 技能模块的实验验证</a></div>
+    <div class="paper-desc">提出智能体能力的五维扩展框架，揭示工具扩展和技能扩展两个互补轴——结构化能力比模型堆参数更重要</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot" style="background:#ef4444"></span>arXiv · 2026.03</span>
+      <a class="read-more" href="https://arxiv.org/abs/2603.11709" target="_blank">查看论文 →</a>
+    </div>
+  </div>
+
+  <!-- 论文10 -->
+  <div class="paper-card" onclick="window.open('https://www.stdaily.com/web/gdxw/2026-02/02/content_469052.html','_blank')" style="cursor:pointer;">
+    <div class="card-top-row">
+      <span class="tag tag-red">Nature</span>
+      <span class="tag tag-blue">智源</span>
+    </div>
+    <div class="paper-title"><a href="https://www.stdaily.com/web/gdxw/2026-02/02/content_469052.html" target="_blank">智源 Emu3 首登《自然》：中国 AI 成果在世界顶刊的里程碑</a></div>
+    <div class="paper-desc">科技日报深度报道——Emu3.5 进一步实现「预测下一个状态」的能力跃迁，获得可泛化的世界建模能力</div>
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot" style="background:#dc2626"></span>科技日报 · 中文报道</span>
+      <a class="read-more" href="https://www.stdaily.com/web/gdxw/2026-02/02/content_469052.html" target="_blank">阅读报道 →</a>
+    </div>
+  </div>
+
+  <a href="#" class="archive-btn" onclick="alert('预览模式：正式上线后可查看往期日报'); return false;">📅 查看往期日报</a>
+
+</div>
+
+<div class="footer">
+  <p>AI 日报 · 每天 08:00 自动更新 · 数据来源：新浪科技 / 36氪 / IT之家 / 搜狐 / arXiv</p>
+</div>
+
+</body>
+</html>
