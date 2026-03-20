@@ -27,22 +27,56 @@
     background: var(--bg); color: var(--text); line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
+
+  /* ===== Header ===== */
   .header {
-    background: linear-gradient(135deg, #1e3a5f 0%, #2d1b69 50%, #1a1a2e 100%);
-    color: white; padding: 2.5rem 1.5rem 2rem; text-align: center;
-    position: relative; overflow: hidden;
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 30%, #2d1b69 65%, #1a1a2e 100%);
+    color: white; padding: 3rem 1.5rem 2.5rem; text-align: center;
+    position: relative; overflow: hidden; min-height: 220px;
   }
   .header::before {
-    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-    background: radial-gradient(circle at 30% 50%, rgba(79,110,247,0.15) 0%, transparent 50%),
-                radial-gradient(circle at 70% 50%, rgba(139,92,246,0.1) 0%, transparent 50%);
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 20% 40%, rgba(79,110,247,0.25) 0%, transparent 50%),
+      radial-gradient(circle at 80% 30%, rgba(139,92,246,0.2) 0%, transparent 45%),
+      radial-gradient(circle at 50% 90%, rgba(20,184,166,0.15) 0%, transparent 50%);
   }
-  .header-content { position: relative; z-index: 1; }
-  .header-logo { font-size: 2rem; margin-bottom: 0.25rem; }
-  .header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: 2px; }
-  .header .date { font-size: 1rem; opacity: 0.85; margin-top: 0.4rem; font-weight: 300; }
+  .header::after {
+    content: ''; position: absolute; inset: 0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 10% 20%, rgba(255,255,255,0.15) 50%, transparent 50%),
+      radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,0.1) 50%, transparent 50%),
+      radial-gradient(2px 2px at 50% 15%, rgba(255,255,255,0.12) 50%, transparent 50%),
+      radial-gradient(1px 1px at 70% 55%, rgba(255,255,255,0.08) 50%, transparent 50%),
+      radial-gradient(1.5px 1.5px at 85% 35%, rgba(255,255,255,0.1) 50%, transparent 50%),
+      radial-gradient(1px 1px at 15% 85%, rgba(255,255,255,0.06) 50%, transparent 50%),
+      radial-gradient(2px 2px at 90% 80%, rgba(255,255,255,0.08) 50%, transparent 50%),
+      radial-gradient(1px 1px at 40% 45%, rgba(255,255,255,0.07) 50%, transparent 50%);
+  }
+  .header-decor {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;
+  }
+  .header-decor .ring {
+    position: absolute; border-radius: 50%; border: 1px solid rgba(255,255,255,0.06);
+  }
+  .header-decor .ring1 { width: 300px; height: 300px; top: -100px; right: -80px; border-width: 1.5px; border-color: rgba(79,110,247,0.15); }
+  .header-decor .ring2 { width: 200px; height: 200px; bottom: -60px; left: -50px; border-color: rgba(139,92,246,0.12); }
+  .header-decor .ring3 { width: 120px; height: 120px; top: 20px; left: 15%; border-color: rgba(20,184,166,0.1); }
+  .header-decor .line {
+    position: absolute; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(79,110,247,0.15), transparent);
+  }
+  .header-decor .line1 { width: 60%; top: 30%; left: 20%; }
+  .header-decor .line2 { width: 40%; top: 65%; left: 35%; background: linear-gradient(90deg, transparent, rgba(139,92,246,0.12), transparent); }
+  .header-content { position: relative; z-index: 2; }
+  .header-logo { font-size: 2.8rem; margin-bottom: 0.4rem; filter: drop-shadow(0 2px 8px rgba(79,110,247,0.4)); }
+  .header h1 { font-size: 1.75rem; font-weight: 800; letter-spacing: 3px; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+  .header .subtitle { font-size: 0.85rem; opacity: 0.6; margin-top: 0.3rem; letter-spacing: 1px; font-weight: 300; }
+  .header .date { font-size: 1.05rem; opacity: 0.9; margin-top: 0.6rem; font-weight: 400; }
   .header .stats {
-    display: inline-flex; gap: 1.5rem; margin-top: 1rem; font-size: 0.8rem; opacity: 0.7;
+    display: inline-flex; gap: 1rem; margin-top: 0.8rem; font-size: 0.78rem;
+    background: rgba(255,255,255,0.08); border-radius: 20px; padding: 0.4rem 1.2rem;
+    backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.08);
   }
   .container { max-width: 700px; margin: 0 auto; padding: 0 1rem 3rem; }
 
@@ -84,22 +118,34 @@
   .speed-btn:hover, .speed-btn.active { background: var(--accent-light); color: var(--accent); border-color: var(--accent); }
   
 
-  /* ===== Section Headers ===== */
+  /* ===== Section Headers (gradient) ===== */
   .section-header {
-    display: flex; align-items: center; gap: 0.65rem;
-    margin: 1.8rem 0 1rem; padding: 0.75rem 1rem;
-    background: var(--card-bg); border-radius: 12px;
-    border: 1px solid var(--border);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+    display: flex; align-items: center; gap: 0.8rem;
+    margin: 1.8rem 0 1rem; padding: 1rem 1.2rem;
+    border-radius: 14px; color: #fff;
+    position: relative; overflow: hidden;
+  }
+  .section-header.news-header {
+    background: linear-gradient(135deg, #3b82f6, #2563eb, #4f46e5);
+    box-shadow: 0 4px 15px rgba(59,130,246,0.25);
+  }
+  .section-header.paper-header {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed, #6d28d9);
+    box-shadow: 0 4px 15px rgba(139,92,246,0.25);
+  }
+  .section-header::after {
+    content: ''; position: absolute; right: -20px; top: -20px;
+    width: 100px; height: 100px; border-radius: 50%;
+    background: rgba(255,255,255,0.08);
   }
   .section-icon {
-    width: 40px; height: 40px; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;
+    width: 46px; height: 46px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; flex-shrink: 0;
+    background: rgba(255,255,255,0.15); backdrop-filter: blur(4px);
   }
-  .section-icon.news { background: linear-gradient(135deg, var(--blue-bg), var(--accent-light)); }
-  .section-icon.paper { background: linear-gradient(135deg, var(--purple-bg), var(--teal-bg)); }
-  .section-text h2 { font-size: 1.05rem; font-weight: 700; line-height: 1.3; }
-  .section-text p { font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.1rem; }
+  .section-text h2 { font-size: 1.25rem; font-weight: 800; letter-spacing: 1px; }
+  .section-text p { font-size: 0.8rem; opacity: 0.85; margin-top: 0.15rem; }
 
   /* ===== News Cards ===== */
   .news-card {
@@ -121,8 +167,6 @@
     display: inline-block; padding: 0.1rem 0.45rem; border-radius: 4px;
     font-size: 0.7rem; font-weight: 600; line-height: 1.6;
   }
-  .tag-red { background: var(--red-bg); color: var(--red); }
-  .tag-orange { background: var(--orange-bg); color: var(--orange); }
   .tag-blue { background: var(--blue-bg); color: var(--blue); }
   .tag-purple { background: var(--purple-bg); color: var(--purple); }
   .tag-green { background: var(--green-bg); color: var(--green); }
@@ -156,12 +200,10 @@
   .paper-desc { font-size: 0.82rem; color: var(--text-secondary); margin-top: 0.25rem; line-height: 1.55; }
   .paper-source { font-size: 0.72rem; color: var(--text-secondary); margin-top: 0.35rem; opacity: 0.8; }
 
-  /* ===== Divider ===== */
   .section-divider {
     height: 1px; background: linear-gradient(to right, transparent, var(--border), transparent);
     margin: 1.5rem 0 0;
   }
-
   .archive-btn {
     display: block; text-align: center; padding: 0.85rem; margin-top: 1.5rem;
     background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
@@ -170,24 +212,35 @@
   .archive-btn:hover { background: var(--accent); color: #fff; }
   .footer { text-align: center; padding: 2rem 1rem; font-size: 0.78rem; color: #94a3b8; border-top: 1px solid var(--border); margin-top: 1rem; }
   @media (max-width: 480px) {
-    .header { padding: 1.8rem 1rem 1.5rem; }
-    .header h1 { font-size: 1.3rem; }
+    .header { padding: 2rem 1rem 1.8rem; min-height: 180px; }
+    .header h1 { font-size: 1.4rem; }
+    .header-logo { font-size: 2.2rem; }
     .container { padding: 0 0.75rem 2rem; }
     .news-card { padding: 1rem; }
-    .section-header { padding: 0.6rem 0.8rem; }
+    .section-header { padding: 0.8rem 1rem; }
+    .section-text h2 { font-size: 1.1rem; }
+    .section-icon { width: 38px; height: 38px; font-size: 1.2rem; }
   }
 </style>
 </head>
 <body>
 
 <div class="header">
+  <div class="header-decor">
+    <div class="ring ring1"></div>
+    <div class="ring ring2"></div>
+    <div class="ring ring3"></div>
+    <div class="line line1"></div>
+    <div class="line line2"></div>
+  </div>
   <div class="header-content">
     <div class="header-logo">🤖</div>
     <h1>AI 日报</h1>
+    <div class="subtitle">ARTIFICIAL INTELLIGENCE DAILY</div>
     <div class="date">2026年03月20日 周五</div>
     <div class="stats">
       <span>📰 10 条资讯</span>
-      <span>📄 6 篇论文</span>
+      
       <span>🎧 语音播报</span>
     </div>
   </div>
@@ -214,8 +267,8 @@
   
 
   
-  <div class="section-header">
-    <div class="section-icon news">📰</div>
+  <div class="section-header news-header">
+    <div class="section-icon">📰</div>
     <div class="section-text">
       <h2>AI 资讯</h2>
       <p>今日热门 AI 新闻精选，10 条</p>
@@ -233,7 +286,7 @@
     </div>
     <div class="news-title">视触觉仿生指尖落地，机器人感知从“看见”到“摸懂”的质变</div>
     
-    <div class="news-desc">纬钛机器人发布仿生指尖，将视觉与触觉融合，标志着具身智能从单一视觉感知迈向多模态感知。这解决了机器人精细操作的核心瓶颈，为工业自动化、医疗手术等场景提供了更接近人类的物理交互能力。</div>
+    <div class="news-desc">纬钛机器人推出的仿生指尖融合视觉与触觉，标志着具身智能正从依赖单一视觉感知，向多模态、类人化的物理交互感知演进。这一突破是机器人进入复杂、非结构化作业场景（如精密装配、柔性抓取）的关键门槛，将加速工业与服务机器人的实用化进程。</div>
     
     <div class="card-bottom-row">
       <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
@@ -251,7 +304,7 @@
     </div>
     <div class="news-title">美国国债5个月激增1万亿美元，AI芯片军备竞赛或成新增长点</div>
     
-    <div class="news-desc">美国国债总额突破39万亿美元历史新高，财政压力加剧。与此同时，马斯克透露SpaceX与特斯拉将继续大规模采购英伟达芯片，显示AI基础设施投资正成为全球科技巨头竞逐的新焦点，可能对冲部分经济下行风险。</div>
+    <div class="news-desc">美国国债总额突破39万亿美元历史新高，财政压力加剧。与此同时，马斯克透露SpaceX与特斯拉将继续大规模采购英伟达芯片，显示AI硬件投资正成为科技巨头战略核心，可能催生新的经济增长动力。</div>
     
     <div class="card-bottom-row">
       <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
@@ -267,9 +320,9 @@
       
       <span class="tag tag-blue">钛媒体</span>
     </div>
-    <div class="news-title">车企闲置英伟达算力成国产AI芯片“隐形训练场”，产业协同模式浮出水面</div>
+    <div class="news-title">车企闲置算力成国产AI芯片隐形训练场，英伟达H200意外赋能地平线征程7</div>
     
-    <div class="news-desc">地平线正通过车企联合实验室，利用后者闲置的英伟达H200算力训练其下一代国产芯片征程7。这揭示了在高端算力受限背景下，一种创新的产业资源协同模式，或将加速国产AI芯片的研发迭代进程。</div>
+    <div class="news-desc">车企通过联合实验室将闲置的英伟达H200算力共享给地平线，用于训练其下一代国产芯片征程7。这揭示了在高端算力受限背景下，中国AI产业正通过资源协同创新，利用现有进口硬件加速国产替代方案的研发进程。</div>
     
     <div class="card-bottom-row">
       <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
@@ -277,57 +330,39 @@
     </div>
   </div>
   
-  <div class="news-card" onclick="window.open('http://www.huxiu.com/article/4843465.html?f=wangzhan','_blank')">
-    <a class="card-link" href="http://www.huxiu.com/article/4843465.html?f=wangzhan" target="_blank" rel="noopener"></a>
+  <div class="news-card" onclick="window.open('https://www.tmtpost.com/7921834.html','_blank')">
+    <a class="card-link" href="https://www.tmtpost.com/7921834.html" target="_blank" rel="noopener"></a>
     <div class="card-top-row">
       
       <span class="news-rank normal">4</span>
       
-      <span class="tag tag-blue">虎嗅</span>
+      <span class="tag tag-blue">钛媒体</span>
     </div>
-    <div class="news-title">小牛电动押注AI叙事，但两轮车行业面临技术过剩与价值回归挑战</div>
+    <div class="news-title">Kimi估值3个月翻4倍，揭示AI Agent赛道已从技术验证进入商业落地淘汰赛</div>
     
-    <div class="news-desc">小牛电动在发布会上强调AI重构人车关系，引入高通、禾赛、斑马等汽车级技术，但行业正从参数内卷转向用户体验与商业价值的平衡，科技叙事需转化为实际市场竞争力。</div>
+    <div class="news-desc">Kimi的沉寂与狂飙背后，是AI Agent领域正从早期的技术探索阶段，快速过渡到以实际商业应用和市场份额为核心的竞争阶段。这意味着企业需要更关注AI解决方案的实际ROI和规模化能力，而不仅仅是技术噱头。</div>
     
     <div class="card-bottom-row">
-      <span class="source-badge"><span class="source-dot"></span>虎嗅</span>
-      <a class="read-more" href="http://www.huxiu.com/article/4843465.html?f=wangzhan" target="_blank" rel="noopener">阅读原文 →</a>
+      <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
+      <a class="read-more" href="https://www.tmtpost.com/7921834.html" target="_blank" rel="noopener">阅读原文 →</a>
     </div>
   </div>
   
-  <div class="news-card" onclick="window.open('http://www.huxiu.com/article/4843210.html?f=wangzhan','_blank')">
-    <a class="card-link" href="http://www.huxiu.com/article/4843210.html?f=wangzhan" target="_blank" rel="noopener"></a>
+  <div class="news-card" onclick="window.open('https://www.tmtpost.com/7922016.html','_blank')">
+    <a class="card-link" href="https://www.tmtpost.com/7922016.html" target="_blank" rel="noopener"></a>
     <div class="card-top-row">
       
       <span class="news-rank normal">5</span>
       
-      <span class="tag tag-blue">虎嗅</span>
+      <span class="tag tag-blue">钛媒体</span>
     </div>
-    <div class="news-title">Token经济崛起：大厂争夺AI时代“数字石油”定价权</div>
+    <div class="news-title">OpenAI桌面应用直击AI PC软肋，硬件厂商或沦为算力管道</div>
     
-    <div class="news-desc">Token作为AI计算的核心度量单位，正成为科技巨头争夺的战略资源。控制Token生态意味着掌握AI服务定价权与数据流分配权，这背后是每年千亿级市场规模的价值重分配。</div>
+    <div class="news-desc">OpenAI推出桌面应用，旨在成为比操作系统更底层的AI入口，直接调用云端模型。此举可能架空PC厂商的AI软件生态布局，迫使其退回硬件代工角色，加速AI能力向云端集中趋势。</div>
     
     <div class="card-bottom-row">
-      <span class="source-badge"><span class="source-dot"></span>虎嗅</span>
-      <a class="read-more" href="http://www.huxiu.com/article/4843210.html?f=wangzhan" target="_blank" rel="noopener">阅读原文 →</a>
-    </div>
-  </div>
-  
-  <div class="news-card" onclick="window.open('https://www.ithome.com/0/930/805.htm','_blank')">
-    <a class="card-link" href="https://www.ithome.com/0/930/805.htm" target="_blank" rel="noopener"></a>
-    <div class="card-top-row">
-      
-      <span class="news-rank normal">6</span>
-      
-      <span class="tag tag-blue">IT之家</span>
-    </div>
-    <div class="news-title">太空算力首次驱动地面机器人，AI基础设施从云端走向星链</div>
-    
-    <div class="news-desc">国星宇航联合上海交通大学完成全球首次OpenClaw调用太空算力操控地面机器人试验，实现了从自然语言指令到太空AI推理再到机器人执行的完整闭环。这标志着算力基础设施正从地面云向太空轨道延伸，为未来全域无人化作业和应急响应提供了关键的技术验证路径。</div>
-    
-    <div class="card-bottom-row">
-      <span class="source-badge"><span class="source-dot"></span>IT之家</span>
-      <a class="read-more" href="https://www.ithome.com/0/930/805.htm" target="_blank" rel="noopener">阅读原文 →</a>
+      <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
+      <a class="read-more" href="https://www.tmtpost.com/7922016.html" target="_blank" rel="noopener">阅读原文 →</a>
     </div>
   </div>
   
@@ -335,13 +370,13 @@
     <a class="card-link" href="https://www.tmtpost.com/7921729.html" target="_blank" rel="noopener"></a>
     <div class="card-top-row">
       
-      <span class="news-rank normal">7</span>
+      <span class="news-rank normal">6</span>
       
       <span class="tag tag-blue">钛媒体</span>
     </div>
     <div class="news-title">阿里闪购拉动1.5亿用户增长，但万亿GMV目标下盈利仍需两年</div>
     
-    <div class="news-desc">阿里财报显示，即时零售业务成为用户增长核心引擎，但管理层明确盈利节点设在2029财年。这意味着阿里为抢占市场领先地位，未来两年将持续战略性投入，短期利润将让位于规模扩张。</div>
+    <div class="news-desc">阿里电商CEO蒋凡在财报会上确认，即时零售业务（闪购）是拉动用户增长的核心引擎，但实现整体盈利需等到2029财年。这表明阿里正以短期利润为代价，换取市场份额和用户粘性，在即时零售赛道进行战略性投入。</div>
     
     <div class="card-bottom-row">
       <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
@@ -353,13 +388,13 @@
     <a class="card-link" href="https://www.tmtpost.com/7921338.html" target="_blank" rel="noopener"></a>
     <div class="card-top-row">
       
-      <span class="news-rank normal">8</span>
+      <span class="news-rank normal">7</span>
       
       <span class="tag tag-blue">钛媒体</span>
     </div>
-    <div class="news-title">国产大模型同质化加剧，小米模型被误认DeepSeek V4折射行业趋同困境</div>
+    <div class="news-title">国产大模型同质化加剧，小米DeepSeek混淆事件暴露行业辨识度危机</div>
     
-    <div class="news-desc">小米最新AI模型因技术路线、架构设计与DeepSeek高度相似，引发全球开发者集体误认。这反映出中国大模型企业在Transformer架构优化、MoE技术应用上正走向技术收敛，创新差异化面临挑战。</div>
+    <div class="news-desc">小米最新模型被全球开发者误认为DeepSeek V4，反映国产大模型在技术路线、能力表现上趋同严重。当头部玩家与追赶者界限模糊，行业将面临品牌价值稀释与用户认知混乱的双重挑战。</div>
     
     <div class="card-bottom-row">
       <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
@@ -367,17 +402,53 @@
     </div>
   </div>
   
-  <div class="news-card" onclick="window.open('https://www.ithome.com/0/930/826.htm','_blank')">
-    <a class="card-link" href="https://www.ithome.com/0/930/826.htm" target="_blank" rel="noopener"></a>
+  <div class="news-card" onclick="window.open('https://www.ithome.com/0/930/823.htm','_blank')">
+    <a class="card-link" href="https://www.ithome.com/0/930/823.htm" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">8</span>
+      
+      <span class="tag tag-blue">IT之家</span>
+    </div>
+    <div class="news-title">小米MiMo-V2开源承诺，预示智能体时代开源模型竞争加剧</div>
+    
+    <div class="news-desc">小米大模型负责人罗福莉承诺开源MiMo-V2系列，这是小米首款为智能体时代打造的全栈产品。此举可能降低AI应用开发门槛，加速智能体生态构建，并加剧与Meta Llama等开源模型的竞争。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>IT之家</span>
+      <a class="read-more" href="https://www.ithome.com/0/930/823.htm" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.tmtpost.com/7921769.html','_blank')">
+    <a class="card-link" href="https://www.tmtpost.com/7921769.html" target="_blank" rel="noopener"></a>
     <div class="card-top-row">
       
       <span class="news-rank normal">9</span>
       
+      <span class="tag tag-blue">钛媒体</span>
+    </div>
+    <div class="news-title">腾讯AI战略转向：从技术跟随到生态重注，巨头如何破局？</div>
+    
+    <div class="news-desc">面对OpenAI等新锐冲击，腾讯正调整AI战略，从分散的技术布局转向集中资源构建生态闭环，这反映了传统科技巨头在AI浪潮中的转型压力与破局尝试。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
+      <a class="read-more" href="https://www.tmtpost.com/7921769.html" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.ithome.com/0/930/826.htm','_blank')">
+    <a class="card-link" href="https://www.ithome.com/0/930/826.htm" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">10</span>
+      
       <span class="tag tag-blue">IT之家</span>
     </div>
-    <div class="news-title">OpenAI整合三大平台打造超级应用，AI工具从分散走向统一生态</div>
+    <div class="news-title">OpenAI整合三大平台打造超级应用，企业级AI战略转向桌面端</div>
     
-    <div class="news-desc">OpenAI将ChatGPT、Codex和浏览器整合为桌面级超级应用，旨在简化用户体验并聚焦企业客户。此举标志着AI工具正从单一功能向集成化、平台化生态演进，或将重塑企业级AI应用的工作流与采购模式。</div>
+    <div class="news-desc">OpenAI将ChatGPT、Codex和浏览器整合为桌面应用，旨在简化用户体验并聚焦企业客户。这一战略调整标志着其从分散工具转向集成解决方案，可能加速AI在工作场景的深度渗透，但面临与现有企业软件生态的整合挑战。</div>
     
     <div class="card-bottom-row">
       <span class="source-badge"><span class="source-dot"></span>IT之家</span>
@@ -385,124 +456,16 @@
     </div>
   </div>
   
-  <div class="news-card" onclick="window.open('https://www.ithome.com/0/930/813.htm','_blank')">
-    <a class="card-link" href="https://www.ithome.com/0/930/813.htm" target="_blank" rel="noopener"></a>
-    <div class="card-top-row">
-      
-      <span class="news-rank normal">10</span>
-      
-      <span class="tag tag-blue">IT之家</span>
-    </div>
-    <div class="news-title">苹果AI战略另辟蹊径：应用商店佣金年入9亿美元，平台价值凸显</div>
-    
-    <div class="news-desc">当OpenAI、谷歌等巨头投入数千亿美元训练大模型时，苹果通过App Store向生成式AI应用收取佣金，去年收入近9亿美元。这揭示了苹果独特的平台优势：不直接参与烧钱竞赛，而是作为生态基础设施，从AI应用繁荣中稳定获利。</div>
-    
-    <div class="card-bottom-row">
-      <span class="source-badge"><span class="source-dot"></span>IT之家</span>
-      <a class="read-more" href="https://www.ithome.com/0/930/813.htm" target="_blank" rel="noopener">阅读原文 →</a>
-    </div>
-  </div>
-  
 
   
 
-  
-  <div class="section-divider"></div>
-
-  <div class="section-header">
-    <div class="section-icon paper">📄</div>
-    <div class="section-text">
-      <h2>AI 论文解读</h2>
-      <p>前沿研究与论文精选，6 篇</p>
-    </div>
-  </div>
-
-  
-  <div class="paper-card">
-    <div class="paper-title">
-      <span class="paper-idx">1</span>
-      <a href="https://www.qbitai.com/2026/03/389559.html" target="_blank" rel="noopener">阿里计划五年内让云和AI业务收入超过1000亿美元</a>
-    </div>
-    
-    <div class="paper-desc">阿里宣布未来五年将重点发展云和人工智能业务，目标是这些技术的商业化收入突破1000亿美元，这显示了阿里在AI领域的雄心和对技术变现的重视。</div>
-    
-    
-    <div class="paper-source">来源：量子位</div>
-    
-  </div>
-  
-  <div class="paper-card">
-    <div class="paper-title">
-      <span class="paper-idx">2</span>
-      <a href="https://www.qbitai.com/2026/03/389447.html" target="_blank" rel="noopener">英伟达AI游戏角色美化功能引发玩家强烈抵制</a>
-    </div>
-    
-    <div class="paper-desc">英伟达推出AI技术自动美化游戏角色，但玩家认为这破坏了角色原貌和艺术风格，导致游戏圈大规模反对。这反映了AI应用需平衡技术革新与用户接受度。</div>
-    
-    
-    <div class="paper-source">来源：量子位</div>
-    
-  </div>
-  
-  <div class="paper-card">
-    <div class="paper-title">
-      <span class="paper-idx">3</span>
-      <a href="https://www.qbitai.com/2026/03/389442.html" target="_blank" rel="noopener">世界模型结合强化学习是迈向物理AI的关键路径</a>
-    </div>
-    
-    <div class="paper-desc">这项研究提出，通过世界模型模拟环境，再结合强化学习训练AI，能让AI在物理世界中更智能地决策和行动，为自动驾驶等应用提供新思路。</div>
-    
-    
-    <div class="paper-source">来源：量子位</div>
-    
-  </div>
-  
-  <div class="paper-card">
-    <div class="paper-title">
-      <span class="paper-idx">4</span>
-      <a href="https://www.qbitai.com/2026/03/389311.html" target="_blank" rel="noopener">飞书推出企业智能助手，覆盖个人办公与业务系统</a>
-    </div>
-    
-    <div class="paper-desc">飞书发布多款企业级智能助手，能帮员工处理日常任务，还能连接业务系统。同时升级了官方插件，让这些助手更灵活好用，提升企业效率。</div>
-    
-    
-    <div class="paper-source">来源：量子位</div>
-    
-  </div>
-  
-  <div class="paper-card">
-    <div class="paper-title">
-      <span class="paper-idx">5</span>
-      <a href="https://www.qbitai.com/2026/03/389305.html" target="_blank" rel="noopener">蚂蚁数科推出“龙虾卫士”，为AI智能体提供三大安全保障</a>
-    </div>
-    
-    <div class="paper-desc">蚂蚁数科发布“龙虾卫士”安全方案，让AI智能体的决策过程可解释、行为可控制、操作可追溯，帮助企业安全可靠地部署AI应用。</div>
-    
-    
-    <div class="paper-source">来源：量子位</div>
-    
-  </div>
-  
-  <div class="paper-card">
-    <div class="paper-title">
-      <span class="paper-idx">6</span>
-      <a href="https://www.qbitai.com/2026/03/389301.html" target="_blank" rel="noopener">钉钉推出AI硬件与创新工场，助力开发者打造智能产品</a>
-    </div>
-    
-    <div class="paper-desc">钉钉发布多款AI硬件并启动创新工场计划，旨在为开发者提供工具和支持，帮助他们快速开发出适应AI时代的创新产品，推动企业智能化转型。</div>
-    
-    
-    <div class="paper-source">来源：量子位</div>
-    
-  </div>
-  
   
 
   <a href="/ai-daily-push/index.html" class="archive-btn">📅 查看往期日报</a>
 </div>
 
 <div class="footer">
-  <p>AI 日报 · 自动生成于 2026-03-20 09:11 · 数据来源：36氪 / 虎嗅 / 钛媒体 / 猎云网 / 机器之心 / IT之家</p>
+  <p>AI 日报 · 自动生成于 2026-03-20 10:45 · 数据来源：36氪 / 虎嗅 / 钛媒体 / 猎云网 / 机器之心 / IT之家</p>
 </div>
 
 
