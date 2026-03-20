@@ -5,6 +5,7 @@ load_dotenv()
 
 DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY", "")
 SITE_BASE_URL = os.getenv("SITE_BASE_URL", "")
+BASE_PATH = os.getenv("BASE_PATH", "")
 
 INDUSTRY_KEYWORDS = [
     "AI应用", "大模型", "智能体", "Agent", "算力",

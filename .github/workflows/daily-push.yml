@@ -3,14 +3,23 @@ name: AI Daily Report
 on:
   schedule:
     - cron: '0 0 * * *'  # UTC 00:00 = 北京时间 08:00
-  workflow_dispatch:       # 支持手动触发（测试用）
+  workflow_dispatch:       # 支持手动触发
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   generate:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,9 +37,9 @@ jobs:
         run: python main.py
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
-          SITE_BASE_URL: ${{ secrets.SITE_BASE_URL }}
+          BASE_PATH: /ai-daily-push
 
-      - name: Commit & Push Generated Pages
+      - name: Commit site to repo
         run: |
           git config user.name "AI Daily Bot"
           git config user.email "bot@ai-daily.local"
@@ -41,3 +50,15 @@ jobs:
             echo "Push attempt $i failed, retrying in 5s..."
             sleep 5
           done
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
