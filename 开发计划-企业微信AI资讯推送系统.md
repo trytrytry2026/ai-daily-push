@@ -7,11 +7,11 @@
 | 项目 | 信息 |
 |------|------|
 | **GitHub 仓库** | `https://github.com/trytrytry2026/ai-daily-push` |
-| **日报网址** | `https://ai-daily-push.vercel.app/` |
+| **日报网址** | `https://trytrytry2026.github.io/ai-daily-push/` |
 | **自动运行时间** | 每天北京时间 08:00 |
 | **开发语言** | Python 3.11+ |
 | **运行平台** | GitHub Actions（免费） |
-| **网页托管** | Vercel（免费） |
+| **网页托管** | GitHub Pages（免费） |
 | **LLM 服务** | DeepSeek API |
 | **语音合成** | Edge TTS（微软晓晓，女声） |
 
@@ -21,16 +21,18 @@
 
 ### 已实现
 
-- **AI 资讯模块**（10 条/天）
+- **AI 资讯模块**（15 条/天）
   - 优先采集：36氪、虎嗅、钛媒体、猎云网
   - 补充采集：机器之心、IT之家、百度资讯
   - 智能过滤：关键词匹配、质量过滤、URL 日期校验、SimHash 去重、公司多样性控制
   - LLM 生成一句话标题 + 精简描述，信息密度高、不标题党
   - 热度排序，优先源加权
+  - 至少 5 条 AI 应用深度类资讯
 
-- **AI 论文解读模块**（最多 10 篇/天）
-  - 来源：机器之心、量子位 RSS + 百度搜索
-  - 严格过滤：必须是论文/研究相关内容，排除纯产品新闻、股票、医疗等
+- **AI 论文解读模块**（最多 10 篇/天，近 1 周内）
+  - 来源：机器之心 / 量子位 RSS + Bing 搜索 + Google 搜索 + 百度搜索（四引擎）
+  - **两级过滤策略**：严格模式（要求"论文/paper/arxiv"等强信号词）→ 如 <5 篇自动降级到宽松模式（弱信号词 + 可信来源 AI 文章）
+  - 排除纯产品新闻、股票、医疗等无关内容
   - LLM 精炼摘要，点击可跳转原文（中文网站）
 
 - **语音播报**
@@ -40,14 +42,15 @@
 
 - **网页日报**
   - 响应式设计，手机/电脑自适应
-  - 分模块展示：「AI 资讯」和「AI 论文解读」独立标题
+  - 紧凑型顶部 Header，内嵌 SVG 科技感图形（电路节点、网格线、光晕）
+  - 分模块展示：「AI 资讯」蓝色渐变标题卡片、「AI 论文解读」紫色渐变标题卡片
   - 新闻卡片支持排名角标、来源标签、点击跳转原文
   - 往期归档，自动保留最近 90 天日报
 
 - **全自动运行**
   - GitHub Actions 每天 UTC 00:00（北京时间 08:00）自动触发
   - 也支持手动触发（GitHub Actions → Run workflow）
-  - 生成的页面自动提交到仓库 → Vercel 自动部署
+  - 生成的页面自动提交到仓库 → GitHub Pages 自动部署
 
 ### 未实现（可扩展）
 
@@ -70,9 +73,11 @@ START (每天 08:00 自动触发)
   │     ├─ 百度资讯搜索
   │     └─ 机器之心 / IT之家 RSS（补充源）
   │
-  ├─ 2. 论文采集
+  ├─ 2. 论文采集（四引擎并行）
   │     ├─ 机器之心 / 量子位 RSS
-  │     └─ 百度搜索（论文解读专用查询词）
+  │     ├─ Bing 搜索（海外服务器更稳定）
+  │     ├─ Google 搜索（兜底）
+  │     └─ 百度搜索（国内搜索引擎）
   │
   ├─ 3. 新闻过滤 Pipeline
   │     ├─ URL 日期校验（丢弃明显过时文章）
@@ -81,13 +86,14 @@ START (每天 08:00 自动触发)
   │     ├─ 质量过滤（排除股评/自媒体/标题党）
   │     ├─ SimHash 文本去重
   │     ├─ 公司多样性控制（同一公司最多 2 条）
-  │     └─ 热度排序 + 优先源加权 → 取 Top 10
+  │     └─ 热度排序 + 优先源加权 → 取 Top 15
   │
-  ├─ 4. 论文过滤
-  │     ├─ AI 关键词必须命中
-  │     ├─ 论文/研究信号词匹配
-  │     ├─ 负面词排除（医疗/股票/体育等）
-  │     └─ 相关度排序 → 取 Top 10
+  ├─ 4. 论文两级过滤
+  │     ├─ 负面词排除（股票/体育/医疗等）
+  │     ├─ 严格模式：要求标题含"论文/paper/arxiv/论文解读"
+  │     ├─ 宽松模式（兜底）：弱信号词（研究发现/实验表明/开源模型等）
+  │     │   或来自可信来源（机器之心/量子位）的 AI 相关文章
+  │     └─ 相关度评分排序 → 取 Top 10
   │
   ├─ 5. LLM 摘要（DeepSeek API）
   │     ├─ 新闻：生成一句话标题 + 精简描述
@@ -97,12 +103,12 @@ START (每天 08:00 自动触发)
   │     └─ 生成完整播报 MP3
   │
   ├─ 7. 网页生成（Jinja2 模板）
-  │     ├─ 日报页面（含音频播放器）
+  │     ├─ 日报页面（含音频播放器、SVG 科技感 Header）
   │     └─ 首页归档更新
   │
   └─ 8. 自动部署
         ├─ Git commit & push 到 GitHub
-        └─ Vercel 检测到推送 → 自动部署上线
+        └─ GitHub Pages 自动部署上线
 END
 ```
 
@@ -114,13 +120,13 @@ END
 ai-daily-push/
 ├── .github/
 │   └── workflows/
-│       └── daily-push.yml              # GitHub Actions 定时任务配置
+│       └── daily-push.yml              # GitHub Actions 定时任务 + GitHub Pages 部署
 ├── src/
 │   ├── collector/                       # 数据采集模块
 │   │   ├── base.py                     # 采集器抽象基类
 │   │   ├── rss_collector.py            # RSS 通用采集器（虎嗅/钛媒体/猎云网/机器之心/IT之家）
 │   │   ├── web_collector.py            # 网页采集器（36氪 API + 百度资讯搜索）
-│   │   └── cn_paper_collector.py       # 中文论文/研究采集器（RSS + 百度搜索）
+│   │   └── cn_paper_collector.py       # 论文采集器（RSS + Bing + Google + 百度，四引擎）
 │   ├── filter/                          # 过滤 & 去重模块
 │   │   └── pipeline.py                 # 完整过滤流水线
 │   ├── summarizer/                      # LLM 摘要模块
@@ -132,20 +138,19 @@ ai-daily-push/
 │   │   └── page_builder.py            # Jinja2 渲染 HTML + 归档管理
 │   ├── audio/                           # 语音合成模块
 │   │   └── tts_generator.py           # Edge TTS 生成 MP3
-│   ├── config.py                        # 全局配置（关键词/数据源/阈值）
+│   ├── config.py                        # 全局配置（关键词/数据源/阈值/BASE_PATH）
 │   └── models.py                        # 数据模型（RawArticle / ProcessedArticle）
 ├── templates/
-│   ├── daily.html                       # 日报页面 Jinja2 模板
+│   ├── daily.html                       # 日报页面 Jinja2 模板（SVG Header + 渐变模块标题）
 │   └── index.html                       # 首页归档模板
-├── site/                                # 生成的静态站点（自动部署到 Vercel）
+├── site/                                # 生成的静态站点（自动部署到 GitHub Pages）
 │   ├── index.html                      # 首页
 │   ├── archive.json                    # 归档索引
 │   ├── audio/                          # 语音 MP3 文件
-│   │   └── 2026-03-19.mp3
-│   └── 2026/03/19.html                # 日报页面
+│   │   └── 2026-03-20.mp3
+│   └── 2026/03/20.html                # 日报页面
 ├── main.py                              # 主入口
 ├── requirements.txt                     # Python 依赖
-├── vercel.json                          # Vercel 部署配置
 ├── .env.example                         # 环境变量模板
 ├── .gitignore
 └── README.md
@@ -174,7 +179,7 @@ PRIORITY_SOURCES = ["36氪", "虎嗅", "钛媒体", "猎云网"]
 
 | 参数 | 值 | 位置 |
 |------|-----|------|
-| 新闻条数上限 | 10 | `config.py → MAX_NEWS_COUNT` |
+| 新闻条数上限 | 15 | `config.py → MAX_NEWS_COUNT` |
 | 论文条数上限 | 10 | `config.py → MAX_PAPER_COUNT` |
 | 总字符上限 | 3000 | `main.py → _truncate_to_limit()` |
 | 新闻时间窗口 | 24 小时 | `main.py → since = now - timedelta(hours=24)` |
@@ -193,9 +198,12 @@ PRIORITY_SOURCES = ["36氪", "虎嗅", "钛媒体", "猎云网"]
 | 新闻 | IT之家 | RSS | 补充 |
 | 论文 | 机器之心 | RSS | 主要 |
 | 论文 | 量子位 | RSS | 主要 |
+| 论文 | Bing | 搜索抓取 | 补充（海外稳定） |
+| 论文 | Google | 搜索抓取 | 补充（兜底） |
 | 论文 | 百度搜索 | 搜索抓取 | 补充 |
 
-> 所有数据源均为国内可直接访问，无需 VPN。
+> 新闻数据源均为国内可直接访问，无需 VPN。  
+> 论文采集在 GitHub Actions（海外服务器）上运行，故使用 Bing/Google 确保稳定性，最终展示链接为中文网站。
 
 ---
 
@@ -204,9 +212,10 @@ PRIORITY_SOURCES = ["36氪", "虎嗅", "钛媒体", "猎云网"]
 | 变量名 | 必填 | 说明 |
 |--------|------|------|
 | `DEEPSEEK_API_KEY` | 是 | DeepSeek API Key，用于 LLM 摘要生成 |
-| `SITE_BASE_URL` | 否 | 网站基础 URL（如 `https://ai-daily-push.vercel.app`） |
+| `BASE_PATH` | 否 | GitHub Pages 项目路径前缀（如 `/ai-daily-push`） |
 
-在 GitHub 仓库的 **Settings → Secrets and variables → Actions** 中配置。
+在 GitHub 仓库的 **Settings → Secrets and variables → Actions** 中配置 `DEEPSEEK_API_KEY`。  
+`BASE_PATH` 已在 GitHub Actions workflow 文件中直接设置。
 
 ---
 
@@ -234,11 +243,11 @@ PRIORITY_SOURCES = ["36氪", "虎嗅", "钛媒体", "猎云网"]
 | 问题 | 原因 | 解决方法 |
 |------|------|----------|
 | 新闻为空 | 数据源网站改版或临时故障 | 等待恢复，或调整采集器代码 |
-| 论文为空 | RSS 源无新内容或过滤太严 | 放宽 `cn_paper_collector.py` 中的过滤条件 |
+| 论文为空 | 所有四个引擎均无结果（极少见） | 检查 Actions 日志，放宽过滤条件 |
 | LLM 摘要失败 | DeepSeek API 余额不足或服务异常 | 充值或等待恢复，系统会降级为原始标题 |
 | 语音生成失败 | Edge TTS 服务临时不可用 | 页面正常生成，仅无语音，等待恢复 |
 | Git push 失败 | 并发推送冲突 | 工作流已内置 3 次重试机制 |
-| Vercel 部署失败 | 服务临时异常 | 重新触发 Actions 即可 |
+| GitHub Pages 部署失败 | 服务临时异常 | 重新触发 Actions 即可 |
 
 ### 7.3 手动触发
 
@@ -246,7 +255,7 @@ PRIORITY_SOURCES = ["36氪", "虎嗅", "钛媒体", "猎云网"]
 
 1. 打开 GitHub 仓库 → **Actions** → 左侧 **AI Daily Report**
 2. 点击 **Run workflow** → **Run workflow**
-3. 等待 2-3 分钟，刷新 Vercel 网址查看结果
+3. 等待 2-3 分钟，刷新日报网址查看结果
 
 ---
 
@@ -260,6 +269,7 @@ PRIORITY_SOURCES = ["36氪", "虎嗅", "钛媒体", "猎云网"]
    cd "C:\Users\Laptop\Desktop\推送新闻"
    git add .
    git commit -m "update: 调整关键词配置"
+   git pull --rebase origin main
    git push
    ```
 3. 下次自动运行时即生效，或手动触发立即生效
@@ -296,9 +306,9 @@ cron 格式：`分 时 日 月 星期`（UTC 时间），北京时间 = UTC + 8�
 | 项目 | 费用 | 说明 |
 |------|------|------|
 | GitHub Actions | ¥0 | 免费额度 2000 分钟/月，本项目每天约 3 分钟 |
-| Vercel 网页托管 | ¥0 | Hobby 计划免费 |
+| GitHub Pages | ¥0 | 免费静态站点托管 |
 | Edge TTS 语音 | ¥0 | 微软免费服务 |
-| DeepSeek API | **约 ¥10-30** | 每天约 20 条摘要，费用极低 |
+| DeepSeek API | **约 ¥10-30** | 每天约 25 条摘要，费用极低 |
 | **月总成本** | **约 ¥10-30** | 唯一的持续支出就是 LLM API |
 
 > DeepSeek API 极其便宜，10 块钱可以用很久。如余额不足，登录 https://platform.deepseek.com/ 充值即可。
@@ -309,15 +319,15 @@ cron 格式：`分 时 日 月 星期`（UTC 时间），北京时间 = UTC + 8�
 
 1. **所有新闻链接必须国内可访问**：系统已排除所有海外源，仅采集国内网站。如发现某条链接无法打开，属于原网站个别文章问题，不影响整体。
 
-2. **论文模块展示的是"论文解读"**：不是直接展示英文论文，而是采集国内科技媒体（机器之心、量子位）对 AI 论文的中文解读文章，点击链接打开的是中文网站。
+2. **论文模块展示的是"论文解读"**：不是直接展示英文论文，而是采集国内科技媒体（机器之心、量子位）对 AI 论文的中文解读文章。采集使用四引擎（RSS + Bing + Google + 百度），并通过两级过滤策略确保稳定性。
 
 3. **语音播报依赖网络**：Edge TTS 需要 GitHub Actions 运行环境能访问微软服务。如果语音偶尔生成失败，不影响页面正常展示。
 
 4. **GitHub Actions 有免费额度**：每月 2000 分钟，本项目每天用约 3 分钟，一个月不到 100 分钟，远远够用。
 
-5. **Vercel 域名**：默认使用 `ai-daily-push.vercel.app`，如需自定义域名可在 Vercel Dashboard 中设置（需额外购买域名，约 ¥50/年）。
+5. **GitHub Pages 域名**：使用 `trytrytry2026.github.io/ai-daily-push/`。如需自定义域名可在 GitHub 仓库 Settings → Pages 中设置（需额外购买域名，约 ¥50/年）。
 
-6. **数据源可能改版**：RSS 源和网站 API 可能随时间变化。如某个源长期无法采集，需要更新对应的采集器代码。多源冗余设计使得单个源故障不影响整体。
+6. **数据源可能改版**：RSS 源和网站 API 可能随时间变化。如某个源长期无法采集，需要更新对应的采集器代码。论文模块四引擎冗余设计使得单个源故障不影响整体。
 
 7. **DeepSeek API Key 安全**：API Key 存储在 GitHub Secrets 中，不会出现在代码里。不要将 `.env` 文件提交到仓库。
 
@@ -340,10 +350,23 @@ edge-tts>=6.1.0        # 微软 Edge TTS 语音合成
 
 | 风险 | 影响 | 应对策略 |
 |------|------|----------|
-| 数据源网站改版 | 部分采集失败 | 7 个源冗余设计，单源故障不影响整体 |
+| 数据源网站改版 | 部分采集失败 | 7 个新闻源冗余设计，单源故障不影响整体 |
 | RSS 链接失效 | 部分源不可用 | 有百度搜索作为兜底采集 |
+| 论文采集为空 | 无论文展示 | 四引擎冗余（RSS/Bing/Google/百度）+ 两级过滤降级 |
 | DeepSeek API 不可用 | 无法生成摘要 | 系统会捕获异常，页面仍可生成（内容较粗） |
 | Edge TTS 不可用 | 无语音播报 | 页面正常展示，仅缺少音频 |
-| Vercel 国内访问波动 | 网页打开慢 | 可备选切换到阿里云 OSS（约 ¥1/月） |
+| GitHub Pages 访问波动 | 国内偶尔较慢 | 可备选切换到阿里云 OSS（约 ¥1/月） |
 | GitHub Actions 超时 | 当天日报未生成 | 内置超时控制 + 重试；可手动触发重新生成 |
 | 新闻内容质量波动 | 个别低质内容 | 多层过滤 + LLM 质量把关，持续优化过滤规则 |
+
+---
+
+## 十三、更新记录
+
+| 日期 | 变更 |
+|------|------|
+| 2026-03-19 | 项目初始化，Vercel 部署 |
+| 2026-03-19 | 新增论文解读模块、语音播报功能 |
+| 2026-03-20 | 从 Vercel 迁移到 GitHub Pages（解决国内访问问题） |
+| 2026-03-20 | 论文采集新增 Bing + Google 搜索引擎，两级过滤策略 |
+| 2026-03-20 | 页面 Header 改为 SVG 科技感设计，模块标题改为渐变色卡片 |
