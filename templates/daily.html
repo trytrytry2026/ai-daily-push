@@ -28,55 +28,39 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ===== Header ===== */
+  /* ===== Header — compact with SVG tech graphics ===== */
   .header {
-    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 30%, #2d1b69 65%, #1a1a2e 100%);
-    color: white; padding: 3rem 1.5rem 2.5rem; text-align: center;
-    position: relative; overflow: hidden; min-height: 220px;
+    background: linear-gradient(135deg, #0a1628 0%, #162544 40%, #1a1040 100%);
+    color: white; padding: 1.4rem 1.2rem 1.2rem; text-align: center;
+    position: relative; overflow: hidden;
   }
-  .header::before {
-    content: ''; position: absolute; inset: 0;
-    background:
-      radial-gradient(circle at 20% 40%, rgba(79,110,247,0.25) 0%, transparent 50%),
-      radial-gradient(circle at 80% 30%, rgba(139,92,246,0.2) 0%, transparent 45%),
-      radial-gradient(circle at 50% 90%, rgba(20,184,166,0.15) 0%, transparent 50%);
+  .header-svg {
+    position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;
   }
-  .header::after {
-    content: ''; position: absolute; inset: 0;
-    background-image:
-      radial-gradient(1.5px 1.5px at 10% 20%, rgba(255,255,255,0.15) 50%, transparent 50%),
-      radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,0.1) 50%, transparent 50%),
-      radial-gradient(2px 2px at 50% 15%, rgba(255,255,255,0.12) 50%, transparent 50%),
-      radial-gradient(1px 1px at 70% 55%, rgba(255,255,255,0.08) 50%, transparent 50%),
-      radial-gradient(1.5px 1.5px at 85% 35%, rgba(255,255,255,0.1) 50%, transparent 50%),
-      radial-gradient(1px 1px at 15% 85%, rgba(255,255,255,0.06) 50%, transparent 50%),
-      radial-gradient(2px 2px at 90% 80%, rgba(255,255,255,0.08) 50%, transparent 50%),
-      radial-gradient(1px 1px at 40% 45%, rgba(255,255,255,0.07) 50%, transparent 50%);
+  .header-content {
+    position: relative; z-index: 2;
+    display: flex; align-items: center; justify-content: center; gap: 0.8rem;
+    flex-wrap: wrap;
   }
-  .header-decor {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;
+  .header-left {
+    display: flex; align-items: center; gap: 0.6rem;
   }
-  .header-decor .ring {
-    position: absolute; border-radius: 50%; border: 1px solid rgba(255,255,255,0.06);
+  .header-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: linear-gradient(135deg, #4f6ef7, #8b5cf6);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(79,110,247,0.4);
   }
-  .header-decor .ring1 { width: 300px; height: 300px; top: -100px; right: -80px; border-width: 1.5px; border-color: rgba(79,110,247,0.15); }
-  .header-decor .ring2 { width: 200px; height: 200px; bottom: -60px; left: -50px; border-color: rgba(139,92,246,0.12); }
-  .header-decor .ring3 { width: 120px; height: 120px; top: 20px; left: 15%; border-color: rgba(20,184,166,0.1); }
-  .header-decor .line {
-    position: absolute; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(79,110,247,0.15), transparent);
+  .header-titles h1 {
+    font-size: 1.3rem; font-weight: 800; letter-spacing: 2px; line-height: 1.2;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.3);
   }
-  .header-decor .line1 { width: 60%; top: 30%; left: 20%; }
-  .header-decor .line2 { width: 40%; top: 65%; left: 35%; background: linear-gradient(90deg, transparent, rgba(139,92,246,0.12), transparent); }
-  .header-content { position: relative; z-index: 2; }
-  .header-logo { font-size: 2.8rem; margin-bottom: 0.4rem; filter: drop-shadow(0 2px 8px rgba(79,110,247,0.4)); }
-  .header h1 { font-size: 1.75rem; font-weight: 800; letter-spacing: 3px; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
-  .header .subtitle { font-size: 0.85rem; opacity: 0.6; margin-top: 0.3rem; letter-spacing: 1px; font-weight: 300; }
-  .header .date { font-size: 1.05rem; opacity: 0.9; margin-top: 0.6rem; font-weight: 400; }
-  .header .stats {
-    display: inline-flex; gap: 1rem; margin-top: 0.8rem; font-size: 0.78rem;
-    background: rgba(255,255,255,0.08); border-radius: 20px; padding: 0.4rem 1.2rem;
-    backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.08);
+  .header-titles .date { font-size: 0.8rem; opacity: 0.7; font-weight: 400; }
+  .header-stats {
+    display: flex; gap: 0.6rem; font-size: 0.72rem;
+    background: rgba(255,255,255,0.07); border-radius: 16px; padding: 0.3rem 0.8rem;
+    border: 1px solid rgba(255,255,255,0.08);
   }
   .container { max-width: 700px; margin: 0 auto; padding: 0 1rem 3rem; }
 
@@ -212,9 +196,10 @@
   .archive-btn:hover { background: var(--accent); color: #fff; }
   .footer { text-align: center; padding: 2rem 1rem; font-size: 0.78rem; color: #94a3b8; border-top: 1px solid var(--border); margin-top: 1rem; }
   @media (max-width: 480px) {
-    .header { padding: 2rem 1rem 1.8rem; min-height: 180px; }
-    .header h1 { font-size: 1.4rem; }
-    .header-logo { font-size: 2.2rem; }
+    .header { padding: 1.2rem 0.8rem 1rem; }
+    .header-content { gap: 0.5rem; }
+    .header-icon { width: 38px; height: 38px; font-size: 1.3rem; border-radius: 10px; }
+    .header-titles h1 { font-size: 1.15rem; }
     .container { padding: 0 0.75rem 2rem; }
     .news-card { padding: 1rem; }
     .section-header { padding: 0.8rem 1rem; }
@@ -226,19 +211,58 @@
 <body>
 
 <div class="header">
-  <div class="header-decor">
-    <div class="ring ring1"></div>
-    <div class="ring ring2"></div>
-    <div class="ring ring3"></div>
-    <div class="line line1"></div>
-    <div class="line line2"></div>
-  </div>
+  <!-- SVG tech background: circuit nodes, connections, grid -->
+  <svg class="header-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 120" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#4f6ef7;stop-opacity:0.15"/>
+        <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:0.08"/>
+      </linearGradient>
+      <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" style="stop-color:transparent"/>
+        <stop offset="50%" style="stop-color:#4f6ef7;stop-opacity:0.12"/>
+        <stop offset="100%" style="stop-color:transparent"/>
+      </linearGradient>
+    </defs>
+    <!-- grid lines -->
+    <line x1="0" y1="30" x2="800" y2="30" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/>
+    <line x1="0" y1="60" x2="800" y2="60" stroke="rgba(255,255,255,0.025)" stroke-width="0.5"/>
+    <line x1="0" y1="90" x2="800" y2="90" stroke="rgba(255,255,255,0.02)" stroke-width="0.5"/>
+    <line x1="200" y1="0" x2="200" y2="120" stroke="rgba(255,255,255,0.02)" stroke-width="0.5"/>
+    <line x1="400" y1="0" x2="400" y2="120" stroke="rgba(255,255,255,0.025)" stroke-width="0.5"/>
+    <line x1="600" y1="0" x2="600" y2="120" stroke="rgba(255,255,255,0.02)" stroke-width="0.5"/>
+    <!-- circuit paths -->
+    <path d="M50,90 L120,90 L120,50 L200,50" stroke="url(#g2)" stroke-width="1" fill="none"/>
+    <path d="M250,50 L350,50 L350,30 L420,30" stroke="rgba(79,110,247,0.1)" stroke-width="1" fill="none"/>
+    <path d="M600,80 L680,80 L680,40 L750,40" stroke="rgba(139,92,246,0.08)" stroke-width="1" fill="none"/>
+    <path d="M450,90 L530,90 L530,60" stroke="rgba(20,184,166,0.07)" stroke-width="1" fill="none"/>
+    <!-- nodes -->
+    <circle cx="50" cy="90" r="3" fill="rgba(79,110,247,0.2)"/>
+    <circle cx="200" cy="50" r="3.5" fill="rgba(79,110,247,0.25)"/>
+    <circle cx="120" cy="50" r="2" fill="rgba(79,110,247,0.15)"/>
+    <circle cx="420" cy="30" r="3" fill="rgba(79,110,247,0.15)"/>
+    <circle cx="350" cy="30" r="2" fill="rgba(79,110,247,0.1)"/>
+    <circle cx="750" cy="40" r="3" fill="rgba(139,92,246,0.15)"/>
+    <circle cx="680" cy="40" r="2" fill="rgba(139,92,246,0.1)"/>
+    <circle cx="530" cy="60" r="2.5" fill="rgba(20,184,166,0.12)"/>
+    <!-- decorative circles -->
+    <circle cx="700" cy="20" r="35" fill="none" stroke="rgba(139,92,246,0.06)" stroke-width="1"/>
+    <circle cx="80" cy="25" r="25" fill="none" stroke="rgba(79,110,247,0.05)" stroke-width="1"/>
+    <circle cx="500" cy="100" r="20" fill="none" stroke="rgba(20,184,166,0.05)" stroke-width="1"/>
+    <!-- glow spots -->
+    <circle cx="200" cy="50" r="12" fill="rgba(79,110,247,0.06)"/>
+    <circle cx="600" cy="80" r="10" fill="rgba(139,92,246,0.05)"/>
+    <circle cx="350" cy="50" r="8" fill="rgba(79,110,247,0.04)"/>
+  </svg>
   <div class="header-content">
-    <div class="header-logo">🤖</div>
-    <h1>AI 日报</h1>
-    <div class="subtitle">ARTIFICIAL INTELLIGENCE DAILY</div>
-    <div class="date">{{ date_display }}</div>
-    <div class="stats">
+    <div class="header-left">
+      <div class="header-icon">🤖</div>
+      <div class="header-titles">
+        <h1>AI 日报</h1>
+        <div class="date">{{ date_display }}</div>
+      </div>
+    </div>
+    <div class="header-stats">
       <span>📰 {{ news_list|length }} 条资讯</span>
       {% if paper_list %}<span>📄 {{ paper_list|length }} 篇论文</span>{% endif %}
       {% if audio_url %}<span>🎧 语音播报</span>{% endif %}
