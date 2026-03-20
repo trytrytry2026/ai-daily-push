@@ -1,4 +1,4 @@
-"""中文 AI 论文/研究解读采集器 — 多引擎搜索 + RSS 双保险"""
+"""中文 AI 论文/研究解读采集器 — 多引擎搜索 + RSS，严格只保留论文/研究类"""
 import logging
 import re
 from datetime import datetime, timezone
@@ -20,47 +20,52 @@ PAPER_RSS_FEEDS = {
 
 BAIDU_QUERIES = [
     "AI 论文解读",
-    "大模型 论文",
-    "人工智能 研究突破",
-    "深度学习 最新论文",
-    "AI 论文速递",
-    "机器学习 研究进展",
+    "大模型 论文 解读",
+    "人工智能 论文 arXiv",
+    "深度学习 论文速递",
+    "AI 论文推荐",
+    "大模型 研究 论文",
 ]
 
 BING_QUERIES = [
     "AI 论文解读 site:jiqizhixin.com",
     "论文 site:qbitai.com",
     "AI论文解读 最新",
-    "大模型 论文 研究",
-    "人工智能 研究 arXiv",
+    "大模型 论文 arXiv 解读",
     "深度学习 论文推荐",
+    "人工智能 研究论文",
+]
+
+PAPER_SIGNALS = [
+    "论文", "paper", "arxiv", "论文解读", "论文速递", "论文推荐",
+    "论文精读", "论文导读", "技术报告", "研究发现", "研究表明",
+    "研究证实", "研究团队", "实验证明", "实验表明", "实验结果",
+    "提出了", "我们提出", "研究人员", "研究者",
+    "数据集", "benchmark", "评测", "开源模型", "开源框架",
+    "预训练", "微调", "fine-tune", "训练方法",
+    "模型架构", "注意力机制", "attention",
+    "sota", "state-of-the-art", "性能提升", "准确率",
 ]
 
 AI_KEYWORDS = [
     "ai", "人工智能", "大模型", "深度学习", "机器学习",
     "transformer", "gpt", "llm", "bert", "diffusion",
     "多模态", "智能体", "agent", "具身智能",
-    "算力", "神经网络", "自然语言处理", "nlp",
+    "神经网络", "自然语言处理", "nlp",
     "计算机视觉", "语音识别", "aigc", "生成式",
-    "rag", "强化学习", "机器人", "moe",
-    "视觉语言", "世界模型", "推理", "reasoning",
-    "模型", "算法", "训练", "开源",
+    "rag", "强化学习", "moe",
+    "视觉语言", "世界模型",
 ]
 
 NEGATIVE_KEYWORDS = [
     "医疗", "医学", "药物", "临床", "患者", "癌症", "肿瘤",
     "基因", "蛋白", "手术",
-    "股票", "涨停", "跌停", "基金", "财报", "市值蒸发",
+    "股票", "涨停", "跌停", "基金", "财报", "市值",
     "足球", "篮球", "体育",
     "房地产", "楼市", "房价",
     "娱乐", "综艺", "选秀", "明星",
-    "售价", "优惠", "获投", "股价",
-]
-
-PAPER_BOOST_KEYWORDS = [
-    "论文", "paper", "arxiv", "论文解读", "论文速递",
-    "研究", "实验", "数据集", "benchmark", "开源",
-    "技术报告", "突破", "提出", "发现",
+    "售价", "优惠", "获投", "股价", "融资",
+    "发布会", "新品发布", "上市",
 ]
 
 
@@ -77,7 +82,7 @@ class CnPaperCollector(BaseCollector):
         all_papers.extend(rss_papers)
         logger.info(f"[{self.name}] RSS 采集到 {len(rss_papers)} 篇")
 
-        bing_papers = self._fetch_from_bing(since)
+        bing_papers = self._fetch_from_bing()
         all_papers.extend(bing_papers)
         logger.info(f"[{self.name}] Bing 搜索采集到 {len(bing_papers)} 篇")
 
@@ -97,8 +102,6 @@ class CnPaperCollector(BaseCollector):
         unique.sort(key=lambda p: self._paper_score(p), reverse=True)
         logger.info(f"[{self.name}] 去重后共 {len(unique)} 篇")
         return unique
-
-    # ── RSS ──────────────────────────────────────────
 
     def _fetch_from_rss(self, since: datetime) -> list[RawArticle]:
         results = []
@@ -132,7 +135,7 @@ class CnPaperCollector(BaseCollector):
                         continue
 
                     text = f"{title} {summary}".lower()
-                    if not self._basic_filter(text):
+                    if not self._is_paper(text):
                         continue
 
                     results.append(RawArticle(
@@ -149,9 +152,7 @@ class CnPaperCollector(BaseCollector):
                 logger.warning(f"[{self.name}] RSS {name} 采集失败: {e}")
         return results
 
-    # ── Bing 搜索（海外访问更稳定）──────────────────
-
-    def _fetch_from_bing(self, since: datetime) -> list[RawArticle]:
+    def _fetch_from_bing(self) -> list[RawArticle]:
         all_results = []
         now = datetime.now(timezone.utc)
 
@@ -162,12 +163,11 @@ class CnPaperCollector(BaseCollector):
             except Exception as e:
                 logger.warning(f"[{self.name}] Bing '{query}' 异常: {e}")
 
-        logger.info(f"[{self.name}] Bing 搜索总计 {len(all_results)} 篇")
         return all_results
 
     def _search_bing(self, query: str, now: datetime) -> list[RawArticle]:
         url = "https://www.bing.com/search"
-        params = {"q": f"{query}", "setlang": "zh-Hans", "cc": "CN"}
+        params = {"q": query, "setlang": "zh-Hans", "cc": "CN"}
         headers = {
             "User-Agent": USER_AGENT,
             "Accept": "text/html,application/xhtml+xml",
@@ -188,22 +188,17 @@ class CnPaperCollector(BaseCollector):
             if any(skip in link for skip in ["bing.com", "microsoft.com", "go.microsoft", "login"]):
                 continue
 
-            text = title.lower()
-            if not self._basic_filter(text):
+            if not self._is_paper(title.lower()):
                 continue
 
             pub_time = self._extract_date_from_url(link)
             papers.append(RawArticle(
-                title=title,
-                summary="",
-                url=link,
+                title=title, summary="", url=link,
                 source="Bing搜索",
                 publish_time=pub_time or now,
             ))
 
         return papers[:8]
-
-    # ── 百度搜索 ──────────────────────────────────
 
     def _fetch_from_baidu(self, since: datetime) -> list[RawArticle]:
         all_results = []
@@ -218,18 +213,13 @@ class CnPaperCollector(BaseCollector):
             except Exception as e:
                 logger.warning(f"[{self.name}] 百度 '{query}' 异常: {e}")
 
-        logger.info(f"[{self.name}] 百度搜索总计 {len(all_results)} 篇")
         return all_results
 
     def _search_baidu(self, query: str, begin_ts: int, end_ts: int, now: datetime) -> list[RawArticle]:
         url = "https://www.baidu.com/s"
         params = {
-            "wd": query,
-            "tn": "news",
-            "rtt": "4",
-            "bsst": "1",
-            "cl": "2",
-            "medium": "0",
+            "wd": query, "tn": "news", "rtt": "4", "bsst": "1",
+            "cl": "2", "medium": "0",
             "gpc": f"stf={begin_ts},{end_ts}|stftype=2",
         }
         headers = {
@@ -242,63 +232,48 @@ class CnPaperCollector(BaseCollector):
         html = resp.text
 
         papers = []
-        patterns = [
+        for pat in [
             r'<h3[^>]*>\s*<a[^>]*href="([^"]+)"[^>]*>(.*?)</a>',
             r'href="(https?://[^"]+)"[^>]*>([\u4e00-\u9fff][\s\S]*?)</a>',
-        ]
-        all_matches = []
-        for pat in patterns:
+        ]:
             found = re.findall(pat, html, re.DOTALL)
             if found:
-                all_matches = found
+                for link, title_html in found[:10]:
+                    title = re.sub(r"<[^>]+>", "", title_html).strip()
+                    title = re.sub(r"\s+", " ", title)
+                    if not title or not link or len(title) < 6:
+                        continue
+                    if "百度" in title and "搜索" in title:
+                        continue
+                    if not self._is_paper(title.lower()):
+                        continue
+
+                    pub_time = self._extract_date_from_url(link)
+                    papers.append(RawArticle(
+                        title=title, summary="", url=link,
+                        source="论文搜索",
+                        publish_time=pub_time or now,
+                    ))
                 break
-
-        for link, title_html in all_matches[:10]:
-            title = re.sub(r"<[^>]+>", "", title_html).strip()
-            title = re.sub(r"\s+", " ", title)
-            if not title or not link or len(title) < 6:
-                continue
-            if "百度" in title and "搜索" in title:
-                continue
-
-            text = title.lower()
-            if not self._basic_filter(text):
-                continue
-
-            pub_time = self._extract_date_from_url(link)
-            papers.append(RawArticle(
-                title=title,
-                summary="",
-                url=link,
-                source="论文搜索",
-                publish_time=pub_time or now,
-            ))
 
         return papers
 
-    # ── 过滤与评分 ────────────────────────────────
-
     @staticmethod
-    def _basic_filter(text: str) -> bool:
-        """基础过滤：排除负面词，须含至少一个AI相关词"""
+    def _is_paper(text: str) -> bool:
+        """必须同时满足：无负面词 + 有AI词 + 有论文/研究信号"""
         if any(neg in text for neg in NEGATIVE_KEYWORDS):
             return False
-        return any(kw in text for kw in AI_KEYWORDS)
+        has_ai = any(kw in text for kw in AI_KEYWORDS)
+        has_paper = any(kw in text for kw in PAPER_SIGNALS)
+        return has_ai and has_paper
 
     @staticmethod
     def _paper_score(article: RawArticle) -> float:
         text = f"{article.title} {article.summary}".lower()
-        score = 0.0
-        for kw in PAPER_BOOST_KEYWORDS:
-            if kw in text:
-                score += 3
+        score = sum(3 for kw in PAPER_SIGNALS if kw in text)
         if article.source in ("机器之心", "量子位"):
             score += 5
-        if article.source == "Bing搜索":
-            score += 1
         return score
-
-    # ── 工具方法 ──────────────────────────────────
 
     @staticmethod
     def _parse_rss_time(entry) -> datetime | None:
