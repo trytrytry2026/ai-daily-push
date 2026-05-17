@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 日报 | 2026年05月17日 周日</title>
+<style>
+  :root {
+    --bg: #f0f2f5;
+    --card-bg: #ffffff;
+    --text: #1a1a2e;
+    --text-secondary: #5a6577;
+    --accent: #4f6ef7;
+    --accent-light: #eef1ff;
+    --border: #e5e8ed;
+    --red: #ef4444; --red-bg: #fef2f2;
+    --orange: #f97316; --orange-bg: #fff7ed;
+    --blue: #3b82f6; --blue-bg: #eff6ff;
+    --green: #22c55e; --green-bg: #f0fdf4;
+    --purple: #8b5cf6; --purple-bg: #f5f3ff;
+    --teal: #14b8a6; --teal-bg: #f0fdfa;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== Header — compact with SVG tech graphics ===== */
+  .header {
+    background: linear-gradient(135deg, #0a1628 0%, #162544 40%, #1a1040 100%);
+    color: white; padding: 1.4rem 1.2rem 1.2rem; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .header-svg {
+    position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;
+  }
+  .header-content {
+    position: relative; z-index: 2;
+    display: flex; align-items: center; justify-content: center; gap: 0.8rem;
+    flex-wrap: wrap;
+  }
+  .header-left {
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .header-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: linear-gradient(135deg, #4f6ef7, #8b5cf6);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(79,110,247,0.4);
+  }
+  .header-titles h1 {
+    font-size: 1.3rem; font-weight: 800; letter-spacing: 2px; line-height: 1.2;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.3);
+  }
+  .header-titles .date { font-size: 0.8rem; opacity: 0.7; font-weight: 400; }
+  .header-stats {
+    display: flex; gap: 0.6rem; font-size: 0.72rem;
+    background: rgba(255,255,255,0.07); border-radius: 16px; padding: 0.3rem 0.8rem;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .container { max-width: 700px; margin: 0 auto; padding: 0 1rem 3rem; }
+
+  /* ===== Audio Player ===== */
+  
+  .audio-player {
+    background: var(--card-bg); border-radius: 14px; padding: 1rem 1.25rem;
+    margin: 1rem 0; border: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .audio-header {
+    display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem;
+    font-size: 0.9rem; font-weight: 600; color: var(--accent);
+  }
+  .audio-controls { display: flex; align-items: center; gap: 0.75rem; }
+  .audio-btn {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--purple));
+    border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 1.1rem; flex-shrink: 0; transition: transform 0.15s;
+  }
+  .audio-btn:hover { transform: scale(1.08); }
+  .audio-progress-wrap { flex: 1; display: flex; flex-direction: column; gap: 0.2rem; }
+  .audio-progress {
+    width: 100%; height: 6px; border-radius: 3px; appearance: none; -webkit-appearance: none;
+    background: var(--border); outline: none; cursor: pointer;
+  }
+  .audio-progress::-webkit-slider-thumb {
+    appearance: none; -webkit-appearance: none; width: 14px; height: 14px;
+    border-radius: 50%; background: var(--accent); cursor: pointer; margin-top: -4px;
+  }
+  .audio-progress::-webkit-slider-runnable-track { height: 6px; border-radius: 3px; }
+  .audio-time-row { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-secondary); }
+  .speed-btn {
+    padding: 0.2rem 0.5rem; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--card-bg); color: var(--text-secondary); font-size: 0.72rem;
+    cursor: pointer; font-weight: 600; transition: all 0.15s; flex-shrink: 0;
+  }
+  .speed-btn:hover, .speed-btn.active { background: var(--accent-light); color: var(--accent); border-color: var(--accent); }
+  
+
+  /* ===== Section Headers (gradient) ===== */
+  .section-header {
+    display: flex; align-items: center; gap: 0.8rem;
+    margin: 1.8rem 0 1rem; padding: 1rem 1.2rem;
+    border-radius: 14px; color: #fff;
+    position: relative; overflow: hidden;
+  }
+  .section-header.news-header {
+    background: linear-gradient(135deg, #3b82f6, #2563eb, #4f46e5);
+    box-shadow: 0 4px 15px rgba(59,130,246,0.25);
+  }
+  .section-header.paper-header {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed, #6d28d9);
+    box-shadow: 0 4px 15px rgba(139,92,246,0.25);
+  }
+  .section-header::after {
+    content: ''; position: absolute; right: -20px; top: -20px;
+    width: 100px; height: 100px; border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+  }
+  .section-icon {
+    width: 46px; height: 46px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; flex-shrink: 0;
+    background: rgba(255,255,255,0.15); backdrop-filter: blur(4px);
+  }
+  .section-text h2 { font-size: 1.25rem; font-weight: 800; letter-spacing: 1px; }
+  .section-text p { font-size: 0.8rem; opacity: 0.85; margin-top: 0.15rem; }
+
+  /* ===== News Cards ===== */
+  .news-card {
+    background: var(--card-bg); border-radius: 14px; padding: 1.15rem 1.25rem;
+    margin-bottom: 0.65rem; border: 1px solid var(--border); position: relative; cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04); transition: box-shadow 0.25s, transform 0.25s;
+  }
+  .news-card:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.08); transform: translateY(-2px); border-color: var(--accent); }
+  .card-top-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+  .news-rank {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 24px; height: 24px; border-radius: 8px; font-size: 0.75rem; font-weight: 800; flex-shrink: 0;
+  }
+  .news-rank.top1 { background: linear-gradient(135deg, #ef4444, #f97316); color: #fff; }
+  .news-rank.top2 { background: linear-gradient(135deg, #f97316, #eab308); color: #fff; }
+  .news-rank.top3 { background: linear-gradient(135deg, #eab308, #84cc16); color: #fff; }
+  .news-rank.normal { background: var(--accent-light); color: var(--accent); }
+  .tag {
+    display: inline-block; padding: 0.1rem 0.45rem; border-radius: 4px;
+    font-size: 0.7rem; font-weight: 600; line-height: 1.6;
+  }
+  .tag-blue { background: var(--blue-bg); color: var(--blue); }
+  .tag-purple { background: var(--purple-bg); color: var(--purple); }
+  .tag-green { background: var(--green-bg); color: var(--green); }
+  .news-title { font-size: 1rem; font-weight: 650; line-height: 1.55; margin-bottom: 0.35rem; }
+  .news-card:hover .news-title { color: var(--accent); }
+  .news-desc {
+    font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .card-bottom-row { display: flex; align-items: center; justify-content: space-between; margin-top: 0.6rem; }
+  .source-badge { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; color: var(--text-secondary); }
+  .source-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; background: var(--accent); }
+  .read-more { font-size: 0.78rem; color: var(--accent); text-decoration: none; font-weight: 500; position: relative; z-index: 2; }
+  .news-card a.card-link { position: absolute; inset: 0; z-index: 1; }
+
+  /* ===== Paper Cards ===== */
+  .paper-card {
+    background: var(--card-bg); border-radius: 14px; padding: 1rem 1.25rem;
+    margin-bottom: 0.6rem; border: 1px solid var(--border); border-left: 3px solid var(--purple);
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .paper-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); transform: translateY(-1px); }
+  .paper-idx {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 22px; height: 22px; border-radius: 6px; font-size: 0.7rem; font-weight: 700;
+    background: var(--purple-bg); color: var(--purple); margin-right: 0.4rem;
+  }
+  .paper-title { font-size: 0.92rem; font-weight: 600; line-height: 1.5; }
+  .paper-title a { color: var(--text); text-decoration: none; }
+  .paper-title a:hover { color: var(--accent); }
+  .paper-desc { font-size: 0.82rem; color: var(--text-secondary); margin-top: 0.25rem; line-height: 1.55; }
+  .paper-source { font-size: 0.72rem; color: var(--text-secondary); margin-top: 0.35rem; opacity: 0.8; }
+
+  .section-divider {
+    height: 1px; background: linear-gradient(to right, transparent, var(--border), transparent);
+    margin: 1.5rem 0 0;
+  }
+  .archive-btn {
+    display: block; text-align: center; padding: 0.85rem; margin-top: 1.5rem;
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
+    color: var(--accent); text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: all 0.2s;
+  }
+  .archive-btn:hover { background: var(--accent); color: #fff; }
+  .footer { text-align: center; padding: 2rem 1rem; font-size: 0.78rem; color: #94a3b8; border-top: 1px solid var(--border); margin-top: 1rem; }
+  @media (max-width: 480px) {
+    .header { padding: 1.2rem 0.8rem 1rem; }
+    .header-content { gap: 0.5rem; }
+    .header-icon { width: 38px; height: 38px; font-size: 1.3rem; border-radius: 10px; }
+    .header-titles h1 { font-size: 1.15rem; }
+    .container { padding: 0 0.75rem 2rem; }
+    .news-card { padding: 1rem; }
+    .section-header { padding: 0.8rem 1rem; }
+    .section-text h2 { font-size: 1.1rem; }
+    .section-icon { width: 38px; height: 38px; font-size: 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <!-- SVG tech background: circuit nodes, connections, grid -->
+  <svg class="header-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 120" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#4f6ef7;stop-opacity:0.15"/>
+        <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:0.08"/>
+      </linearGradient>
+      <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" style="stop-color:transparent"/>
+        <stop offset="50%" style="stop-color:#4f6ef7;stop-opacity:0.12"/>
+        <stop offset="100%" style="stop-color:transparent"/>
+      </linearGradient>
+    </defs>
+    <!-- grid lines -->
+    <line x1="0" y1="30" x2="800" y2="30" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/>
+    <line x1="0" y1="60" x2="800" y2="60" stroke="rgba(255,255,255,0.025)" stroke-width="0.5"/>
+    <line x1="0" y1="90" x2="800" y2="90" stroke="rgba(255,255,255,0.02)" stroke-width="0.5"/>
+    <line x1="200" y1="0" x2="200" y2="120" stroke="rgba(255,255,255,0.02)" stroke-width="0.5"/>
+    <line x1="400" y1="0" x2="400" y2="120" stroke="rgba(255,255,255,0.025)" stroke-width="0.5"/>
+    <line x1="600" y1="0" x2="600" y2="120" stroke="rgba(255,255,255,0.02)" stroke-width="0.5"/>
+    <!-- circuit paths -->
+    <path d="M50,90 L120,90 L120,50 L200,50" stroke="url(#g2)" stroke-width="1" fill="none"/>
+    <path d="M250,50 L350,50 L350,30 L420,30" stroke="rgba(79,110,247,0.1)" stroke-width="1" fill="none"/>
+    <path d="M600,80 L680,80 L680,40 L750,40" stroke="rgba(139,92,246,0.08)" stroke-width="1" fill="none"/>
+    <path d="M450,90 L530,90 L530,60" stroke="rgba(20,184,166,0.07)" stroke-width="1" fill="none"/>
+    <!-- nodes -->
+    <circle cx="50" cy="90" r="3" fill="rgba(79,110,247,0.2)"/>
+    <circle cx="200" cy="50" r="3.5" fill="rgba(79,110,247,0.25)"/>
+    <circle cx="120" cy="50" r="2" fill="rgba(79,110,247,0.15)"/>
+    <circle cx="420" cy="30" r="3" fill="rgba(79,110,247,0.15)"/>
+    <circle cx="350" cy="30" r="2" fill="rgba(79,110,247,0.1)"/>
+    <circle cx="750" cy="40" r="3" fill="rgba(139,92,246,0.15)"/>
+    <circle cx="680" cy="40" r="2" fill="rgba(139,92,246,0.1)"/>
+    <circle cx="530" cy="60" r="2.5" fill="rgba(20,184,166,0.12)"/>
+    <!-- decorative circles -->
+    <circle cx="700" cy="20" r="35" fill="none" stroke="rgba(139,92,246,0.06)" stroke-width="1"/>
+    <circle cx="80" cy="25" r="25" fill="none" stroke="rgba(79,110,247,0.05)" stroke-width="1"/>
+    <circle cx="500" cy="100" r="20" fill="none" stroke="rgba(20,184,166,0.05)" stroke-width="1"/>
+    <!-- glow spots -->
+    <circle cx="200" cy="50" r="12" fill="rgba(79,110,247,0.06)"/>
+    <circle cx="600" cy="80" r="10" fill="rgba(139,92,246,0.05)"/>
+    <circle cx="350" cy="50" r="8" fill="rgba(79,110,247,0.04)"/>
+  </svg>
+  <div class="header-content">
+    <div class="header-left">
+      <div class="header-icon">🤖</div>
+      <div class="header-titles">
+        <h1>AI 日报</h1>
+        <div class="date">2026年05月17日 周日</div>
+      </div>
+    </div>
+    <div class="header-stats">
+      <span>📰 10 条资讯</span>
+      <span>📄 7 篇论文</span>
+      <span>🎧 语音播报</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  
+  <div class="audio-player" id="audioPlayerCard">
+    <div class="audio-header">🎧 语音播报 · 听 AI 日报</div>
+    <audio id="dailyAudio" src="/ai-daily-push/audio/2026-05-17.mp3" preload="metadata"></audio>
+    <div class="audio-controls">
+      <button class="audio-btn" id="playBtn" onclick="togglePlay()">▶</button>
+      <div class="audio-progress-wrap">
+        <input type="range" class="audio-progress" id="progressBar" value="0" min="0" max="100" step="0.1" oninput="seekAudio(this.value)">
+        <div class="audio-time-row">
+          <span id="currentTime">00:00</span>
+          <span id="totalTime">00:00</span>
+        </div>
+      </div>
+      <button class="speed-btn" id="speedBtn" onclick="cycleSpeed()">1x</button>
+    </div>
+  </div>
+  
+
+  
+  <div class="section-header news-header">
+    <div class="section-icon">📰</div>
+    <div class="section-text">
+      <h2>AI 资讯</h2>
+      <p>今日热门 AI 新闻精选，10 条</p>
+    </div>
+  </div>
+
+  
+  <div class="news-card" onclick="window.open('https://www.ithome.com/0/951/390.htm','_blank')">
+    <a class="card-link" href="https://www.ithome.com/0/951/390.htm" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank top1">1</span>
+      
+      <span class="tag tag-blue">IT之家</span>
+    </div>
+    <div class="news-title">具身智能从实验室走向产业化的关键一步：国家级中试基地落地杭州</div>
+    
+    <div class="news-desc">国家人工智能应用中试基地在杭州启用，为机器人提供标准化职业技能训练场。这标志着具身智能从研发走向商业化应用有了系统化支撑，将加速技术落地和产业生态构建，对AI企业布局未来赛道具有战略意义。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>IT之家</span>
+      <a class="read-more" href="https://www.ithome.com/0/951/390.htm" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.tmtpost.com/7990615.html','_blank')">
+    <a class="card-link" href="https://www.tmtpost.com/7990615.html" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank top2">2</span>
+      
+      <span class="tag tag-blue">钛媒体</span>
+    </div>
+    <div class="news-title">同款AI船票，阿里腾讯走向不同生态：一个重应用，一个重基建</div>
+    
+    <div class="news-desc">阿里和腾讯虽同获AI入场券，却分化明显：阿里侧重AI赋能电商与云服务，腾讯押注社交与游戏场景。这种战略分歧将重塑中国AI产业格局，企业需关注其生态选择对自身业务的影响。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
+      <a class="read-more" href="https://www.tmtpost.com/7990615.html" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.tmtpost.com/7989595.html','_blank')">
+    <a class="card-link" href="https://www.tmtpost.com/7989595.html" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank top3">3</span>
+      
+      <span class="tag tag-blue">钛媒体</span>
+    </div>
+    <div class="news-title">亏损公司一夜千亿，AI推理芯片定价锚诞生颠覆英伟达</div>
+    
+    <div class="news-desc">一家长期亏损的AI芯片公司凭借推理芯片技术突破，市值飙升千亿，标志着AI推理市场正式确立价格基准，可能打破英伟达在训练领域的垄断，重塑行业竞争格局。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
+      <a class="read-more" href="https://www.tmtpost.com/7989595.html" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.tmtpost.com/7989303.html','_blank')">
+    <a class="card-link" href="https://www.tmtpost.com/7989303.html" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">4</span>
+      
+      <span class="tag tag-blue">钛媒体</span>
+    </div>
+    <div class="news-title">大模型定价战：豆包免费体验背后，全球价格对比揭示行业盈利困局</div>
+    
+    <div class="news-desc">钛媒体对比全球主流大模型价格，指出豆包等产品通过免费策略吸引用户，但可持续性存疑。企业需关注：低价竞争虽降低门槛，却可能压缩利润空间，影响长期AI服务稳定性与创新投入。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
+      <a class="read-more" href="https://www.tmtpost.com/7989303.html" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://baijiahao.baidu.com/s?id=1865322568184740620&amp;wfr=spider&amp;for=pc','_blank')">
+    <a class="card-link" href="https://baijiahao.baidu.com/s?id=1865322568184740620&amp;wfr=spider&amp;for=pc" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">5</span>
+      
+      <span class="tag tag-blue">百度资讯</span>
+    </div>
+    <div class="news-title">AI芯片新秀Cerebras上市首日涨51%，挑战英伟达霸主地位</div>
+    
+    <div class="news-desc">Cerebras凭借与OpenAI的合作关系及独特的大芯片设计，在IPO首日表现强劲，市值飙升。这标志着AI芯片市场格局开始松动，企业客户需关注多元化算力选择，以降低对单一供应商的依赖风险。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>百度资讯</span>
+      <a class="read-more" href="https://baijiahao.baidu.com/s?id=1865322568184740620&amp;wfr=spider&amp;for=pc" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.tmtpost.com/7990904.html','_blank')">
+    <a class="card-link" href="https://www.tmtpost.com/7990904.html" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">6</span>
+      
+      <span class="tag tag-blue">钛媒体</span>
+    </div>
+    <div class="news-title">音频巨头十二年上市梦碎，腾讯收购揭示独立平台生存困境</div>
+    
+    <div class="news-desc">喜马拉雅四次IPO失败后接受腾讯收购，反映音频赛道盈利模式单一、用户付费意愿低等结构性难题。独立平台在巨头生态挤压下，通过并购寻求出路或成行业常态。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
+      <a class="read-more" href="https://www.tmtpost.com/7990904.html" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.tmtpost.com/7990731.html','_blank')">
+    <a class="card-link" href="https://www.tmtpost.com/7990731.html" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">7</span>
+      
+      <span class="tag tag-blue">钛媒体</span>
+    </div>
+    <div class="news-title">快手可灵AI独立上市，AI视频商业化进入资本检验期</div>
+    
+    <div class="news-desc">快手将可灵AI业务剥离并计划独立上市，效仿百度昆仑芯模式。此举旨在利用资本市场对AI视频的热度融资，但商业化落地和盈利模式仍是关键考验，行业需警惕泡沫风险。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
+      <a class="read-more" href="https://www.tmtpost.com/7990731.html" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.tmtpost.com/7990530.html','_blank')">
+    <a class="card-link" href="https://www.tmtpost.com/7990530.html" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">8</span>
+      
+      <span class="tag tag-blue">钛媒体</span>
+    </div>
+    <div class="news-title">阿里健康AI填坑背后：内部整合成本远超技术投入</div>
+    
+    <div class="news-desc">阿里健康通过‘削藩’整合内部资源，为AI业务铺路，但数据显示，内部协调成本占AI项目总投入的40%以上，远超技术研发本身，凸显企业AI转型中组织变革的深层挑战。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
+      <a class="read-more" href="https://www.tmtpost.com/7990530.html" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.ithome.com/0/951/433.htm','_blank')">
+    <a class="card-link" href="https://www.ithome.com/0/951/433.htm" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">9</span>
+      
+      <span class="tag tag-blue">IT之家</span>
+    </div>
+    <div class="news-title">东风奕派全系免费升级城市NOA，15万级智驾战再添变数</div>
+    
+    <div class="news-desc">东风奕派007+全系免费推送城市NOA，搭载地平线征程6M芯片和端到端大模型，覆盖99%日常场景。此举将高阶智驾下探至15万级市场，可能加速行业价格战和技术普及，对传统车企和新势力形成双重压力。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>IT之家</span>
+      <a class="read-more" href="https://www.ithome.com/0/951/433.htm" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.ithome.com/0/951/389.htm','_blank')">
+    <a class="card-link" href="https://www.ithome.com/0/951/389.htm" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">10</span>
+      
+      <span class="tag tag-blue">IT之家</span>
+    </div>
+    <div class="news-title">小国AI普惠实验：马耳他全民免费ChatGPT Plus，或成AI民主化样板</div>
+    
+    <div class="news-desc">OpenAI与马耳他政府合作，向57万公民免费提供一年ChatGPT Plus，结合AI课程培训。此举不仅是全球首个国家级AI普及案例，更可能为其他小国探索AI教育、就业转型与数字主权提供低成本验证模型。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>IT之家</span>
+      <a class="read-more" href="https://www.ithome.com/0/951/389.htm" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+
+  
+
+  
+  <div class="section-divider"></div>
+
+  <div class="section-header paper-header">
+    <div class="section-icon">📄</div>
+    <div class="section-text">
+      <h2>AI 论文解读</h2>
+      <p>前沿研究与论文精选，7 篇</p>
+    </div>
+  </div>
+
+  
+  <div class="paper-card">
+    <div class="paper-title">
+      <span class="paper-idx">1</span>
+      <a href="https://www.qbitai.com/2026/05/418620.html" target="_blank" rel="noopener">AI落地实战打法全攻略，亦庄大会一站掌握</a>
+    </div>
+    
+    <div class="paper-desc">本文介绍了一场聚焦AI实际应用的行业大会，旨在帮助企业管理者了解如何将AI技术有效落地，提供从需求到方案的完整实战经验，无需再四处寻找方法。</div>
+    
+    
+    <div class="paper-source">来源：量子位</div>
+    
+  </div>
+  
+  <div class="paper-card">
+    <div class="paper-title">
+      <span class="paper-idx">2</span>
+      <a href="https://www.qbitai.com/2026/05/418518.html" target="_blank" rel="noopener">新工具将全网变命令行，省时省Token</a>
+    </div>
+    
+    <div class="paper-desc">这篇研究介绍了一个GitHub上超2万星的开源项目，它能让你像用命令行一样操作整个网络，大幅减少AI模型消耗的Token，提升效率。</div>
+    
+    
+    <div class="paper-source">来源：量子位</div>
+    
+  </div>
+  
+  <div class="paper-card">
+    <div class="paper-title">
+      <span class="paper-idx">3</span>
+      <a href="https://www.qbitai.com/2026/05/418491.html" target="_blank" rel="noopener">阿里健康发布AI，为500万医生提供权威医学证据</a>
+    </div>
+    
+    <div class="paper-desc">阿里健康推出名为“氢离子”的AI，能快速检索顶级医学期刊，帮医生获取可靠诊疗信息，提升决策效率与准确性。</div>
+    
+    
+    <div class="paper-source">来源：量子位</div>
+    
+  </div>
+  
+  <div class="paper-card">
+    <div class="paper-title">
+      <span class="paper-idx">4</span>
+      <a href="https://www.qbitai.com/2026/05/418135.html" target="_blank" rel="noopener">华为云发布Agentic AI新布局，推动企业智能化升级</a>
+    </div>
+    
+    <div class="paper-desc">华为云在创想者大会上公布了Agentic AI新布局，旨在通过自主智能体技术，帮助企业更高效地实现自动化决策和运营优化，降低AI应用门槛。</div>
+    
+    
+    <div class="paper-source">来源：量子位</div>
+    
+  </div>
+  
+  <div class="paper-card">
+    <div class="paper-title">
+      <span class="paper-idx">5</span>
+      <a href="https://www.qbitai.com/2026/05/418035.html" target="_blank" rel="noopener">AI编程时代，程序员核心能力转向需求分析</a>
+    </div>
+    
+    <div class="paper-desc">研究发现，当AI能自动写代码后，程序员最关键的技能不再是编码，而是精准理解和表达需求的能力，这决定了AI工具的实际效果。</div>
+    
+    
+    <div class="paper-source">来源：量子位</div>
+    
+  </div>
+  
+  <div class="paper-card">
+    <div class="paper-title">
+      <span class="paper-idx">6</span>
+      <a href="https://www.qbitai.com/2026/05/418140.html" target="_blank" rel="noopener">容联云推出AI Agent平台，让大模型赋能联络中心</a>
+    </div>
+    
+    <div class="paper-desc">容联云发布新平台，用AI Agent技术升级联络中心，使大模型能像数字员工一样处理客户服务，提升效率和体验。</div>
+    
+    
+    <div class="paper-source">来源：量子位</div>
+    
+  </div>
+  
+  <div class="paper-card">
+    <div class="paper-title">
+      <span class="paper-idx">7</span>
+      <a href="https://www.qbitai.com/2026/05/417968.html" target="_blank" rel="noopener">联发科芯片让手机AI更聪明，能主动帮用户做事</a>
+    </div>
+    
+    <div class="paper-desc">这篇研究介绍联发科如何通过芯片技术升级，让手机AI从被动响应变成主动服务。它能理解用户习惯，自动安排日程、管理通知，提升日常使用效率，无需复杂操作。</div>
+    
+    
+    <div class="paper-source">来源：量子位</div>
+    
+  </div>
+  
+  
+
+  <a href="/ai-daily-push/index.html" class="archive-btn">📅 查看往期日报</a>
+</div>
+
+<div class="footer">
+  <p>AI 日报 · 自动生成于 2026-05-17 12:05 · 数据来源：36氪 / 虎嗅 / 钛媒体 / 猎云网 / 机器之心 / IT之家</p>
+</div>
+
+
+<script>
+(function(){
+  var audio = document.getElementById('dailyAudio');
+  var playBtn = document.getElementById('playBtn');
+  var progressBar = document.getElementById('progressBar');
+  var currentTimeEl = document.getElementById('currentTime');
+  var totalTimeEl = document.getElementById('totalTime');
+  var speedBtn = document.getElementById('speedBtn');
+  var speeds = [1, 1.25, 1.5, 2];
+  var speedIdx = 0;
+
+  function fmt(s) {
+    var m = Math.floor(s / 60);
+    var sec = Math.floor(s % 60);
+    return (m < 10 ? '0' : '') + m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  audio.addEventListener('loadedmetadata', function() { totalTimeEl.textContent = fmt(audio.duration); });
+  audio.addEventListener('timeupdate', function() {
+    if (audio.duration) {
+      progressBar.value = (audio.currentTime / audio.duration) * 100;
+      currentTimeEl.textContent = fmt(audio.currentTime);
+    }
+  });
+  audio.addEventListener('ended', function() { playBtn.textContent = '▶'; });
+
+  window.togglePlay = function() {
+    if (audio.paused) { audio.play(); playBtn.textContent = '⏸'; }
+    else { audio.pause(); playBtn.textContent = '▶'; }
+  };
+  window.seekAudio = function(val) {
+    if (audio.duration) audio.currentTime = (val / 100) * audio.duration;
+  };
+  window.cycleSpeed = function() {
+    speedIdx = (speedIdx + 1) % speeds.length;
+    audio.playbackRate = speeds[speedIdx];
+    speedBtn.textContent = speeds[speedIdx] + 'x';
+  };
+})();
+</script>
+
+
+</body>
+</html>
