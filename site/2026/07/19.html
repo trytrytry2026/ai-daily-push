@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 日报 | 2026年07月19日 周日</title>
+<style>
+  :root {
+    --bg: #f0f2f5;
+    --card-bg: #ffffff;
+    --text: #1a1a2e;
+    --text-secondary: #5a6577;
+    --accent: #4f6ef7;
+    --accent-light: #eef1ff;
+    --border: #e5e8ed;
+    --red: #ef4444; --red-bg: #fef2f2;
+    --orange: #f97316; --orange-bg: #fff7ed;
+    --blue: #3b82f6; --blue-bg: #eff6ff;
+    --green: #22c55e; --green-bg: #f0fdf4;
+    --purple: #8b5cf6; --purple-bg: #f5f3ff;
+    --teal: #14b8a6; --teal-bg: #f0fdfa;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== Header — compact with SVG tech graphics ===== */
+  .header {
+    background: linear-gradient(135deg, #0a1628 0%, #162544 40%, #1a1040 100%);
+    color: white; padding: 1.4rem 1.2rem 1.2rem; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .header-svg {
+    position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;
+  }
+  .header-content {
+    position: relative; z-index: 2;
+    display: flex; align-items: center; justify-content: center; gap: 0.8rem;
+    flex-wrap: wrap;
+  }
+  .header-left {
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .header-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: linear-gradient(135deg, #4f6ef7, #8b5cf6);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(79,110,247,0.4);
+  }
+  .header-titles h1 {
+    font-size: 1.3rem; font-weight: 800; letter-spacing: 2px; line-height: 1.2;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.3);
+  }
+  .header-titles .date { font-size: 0.8rem; opacity: 0.7; font-weight: 400; }
+  .header-stats {
+    display: flex; gap: 0.6rem; font-size: 0.72rem;
+    background: rgba(255,255,255,0.07); border-radius: 16px; padding: 0.3rem 0.8rem;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .container { max-width: 700px; margin: 0 auto; padding: 0 1rem 3rem; }
+
+  /* ===== Audio Player ===== */
+  
+  .audio-player {
+    background: var(--card-bg); border-radius: 14px; padding: 1rem 1.25rem;
+    margin: 1rem 0; border: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .audio-header {
+    display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem;
+    font-size: 0.9rem; font-weight: 600; color: var(--accent);
+  }
+  .audio-controls { display: flex; align-items: center; gap: 0.75rem; }
+  .audio-btn {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--purple));
+    border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 1.1rem; flex-shrink: 0; transition: transform 0.15s;
+  }
+  .audio-btn:hover { transform: scale(1.08); }
+  .audio-progress-wrap { flex: 1; display: flex; flex-direction: column; gap: 0.2rem; }
+  .audio-progress {
+    width: 100%; height: 6px; border-radius: 3px; appearance: none; -webkit-appearance: none;
+    background: var(--border); outline: none; cursor: pointer;
+  }
+  .audio-progress::-webkit-slider-thumb {
+    appearance: none; -webkit-appearance: none; width: 14px; height: 14px;
+    border-radius: 50%; background: var(--accent); cursor: pointer; margin-top: -4px;
+  }
+  .audio-progress::-webkit-slider-runnable-track { height: 6px; border-radius: 3px; }
+  .audio-time-row { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-secondary); }
+  .speed-btn {
+    padding: 0.2rem 0.5rem; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--card-bg); color: var(--text-secondary); font-size: 0.72rem;
+    cursor: pointer; font-weight: 600; transition: all 0.15s; flex-shrink: 0;
+  }
+  .speed-btn:hover, .speed-btn.active { background: var(--accent-light); color: var(--accent); border-color: var(--accent); }
+  
+
+  /* ===== Section Headers (gradient) ===== */
+  .section-header {
+    display: flex; align-items: center; gap: 0.8rem;
+    margin: 1.8rem 0 1rem; padding: 1rem 1.2rem;
+    border-radius: 14px; color: #fff;
+    position: relative; overflow: hidden;
+  }
+  .section-header.news-header {
+    background: linear-gradient(135deg, #3b82f6, #2563eb, #4f46e5);
+    box-shadow: 0 4px 15px rgba(59,130,246,0.25);
+  }
+  .section-header.paper-header {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed, #6d28d9);
+    box-shadow: 0 4px 15px rgba(139,92,246,0.25);
+  }
+  .section-header::after {
+    content: ''; position: absolute; right: -20px; top: -20px;
+    width: 100px; height: 100px; border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+  }
+  .section-icon {
+    width: 46px; height: 46px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; flex-shrink: 0;
+    background: rgba(255,255,255,0.15); backdrop-filter: blur(4px);
+  }
+  .section-text h2 { font-size: 1.25rem; font-weight: 800; letter-spacing: 1px; }
+  .section-text p { font-size: 0.8rem; opacity: 0.85; margin-top: 0.15rem; }
+
+  /* ===== News Cards ===== */
+  .news-card {
+    background: var(--card-bg); border-radius: 14px; padding: 1.15rem 1.25rem;
+    margin-bottom: 0.65rem; border: 1px solid var(--border); position: relative; cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04); transition: box-shadow 0.25s, transform 0.25s;
+  }
+  .news-card:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.08); transform: translateY(-2px); border-color: var(--accent); }
+  .card-top-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+  .news-rank {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 24px; height: 24px; border-radius: 8px; font-size: 0.75rem; font-weight: 800; flex-shrink: 0;
+  }
+  .news-rank.top1 { background: linear-gradient(135deg, #ef4444, #f97316); color: #fff; }
+  .news-rank.top2 { background: linear-gradient(135deg, #f97316, #eab308); color: #fff; }
+  .news-rank.top3 { background: linear-gradient(135deg, #eab308, #84cc16); color: #fff; }
+  .news-rank.normal { background: var(--accent-light); color: var(--accent); }
+  .tag {
+    display: inline-block; padding: 0.1rem 0.45rem; border-radius: 4px;
+    font-size: 0.7rem; font-weight: 600; line-height: 1.6;
+  }
+  .tag-blue { background: var(--blue-bg); color: var(--blue); }
+  .tag-purple { background: var(--purple-bg); color: var(--purple); }
+  .tag-green { background: var(--green-bg); color: var(--green); }
+  .news-title { font-size: 1rem; font-weight: 650; line-height: 1.55; margin-bottom: 0.35rem; }
+  .news-card:hover .news-title { color: var(--accent); }
+  .news-desc {
+    font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .card-bottom-row { display: flex; align-items: center; justify-content: space-between; margin-top: 0.6rem; }
+  .source-badge { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; color: var(--text-secondary); }
+  .source-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; background: var(--accent); }
+  .read-more { font-size: 0.78rem; color: var(--accent); text-decoration: none; font-weight: 500; position: relative; z-index: 2; }
+  .news-card a.card-link { position: absolute; inset: 0; z-index: 1; }
+
+  /* ===== Paper Cards ===== */
+  .paper-card {
+    background: var(--card-bg); border-radius: 14px; padding: 1rem 1.25rem;
+    margin-bottom: 0.6rem; border: 1px solid var(--border); border-left: 3px solid var(--purple);
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .paper-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); transform: translateY(-1px); }
+  .paper-idx {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 22px; height: 22px; border-radius: 6px; font-size: 0.7rem; font-weight: 700;
+    background: var(--purple-bg); color: var(--purple); margin-right: 0.4rem;
+  }
+  .paper-title { font-size: 0.92rem; font-weight: 600; line-height: 1.5; }
+  .paper-title a { color: var(--text); text-decoration: none; }
+  .paper-title a:hover { color: var(--accent); }
+  .paper-desc { font-size: 0.82rem; color: var(--text-secondary); margin-top: 0.25rem; line-height: 1.55; }
+  .paper-source { font-size: 0.72rem; color: var(--text-secondary); margin-top: 0.35rem; opacity: 0.8; }
+
+  .section-divider {
+    height: 1px; background: linear-gradient(to right, transparent, var(--border), transparent);
+    margin: 1.5rem 0 0;
+  }
+  .archive-btn {
+    display: block; text-align: center; padding: 0.85rem; margin-top: 1.5rem;
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
+    color: var(--accent); text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: all 0.2s;
+  }
+  .archive-btn:hover { background: var(--accent); color: #fff; }
+  .footer { text-align: center; padding: 2rem 1rem; font-size: 0.78rem; color: #94a3b8; border-top: 1px solid var(--border); margin-top: 1rem; }
+  @media (max-width: 480px) {
+    .header { padding: 1.2rem 0.8rem 1rem; }
+    .header-content { gap: 0.5rem; }
+    .header-icon { width: 38px; height: 38px; font-size: 1.3rem; border-radius: 10px; }
+    .header-titles h1 { font-size: 1.15rem; }
+    .container { padding: 0 0.75rem 2rem; }
+    .news-card { padding: 1rem; }
+    .section-header { padding: 0.8rem 1rem; }
+    .section-text h2 { font-size: 1.1rem; }
+    .section-icon { width: 38px; height: 38px; font-size: 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <!-- SVG tech background: circuit nodes, connections, grid -->
+  <svg class="header-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 120" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#4f6ef7;stop-opacity:0.15"/>
+        <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:0.08"/>
+      </linearGradient>
+      <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" style="stop-color:transparent"/>
+        <stop offset="50%" style="stop-color:#4f6ef7;stop-opacity:0.12"/>
+        <stop offset="100%" style="stop-color:transparent"/>
+      </linearGradient>
+    </defs>
+    <!-- grid lines -->
+    <line x1="0" y1="30" x2="800" y2="30" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/>
+    <line x1="0" y1="60" x2="800" y2="60" stroke="rgba(255,255,255,0.025)" stroke-width="0.5"/>
+    <line x1="0" y1="90" x2="800" y2="90" stroke="rgba(255,255,255,0.02)" stroke-width="0.5"/>
+    <line x1="200" y1="0" x2="200" y2="120" stroke="rgba(255,255,255,0.02)" stroke-width="0.5"/>
+    <line x1="400" y1="0" x2="400" y2="120" stroke="rgba(255,255,255,0.025)" stroke-width="0.5"/>
+    <line x1="600" y1="0" x2="600" y2="120" stroke="rgba(255,255,255,0.02)" stroke-width="0.5"/>
+    <!-- circuit paths -->
+    <path d="M50,90 L120,90 L120,50 L200,50" stroke="url(#g2)" stroke-width="1" fill="none"/>
+    <path d="M250,50 L350,50 L350,30 L420,30" stroke="rgba(79,110,247,0.1)" stroke-width="1" fill="none"/>
+    <path d="M600,80 L680,80 L680,40 L750,40" stroke="rgba(139,92,246,0.08)" stroke-width="1" fill="none"/>
+    <path d="M450,90 L530,90 L530,60" stroke="rgba(20,184,166,0.07)" stroke-width="1" fill="none"/>
+    <!-- nodes -->
+    <circle cx="50" cy="90" r="3" fill="rgba(79,110,247,0.2)"/>
+    <circle cx="200" cy="50" r="3.5" fill="rgba(79,110,247,0.25)"/>
+    <circle cx="120" cy="50" r="2" fill="rgba(79,110,247,0.15)"/>
+    <circle cx="420" cy="30" r="3" fill="rgba(79,110,247,0.15)"/>
+    <circle cx="350" cy="30" r="2" fill="rgba(79,110,247,0.1)"/>
+    <circle cx="750" cy="40" r="3" fill="rgba(139,92,246,0.15)"/>
+    <circle cx="680" cy="40" r="2" fill="rgba(139,92,246,0.1)"/>
+    <circle cx="530" cy="60" r="2.5" fill="rgba(20,184,166,0.12)"/>
+    <!-- decorative circles -->
+    <circle cx="700" cy="20" r="35" fill="none" stroke="rgba(139,92,246,0.06)" stroke-width="1"/>
+    <circle cx="80" cy="25" r="25" fill="none" stroke="rgba(79,110,247,0.05)" stroke-width="1"/>
+    <circle cx="500" cy="100" r="20" fill="none" stroke="rgba(20,184,166,0.05)" stroke-width="1"/>
+    <!-- glow spots -->
+    <circle cx="200" cy="50" r="12" fill="rgba(79,110,247,0.06)"/>
+    <circle cx="600" cy="80" r="10" fill="rgba(139,92,246,0.05)"/>
+    <circle cx="350" cy="50" r="8" fill="rgba(79,110,247,0.04)"/>
+  </svg>
+  <div class="header-content">
+    <div class="header-left">
+      <div class="header-icon">🤖</div>
+      <div class="header-titles">
+        <h1>AI 日报</h1>
+        <div class="date">2026年07月19日 周日</div>
+      </div>
+    </div>
+    <div class="header-stats">
+      <span>📰 10 条资讯</span>
+      <span>📄 8 篇论文</span>
+      <span>🎧 语音播报</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  
+  <div class="audio-player" id="audioPlayerCard">
+    <div class="audio-header">🎧 语音播报 · 听 AI 日报</div>
+    <audio id="dailyAudio" src="/ai-daily-push/audio/2026-07-19.mp3" preload="metadata"></audio>
+    <div class="audio-controls">
+      <button class="audio-btn" id="playBtn" onclick="togglePlay()">▶</button>
+      <div class="audio-progress-wrap">
+        <input type="range" class="audio-progress" id="progressBar" value="0" min="0" max="100" step="0.1" oninput="seekAudio(this.value)">
+        <div class="audio-time-row">
+          <span id="currentTime">00:00</span>
+          <span id="totalTime">00:00</span>
+        </div>
+      </div>
+      <button class="speed-btn" id="speedBtn" onclick="cycleSpeed()">1x</button>
+    </div>
+  </div>
+  
+
+  
+  <div class="section-header news-header">
+    <div class="section-icon">📰</div>
+    <div class="section-text">
+      <h2>AI 资讯</h2>
+      <p>今日热门 AI 新闻精选，10 条</p>
+    </div>
+  </div>
+
+  
+  <div class="news-card" onclick="window.open('https://www.ithome.com/0/978/597.htm','_blank')">
+    <a class="card-link" href="https://www.ithome.com/0/978/597.htm" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank top1">1</span>
+      
+      <span class="tag tag-blue">IT之家</span>
+    </div>
+    <div class="news-title">推理市场无万能芯片，软硬协同成破局关键</div>
+    
+    <div class="news-desc">摩尔线程联合创始人王东指出，大模型推理场景高度碎片化，单一硬件无法垄断所有应用。中国模型性价比优势明显，企业需通过灵活的软硬协同组合方案应对多样化需求，而非依赖单一芯片。这揭示了AI落地中解决方案整合的重要性。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>IT之家</span>
+      <a class="read-more" href="https://www.ithome.com/0/978/597.htm" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('http://news.10jqka.com.cn/20260718/c678268820.shtml','_blank')">
+    <a class="card-link" href="http://news.10jqka.com.cn/20260718/c678268820.shtml" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank top2">2</span>
+      
+      <span class="tag tag-blue">百度资讯</span>
+    </div>
+    <div class="news-title">企业AI应用创作平台上线，低代码开发或成新趋势</div>
+    
+    <div class="news-desc">秒悟在WAIC推出团队版企业级AI应用创作平台，降低AI开发门槛，让非技术人员也能快速构建应用，预示企业AI部署将从定制化走向平民化，加速行业数字化转型。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>百度资讯</span>
+      <a class="read-more" href="http://news.10jqka.com.cn/20260718/c678268820.shtml" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.tmtpost.com/8070465.html','_blank')">
+    <a class="card-link" href="https://www.tmtpost.com/8070465.html" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank top3">3</span>
+      
+      <span class="tag tag-blue">钛媒体</span>
+    </div>
+    <div class="news-title">商汤多模态智能体突破“抽卡”瓶颈，长程任务闭环成AI落地新标杆</div>
+    
+    <div class="news-desc">商汤发布SenseNova U1 Pro，实现多模态智能体从碎片化响应到长程任务闭环的跨越，解决行业“抽卡”痛点，标志着多模态AI进入第三阶段，为企业自动化复杂流程提供关键支撑。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
+      <a class="read-more" href="https://www.tmtpost.com/8070465.html" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.ithome.com/0/978/621.htm','_blank')">
+    <a class="card-link" href="https://www.ithome.com/0/978/621.htm" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">4</span>
+      
+      <span class="tag tag-blue">IT之家</span>
+    </div>
+    <div class="news-title">荣耀发布AgenticOS，意图驱动取代App操作，8月Robot Phone首发内核</div>
+    
+    <div class="news-desc">荣耀推出新一代伙伴型多模态智能体操作系统AgenticOS，支持意图驱动、自然交互和主动智能，通过系统级Agent架构实现全局多智能体协同。8月Robot Phone将首发内核，标志着手机操作系统从应用中心向智能体中心的范式转变。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>IT之家</span>
+      <a class="read-more" href="https://www.ithome.com/0/978/621.htm" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.tmtpost.com/8070478.html','_blank')">
+    <a class="card-link" href="https://www.tmtpost.com/8070478.html" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">5</span>
+      
+      <span class="tag tag-blue">钛媒体</span>
+    </div>
+    <div class="news-title">AI音乐竞争转向“二次创作”理解，天谱乐4.7揭示行业新赛道</div>
+    
+    <div class="news-desc">天谱乐大模型4.7发布，标志着AI音乐从追求首次生成效果转向深度理解创作过程。这一转变意味着企业需关注AI在辅助迭代、编辑和个性化调整上的能力，而非仅依赖一次性输出，可能重塑音乐制作与版权管理生态。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
+      <a class="read-more" href="https://www.tmtpost.com/8070478.html" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.tmtpost.com/8070307.html','_blank')">
+    <a class="card-link" href="https://www.tmtpost.com/8070307.html" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">6</span>
+      
+      <span class="tag tag-blue">钛媒体</span>
+    </div>
+    <div class="news-title">算力定价权从卡数转向Token成本，产业链估值坐标正迁移</div>
+    
+    <div class="news-desc">WAIC 2026上客户提问从“多少张卡”变为“Token成本和时延”，标志着算力从固定资产转向运营支出，需求从训练转向推理。这一变化预示产业链估值逻辑将从芯片数量转向单位Token经济性，企业需关注成本效率而非单纯产能规模。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
+      <a class="read-more" href="https://www.tmtpost.com/8070307.html" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.leikeji.com/article/78049','_blank')">
+    <a class="card-link" href="https://www.leikeji.com/article/78049" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">7</span>
+      
+      <span class="tag tag-blue">百度资讯</span>
+    </div>
+    <div class="news-title">智能体眼镜与千问WAIC升级：AI从工具迈向自主执行者</div>
+    
+    <div class="news-desc">千问WAIC新增Skill和Agent功能，结合智能体眼镜，标志AI从被动响应转向主动执行任务。企业需关注这一趋势，它可能重塑人机协作模式，提升自动化效率，但同时也对数据安全和决策控制权提出新挑战。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>百度资讯</span>
+      <a class="read-more" href="https://www.leikeji.com/article/78049" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.ithome.com/0/978/614.htm','_blank')">
+    <a class="card-link" href="https://www.ithome.com/0/978/614.htm" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">8</span>
+      
+      <span class="tag tag-blue">IT之家</span>
+    </div>
+    <div class="news-title">英伟达CEO东京行敲定国家级AI工厂，日本借2.75万GPU加速产业转型</div>
+    
+    <div class="news-desc">黄仁勋访日期间，英伟达与日本政府支持的Noetra公司合作建设配备2.75万块GPU的AI工厂，标志日本在国家级AI基础设施上加速布局。此举不仅强化了英伟达在亚太的生态影响力，也反映出各国正通过政企合作争夺AI算力制高点。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>IT之家</span>
+      <a class="read-more" href="https://www.ithome.com/0/978/614.htm" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.ithome.com/0/978/612.htm','_blank')">
+    <a class="card-link" href="https://www.ithome.com/0/978/612.htm" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">9</span>
+      
+      <span class="tag tag-blue">IT之家</span>
+    </div>
+    <div class="news-title">英伟达罕见外聘微软26年老将掌销售，暗示AI市场策略转向</div>
+    
+    <div class="news-desc">英伟达打破内部晋升传统，引入微软资深高管尼克·帕克接替退休的销售负责人。此举或为应对AI芯片竞争加剧，需借助外部经验拓展企业级市场，标志其销售体系从技术驱动转向商业生态构建。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>IT之家</span>
+      <a class="read-more" href="https://www.ithome.com/0/978/612.htm" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.ithome.com/0/978/603.htm','_blank')">
+    <a class="card-link" href="https://www.ithome.com/0/978/603.htm" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">10</span>
+      
+      <span class="tag tag-blue">IT之家</span>
+    </div>
+    <div class="news-title">小米华为齐获AI终端L3认证，国标分级加速行业洗牌</div>
+    
+    <div class="news-desc">小米17 Max与华为MateBook Pro同日获首批AI终端L3级认证，该标准由工信部等联合发布，L3为当前最高分级。此举标志着AI终端智能化进入可量化时代，企业需加速产品升级以抢占标准高地。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>IT之家</span>
+      <a class="read-more" href="https://www.ithome.com/0/978/603.htm" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+
+  
+
+  
+  <div class="section-divider"></div>
+
+  <div class="section-header paper-header">
+    <div class="section-icon">📄</div>
+    <div class="section-text">
+      <h2>AI 论文解读</h2>
+      <p>前沿研究与论文精选，8 篇</p>
+    </div>
+  </div>
+
+  
+  <div class="paper-card">
+    <div class="paper-title">
+      <span class="paper-idx">1</span>
+      <a href="https://www.qbitai.com/2026/07/454049.html" target="_blank" rel="noopener">AI模型首次实现理解、生成与行动一体化</a>
+    </div>
+    
+    <div class="paper-desc">该研究提出一种新AI模型，能同时处理图像理解、内容生成和物理行动，无需分开训练。这为机器人、自动驾驶等场景提供更高效、灵活的解决方案。</div>
+    
+    
+    <div class="paper-source">来源：量子位</div>
+    
+  </div>
+  
+  <div class="paper-card">
+    <div class="paper-title">
+      <span class="paper-idx">2</span>
+      <a href="https://www.qbitai.com/2026/07/453802.html" target="_blank" rel="noopener">普渡机器人用统一大脑驱动多种形态，抢占行业新战场</a>
+    </div>
+    
+    <div class="paper-desc">普渡推出PuduFM和PuduAgent技术，实现一个智能系统控制不同形状的机器人，让企业灵活部署，降低开发成本，加速服务场景应用。</div>
+    
+    
+    <div class="paper-source">来源：量子位</div>
+    
+  </div>
+  
+  <div class="paper-card">
+    <div class="paper-title">
+      <span class="paper-idx">3</span>
+      <a href="https://www.qbitai.com/2026/07/454040.html" target="_blank" rel="noopener">WAIC展会上，这家公司的机器人已能独立完成实际工作</a>
+    </div>
+    
+    <div class="paper-desc">这家公司展示了能自主完成搬运、组装等任务的机器人，不再只是演示，而是真正能替代人工在工厂里干活，提升生产效率。</div>
+    
+    
+    <div class="paper-source">来源：量子位</div>
+    
+  </div>
+  
+  <div class="paper-card">
+    <div class="paper-title">
+      <span class="paper-idx">4</span>
+      <a href="https://www.qbitai.com/2026/07/454015.html" target="_blank" rel="noopener">万兴科技AI新品首秀，无限画布与智能视频工具引关注</a>
+    </div>
+    
+    <div class="paper-desc">万兴科技在WAIC 2026展示AI视频创作工具，包括无限画布功能和新版Filmora.AI，让非专业人士也能轻松制作专业视频，提升内容生产效率。</div>
+    
+    
+    <div class="paper-source">来源：量子位</div>
+    
+  </div>
+  
+  <div class="paper-card">
+    <div class="paper-title">
+      <span class="paper-idx">5</span>
+      <a href="https://www.qbitai.com/2026/07/454003.html" target="_blank" rel="noopener">滴滴用AI优化出行，让服务更贴近生活消费</a>
+    </div>
+    
+    <div class="paper-desc">滴滴在WAIC展示AI如何提升打车体验，通过智能调度和个性化服务，让出行更高效便捷，同时连接线下消费场景，助力城市烟火气。</div>
+    
+    
+    <div class="paper-source">来源：量子位</div>
+    
+  </div>
+  
+  <div class="paper-card">
+    <div class="paper-title">
+      <span class="paper-idx">6</span>
+      <a href="https://www.qbitai.com/2026/07/453889.html" target="_blank" rel="noopener">AI落地报告：海亮科服入选产业图谱与Top50</a>
+    </div>
+    
+    <div class="paper-desc">WAIC 2026发布AI商业落地报告，显示AI正成为各行各业的基础设施。海亮科服因技术应用突出，同时入选产业图谱和Top50榜单，证明其AI解决方案已获市场认可。</div>
+    
+    
+    <div class="paper-source">来源：量子位</div>
+    
+  </div>
+  
+  <div class="paper-card">
+    <div class="paper-title">
+      <span class="paper-idx">7</span>
+      <a href="https://www.qbitai.com/2026/07/453789.html" target="_blank" rel="noopener">无人机直连卫星传数据，获世界AI大会最高奖</a>
+    </div>
+    
+    <div class="paper-desc">这项研究让无人机能直接通过卫星传输信息，无需地面基站，大幅提升偏远地区通信效率，为应急救灾、农业监测等场景提供低成本解决方案。</div>
+    
+    
+    <div class="paper-source">来源：量子位</div>
+    
+  </div>
+  
+  <div class="paper-card">
+    <div class="paper-title">
+      <span class="paper-idx">8</span>
+      <a href="https://www.qbitai.com/2026/07/453705.html" target="_blank" rel="noopener">后摩智能M50芯片亮相，端侧AI算力实现商用突破</a>
+    </div>
+    
+    <div class="paper-desc">后摩智能在WAIC 2026展示M50芯片，让手机等终端设备本地运行大模型，无需联网，提升隐私和响应速度，推动AI应用规模化落地。</div>
+    
+    
+    <div class="paper-source">来源：量子位</div>
+    
+  </div>
+  
+  
+
+  <a href="/ai-daily-push/index.html" class="archive-btn">📅 查看往期日报</a>
+</div>
+
+<div class="footer">
+  <p>AI 日报 · 自动生成于 2026-07-19 11:33 · 数据来源：36氪 / 虎嗅 / 钛媒体 / 猎云网 / 机器之心 / IT之家</p>
+</div>
+
+
+<script>
+(function(){
+  var audio = document.getElementById('dailyAudio');
+  var playBtn = document.getElementById('playBtn');
+  var progressBar = document.getElementById('progressBar');
+  var currentTimeEl = document.getElementById('currentTime');
+  var totalTimeEl = document.getElementById('totalTime');
+  var speedBtn = document.getElementById('speedBtn');
+  var speeds = [1, 1.25, 1.5, 2];
+  var speedIdx = 0;
+
+  function fmt(s) {
+    var m = Math.floor(s / 60);
+    var sec = Math.floor(s % 60);
+    return (m < 10 ? '0' : '') + m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  audio.addEventListener('loadedmetadata', function() { totalTimeEl.textContent = fmt(audio.duration); });
+  audio.addEventListener('timeupdate', function() {
+    if (audio.duration) {
+      progressBar.value = (audio.currentTime / audio.duration) * 100;
+      currentTimeEl.textContent = fmt(audio.currentTime);
+    }
+  });
+  audio.addEventListener('ended', function() { playBtn.textContent = '▶'; });
+
+  window.togglePlay = function() {
+    if (audio.paused) { audio.play(); playBtn.textContent = '⏸'; }
+    else { audio.pause(); playBtn.textContent = '▶'; }
+  };
+  window.seekAudio = function(val) {
+    if (audio.duration) audio.currentTime = (val / 100) * audio.duration;
+  };
+  window.cycleSpeed = function() {
+    speedIdx = (speedIdx + 1) % speeds.length;
+    audio.playbackRate = speeds[speedIdx];
+    speedBtn.textContent = speeds[speedIdx] + 'x';
+  };
+})();
+</script>
+
+
+</body>
+</html>
