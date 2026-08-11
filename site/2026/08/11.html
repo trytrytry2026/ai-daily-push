@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 日报 | 2026年08月11日 周二</title>
+<style>
+  :root {
+    --bg: #f0f2f5;
+    --card-bg: #ffffff;
+    --text: #1a1a2e;
+    --text-secondary: #5a6577;
+    --accent: #4f6ef7;
+    --accent-light: #eef1ff;
+    --border: #e5e8ed;
+    --red: #ef4444; --red-bg: #fef2f2;
+    --orange: #f97316; --orange-bg: #fff7ed;
+    --blue: #3b82f6; --blue-bg: #eff6ff;
+    --green: #22c55e; --green-bg: #f0fdf4;
+    --purple: #8b5cf6; --purple-bg: #f5f3ff;
+    --teal: #14b8a6; --teal-bg: #f0fdfa;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== Header — compact with SVG tech graphics ===== */
+  .header {
+    background: linear-gradient(135deg, #0a1628 0%, #162544 40%, #1a1040 100%);
+    color: white; padding: 1.4rem 1.2rem 1.2rem; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .header-svg {
+    position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;
+  }
+  .header-content {
+    position: relative; z-index: 2;
+    display: flex; align-items: center; justify-content: center; gap: 0.8rem;
+    flex-wrap: wrap;
+  }
+  .header-left {
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .header-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: linear-gradient(135deg, #4f6ef7, #8b5cf6);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(79,110,247,0.4);
+  }
+  .header-titles h1 {
+    font-size: 1.3rem; font-weight: 800; letter-spacing: 2px; line-height: 1.2;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.3);
+  }
+  .header-titles .date { font-size: 0.8rem; opacity: 0.7; font-weight: 400; }
+  .header-stats {
+    display: flex; gap: 0.6rem; font-size: 0.72rem;
+    background: rgba(255,255,255,0.07); border-radius: 16px; padding: 0.3rem 0.8rem;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .container { max-width: 700px; margin: 0 auto; padding: 0 1rem 3rem; }
+
+  /* ===== Audio Player ===== */
+  
+  .audio-player {
+    background: var(--card-bg); border-radius: 14px; padding: 1rem 1.25rem;
+    margin: 1rem 0; border: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .audio-header {
+    display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem;
+    font-size: 0.9rem; font-weight: 600; color: var(--accent);
+  }
+  .audio-controls { display: flex; align-items: center; gap: 0.75rem; }
+  .audio-btn {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--purple));
+    border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 1.1rem; flex-shrink: 0; transition: transform 0.15s;
+  }
+  .audio-btn:hover { transform: scale(1.08); }
+  .audio-progress-wrap { flex: 1; display: flex; flex-direction: column; gap: 0.2rem; }
+  .audio-progress {
+    width: 100%; height: 6px; border-radius: 3px; appearance: none; -webkit-appearance: none;
+    background: var(--border); outline: none; cursor: pointer;
+  }
+  .audio-progress::-webkit-slider-thumb {
+    appearance: none; -webkit-appearance: none; width: 14px; height: 14px;
+    border-radius: 50%; background: var(--accent); cursor: pointer; margin-top: -4px;
+  }
+  .audio-progress::-webkit-slider-runnable-track { height: 6px; border-radius: 3px; }
+  .audio-time-row { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-secondary); }
+  .speed-btn {
+    padding: 0.2rem 0.5rem; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--card-bg); color: var(--text-secondary); font-size: 0.72rem;
+    cursor: pointer; font-weight: 600; transition: all 0.15s; flex-shrink: 0;
+  }
+  .speed-btn:hover, .speed-btn.active { background: var(--accent-light); color: var(--accent); border-color: var(--accent); }
+  
+
+  /* ===== Section Headers (gradient) ===== */
+  .section-header {
+    display: flex; align-items: center; gap: 0.8rem;
+    margin: 1.8rem 0 1rem; padding: 1rem 1.2rem;
+    border-radius: 14px; color: #fff;
+    position: relative; overflow: hidden;
+  }
+  .section-header.news-header {
+    background: linear-gradient(135deg, #3b82f6, #2563eb, #4f46e5);
+    box-shadow: 0 4px 15px rgba(59,130,246,0.25);
+  }
+  .section-header.paper-header {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed, #6d28d9);
+    box-shadow: 0 4px 15px rgba(139,92,246,0.25);
+  }
+  .section-header::after {
+    content: ''; position: absolute; right: -20px; top: -20px;
+    width: 100px; height: 100px; border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+  }
+  .section-icon {
+    width: 46px; height: 46px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; flex-shrink: 0;
+    background: rgba(255,255,255,0.15); backdrop-filter: blur(4px);
+  }
+  .section-text h2 { font-size: 1.25rem; font-weight: 800; letter-spacing: 1px; }
+  .section-text p { font-size: 0.8rem; opacity: 0.85; margin-top: 0.15rem; }
+
+  /* ===== News Cards ===== */
+  .news-card {
+    background: var(--card-bg); border-radius: 14px; padding: 1.15rem 1.25rem;
+    margin-bottom: 0.65rem; border: 1px solid var(--border); position: relative; cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04); transition: box-shadow 0.25s, transform 0.25s;
+  }
+  .news-card:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.08); transform: translateY(-2px); border-color: var(--accent); }
+  .card-top-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+  .news-rank {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 24px; height: 24px; border-radius: 8px; font-size: 0.75rem; font-weight: 800; flex-shrink: 0;
+  }
+  .news-rank.top1 { background: linear-gradient(135deg, #ef4444, #f97316); color: #fff; }
+  .news-rank.top2 { background: linear-gradient(135deg, #f97316, #eab308); color: #fff; }
+  .news-rank.top3 { background: linear-gradient(135deg, #eab308, #84cc16); color: #fff; }
+  .news-rank.normal { background: var(--accent-light); color: var(--accent); }
+  .tag {
+    display: inline-block; padding: 0.1rem 0.45rem; border-radius: 4px;
+    font-size: 0.7rem; font-weight: 600; line-height: 1.6;
+  }
+  .tag-blue { background: var(--blue-bg); color: var(--blue); }
+  .tag-purple { background: var(--purple-bg); color: var(--purple); }
+  .tag-green { background: var(--green-bg); color: var(--green); }
+  .news-title { font-size: 1rem; font-weight: 650; line-height: 1.55; margin-bottom: 0.35rem; }
+  .news-card:hover .news-title { color: var(--accent); }
+  .news-desc {
+    font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .card-bottom-row { display: flex; align-items: center; justify-content: space-between; margin-top: 0.6rem; }
+  .source-badge { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; color: var(--text-secondary); }
+  .source-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; background: var(--accent); }
+  .read-more { font-size: 0.78rem; color: var(--accent); text-decoration: none; font-weight: 500; position: relative; z-index: 2; }
+  .news-card a.card-link { position: absolute; inset: 0; z-index: 1; }
+
+  /* ===== Paper Cards ===== */
+  .paper-card {
+    background: var(--card-bg); border-radius: 14px; padding: 1rem 1.25rem;
+    margin-bottom: 0.6rem; border: 1px solid var(--border); border-left: 3px solid var(--purple);
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .paper-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); transform: translateY(-1px); }
+  .paper-idx {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 22px; height: 22px; border-radius: 6px; font-size: 0.7rem; font-weight: 700;
+    background: var(--purple-bg); color: var(--purple); margin-right: 0.4rem;
+  }
+  .paper-title { font-size: 0.92rem; font-weight: 600; line-height: 1.5; }
+  .paper-title a { color: var(--text); text-decoration: none; }
+  .paper-title a:hover { color: var(--accent); }
+  .paper-desc { font-size: 0.82rem; color: var(--text-secondary); margin-top: 0.25rem; line-height: 1.55; }
+  .paper-source { font-size: 0.72rem; color: var(--text-secondary); margin-top: 0.35rem; opacity: 0.8; }
+
+  .section-divider {
+    height: 1px; background: linear-gradient(to right, transparent, var(--border), transparent);
+    margin: 1.5rem 0 0;
+  }
+  .archive-btn {
+    display: block; text-align: center; padding: 0.85rem; margin-top: 1.5rem;
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
+    color: var(--accent); text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: all 0.2s;
+  }
+  .archive-btn:hover { background: var(--accent); color: #fff; }
+  .footer { text-align: center; padding: 2rem 1rem; font-size: 0.78rem; color: #94a3b8; border-top: 1px solid var(--border); margin-top: 1rem; }
+  @media (max-width: 480px) {
+    .header { padding: 1.2rem 0.8rem 1rem; }
+    .header-content { gap: 0.5rem; }
+    .header-icon { width: 38px; height: 38px; font-size: 1.3rem; border-radius: 10px; }
+    .header-titles h1 { font-size: 1.15rem; }
+    .container { padding: 0 0.75rem 2rem; }
+    .news-card { padding: 1rem; }
+    .section-header { padding: 0.8rem 1rem; }
+    .section-text h2 { font-size: 1.1rem; }
+    .section-icon { width: 38px; height: 38px; font-size: 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <!-- SVG tech background: circuit nodes, connections, grid -->
+  <svg class="header-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 120" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#4f6ef7;stop-opacity:0.15"/>
+        <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:0.08"/>
+      </linearGradient>
+      <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" style="stop-color:transparent"/>
+        <stop offset="50%" style="stop-color:#4f6ef7;stop-opacity:0.12"/>
+        <stop offset="100%" style="stop-color:transparent"/>
+      </linearGradient>
+    </defs>
+    <!-- grid lines -->
+    <line x1="0" y1="30" x2="800" y2="30" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/>
+    <line x1="0" y1="60" x2="800" y2="60" stroke="rgba(255,255,255,0.025)" stroke-width="0.5"/>
+    <line x1="0" y1="90" x2="800" y2="90" stroke="rgba(255,255,255,0.02)" stroke-width="0.5"/>
+    <line x1="200" y1="0" x2="200" y2="120" stroke="rgba(255,255,255,0.02)" stroke-width="0.5"/>
+    <line x1="400" y1="0" x2="400" y2="120" stroke="rgba(255,255,255,0.025)" stroke-width="0.5"/>
+    <line x1="600" y1="0" x2="600" y2="120" stroke="rgba(255,255,255,0.02)" stroke-width="0.5"/>
+    <!-- circuit paths -->
+    <path d="M50,90 L120,90 L120,50 L200,50" stroke="url(#g2)" stroke-width="1" fill="none"/>
+    <path d="M250,50 L350,50 L350,30 L420,30" stroke="rgba(79,110,247,0.1)" stroke-width="1" fill="none"/>
+    <path d="M600,80 L680,80 L680,40 L750,40" stroke="rgba(139,92,246,0.08)" stroke-width="1" fill="none"/>
+    <path d="M450,90 L530,90 L530,60" stroke="rgba(20,184,166,0.07)" stroke-width="1" fill="none"/>
+    <!-- nodes -->
+    <circle cx="50" cy="90" r="3" fill="rgba(79,110,247,0.2)"/>
+    <circle cx="200" cy="50" r="3.5" fill="rgba(79,110,247,0.25)"/>
+    <circle cx="120" cy="50" r="2" fill="rgba(79,110,247,0.15)"/>
+    <circle cx="420" cy="30" r="3" fill="rgba(79,110,247,0.15)"/>
+    <circle cx="350" cy="30" r="2" fill="rgba(79,110,247,0.1)"/>
+    <circle cx="750" cy="40" r="3" fill="rgba(139,92,246,0.15)"/>
+    <circle cx="680" cy="40" r="2" fill="rgba(139,92,246,0.1)"/>
+    <circle cx="530" cy="60" r="2.5" fill="rgba(20,184,166,0.12)"/>
+    <!-- decorative circles -->
+    <circle cx="700" cy="20" r="35" fill="none" stroke="rgba(139,92,246,0.06)" stroke-width="1"/>
+    <circle cx="80" cy="25" r="25" fill="none" stroke="rgba(79,110,247,0.05)" stroke-width="1"/>
+    <circle cx="500" cy="100" r="20" fill="none" stroke="rgba(20,184,166,0.05)" stroke-width="1"/>
+    <!-- glow spots -->
+    <circle cx="200" cy="50" r="12" fill="rgba(79,110,247,0.06)"/>
+    <circle cx="600" cy="80" r="10" fill="rgba(139,92,246,0.05)"/>
+    <circle cx="350" cy="50" r="8" fill="rgba(79,110,247,0.04)"/>
+  </svg>
+  <div class="header-content">
+    <div class="header-left">
+      <div class="header-icon">🤖</div>
+      <div class="header-titles">
+        <h1>AI 日报</h1>
+        <div class="date">2026年08月11日 周二</div>
+      </div>
+    </div>
+    <div class="header-stats">
+      <span>📰 10 条资讯</span>
+      <span>📄 5 篇论文</span>
+      <span>🎧 语音播报</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  
+  <div class="audio-player" id="audioPlayerCard">
+    <div class="audio-header">🎧 语音播报 · 听 AI 日报</div>
+    <audio id="dailyAudio" src="/ai-daily-push/audio/2026-08-11.mp3" preload="metadata"></audio>
+    <div class="audio-controls">
+      <button class="audio-btn" id="playBtn" onclick="togglePlay()">▶</button>
+      <div class="audio-progress-wrap">
+        <input type="range" class="audio-progress" id="progressBar" value="0" min="0" max="100" step="0.1" oninput="seekAudio(this.value)">
+        <div class="audio-time-row">
+          <span id="currentTime">00:00</span>
+          <span id="totalTime">00:00</span>
+        </div>
+      </div>
+      <button class="speed-btn" id="speedBtn" onclick="cycleSpeed()">1x</button>
+    </div>
+  </div>
+  
+
+  
+  <div class="section-header news-header">
+    <div class="section-icon">📰</div>
+    <div class="section-text">
+      <h2>AI 资讯</h2>
+      <p>今日热门 AI 新闻精选，10 条</p>
+    </div>
+  </div>
+
+  
+  <div class="news-card" onclick="window.open('https://www.tmtpost.com/8098332.html','_blank')">
+    <a class="card-link" href="https://www.tmtpost.com/8098332.html" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank top1">1</span>
+      
+      <span class="tag tag-blue">钛媒体</span>
+    </div>
+    <div class="news-title">字节To B战略口号与市场行为错位，转型阵痛还是内在矛盾显性化？</div>
+    
+    <div class="news-desc">字节高调转向To B，却在主舞台缺席，战略、组织与市场动作的脱节暴露转型深层挑战。这不仅是节奏问题，更折射出互联网巨头在B端基因、客户认知与商业模式上的根本性磨合，其成败将影响行业对跨界转型的预期。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
+      <a class="read-more" href="https://www.tmtpost.com/8098332.html" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.ithome.com/0/988/084.htm','_blank')">
+    <a class="card-link" href="https://www.ithome.com/0/988/084.htm" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank top2">2</span>
+      
+      <span class="tag tag-blue">IT之家</span>
+    </div>
+    <div class="news-title">小红书期权争议频发，员工信任危机或成招聘隐忧</div>
+    
+    <div class="news-desc">继高管后又有前员工曝期权被“踩点”取消，争议折射出创业公司股权激励兑现机制的不透明。在人才竞争激烈的AI时代，此类事件或削弱其雇主品牌，影响长期技术人才储备。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>IT之家</span>
+      <a class="read-more" href="https://www.ithome.com/0/988/084.htm" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.ithome.com/0/988/132.htm','_blank')">
+    <a class="card-link" href="https://www.ithome.com/0/988/132.htm" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank top3">3</span>
+      
+      <span class="tag tag-blue">IT之家</span>
+    </div>
+    <div class="news-title">AI价格战白热化：Anthropic永久降价50%，倒逼行业重估成本底线</div>
+    
+    <div class="news-desc">Anthropic宣布Claude Sonnet 5永久维持首发优惠价，取消原定50%涨幅。此举直接对标OpenAI等对手的降价潮，反映头部厂商正以牺牲短期利润换取市场份额，企业采购AI服务的议价空间显著扩大，但中小模型厂商的生存压力骤增。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>IT之家</span>
+      <a class="read-more" href="https://www.ithome.com/0/988/132.htm" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.tmtpost.com/8098476.html','_blank')">
+    <a class="card-link" href="https://www.tmtpost.com/8098476.html" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">4</span>
+      
+      <span class="tag tag-blue">钛媒体</span>
+    </div>
+    <div class="news-title">英伟达把GPU变成华尔街资产，算力融资开启新纪元</div>
+    
+    <div class="news-desc">黄仁勋亲赴华尔街，六家巨头无一拒绝，5000亿美元算力融资落地。GPU从硬件升级为可投资金融资产，算力资本化将重塑AI产业格局，企业获取算力方式迎来根本性变革。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
+      <a class="read-more" href="https://www.tmtpost.com/8098476.html" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.tmtpost.com/8098284.html','_blank')">
+    <a class="card-link" href="https://www.tmtpost.com/8098284.html" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">5</span>
+      
+      <span class="tag tag-blue">钛媒体</span>
+    </div>
+    <div class="news-title">央行定调AI基建，微软自研芯片加速，算力军备竞赛白热化</div>
+    
+    <div class="news-desc">央行“十五五”规划部署AI基础设施，微软9月推自研芯片，阿里云产能翻倍，叠加花旗增持半导体，算力竞争从企业层面升至国家战略，产业链投资逻辑生变。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>钛媒体</span>
+      <a class="read-more" href="https://www.tmtpost.com/8098284.html" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.ithome.com/0/988/104.htm','_blank')">
+    <a class="card-link" href="https://www.ithome.com/0/988/104.htm" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">6</span>
+      
+      <span class="tag tag-blue">IT之家</span>
+    </div>
+    <div class="news-title">英伟达撬动5000亿金融杠杆，AI算力从技术竞赛升级为资本游戏</div>
+    
+    <div class="news-desc">英伟达联合六大顶级金融机构，将AI基础设施包装成可投资资产类别。此举不仅为芯片客户提供专属资金池，更标志着AI军备竞赛的胜负手从技术迭代转向资本运作能力，重塑行业竞争格局。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>IT之家</span>
+      <a class="read-more" href="https://www.ithome.com/0/988/104.htm" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.ithome.com/0/988/115.htm','_blank')">
+    <a class="card-link" href="https://www.ithome.com/0/988/115.htm" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">7</span>
+      
+      <span class="tag tag-blue">IT之家</span>
+    </div>
+    <div class="news-title">社交巨头败诉：230条款护身符失效，成瘾设计面临3000起诉讼考验</div>
+    
+    <div class="news-desc">美国第九巡回法院裁定Meta、TikTok等须面对数千起青少年成瘾诉讼，削弱了《通信规范法》第230条对平台设计的豁免。此裁决将迫使科技公司重新评估算法推荐机制，或引发行业性产品合规调整，影响全球社交平台的内容分发逻辑。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>IT之家</span>
+      <a class="read-more" href="https://www.ithome.com/0/988/115.htm" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.ithome.com/0/988/097.htm','_blank')">
+    <a class="card-link" href="https://www.ithome.com/0/988/097.htm" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">8</span>
+      
+      <span class="tag tag-blue">IT之家</span>
+    </div>
+    <div class="news-title">谷歌收紧Pixel内核代码访问，开放形象面临信任危机</div>
+    
+    <div class="news-desc">谷歌将Pixel驱动代码从公开即时下载转为人工申请，虽未完全关闭，但增加定制ROM开发门槛。此举或削弱开发者生态，影响GrapheneOS等替代系统，反映大厂在开放与管控间的摇摆。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>IT之家</span>
+      <a class="read-more" href="https://www.ithome.com/0/988/097.htm" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.ithome.com/0/988/161.htm','_blank')">
+    <a class="card-link" href="https://www.ithome.com/0/988/161.htm" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">9</span>
+      
+      <span class="tag tag-blue">IT之家</span>
+    </div>
+    <div class="news-title">朱雀三号发射推迟，商业航天节奏考验供应链韧性</div>
+    
+    <div class="news-desc">蓝箭航天朱雀三号遥二火箭因故推迟发射，原定窗口为8月11日早间。该型号主打可重复使用与低成本，瞄准大型星座组网，此次延期或反映技术验证复杂性，凸显商业航天在追求高频次发射时面临的工程与调度挑战。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>IT之家</span>
+      <a class="read-more" href="https://www.ithome.com/0/988/161.htm" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+  <div class="news-card" onclick="window.open('https://www.ithome.com/0/988/136.htm','_blank')">
+    <a class="card-link" href="https://www.ithome.com/0/988/136.htm" target="_blank" rel="noopener"></a>
+    <div class="card-top-row">
+      
+      <span class="news-rank normal">10</span>
+      
+      <span class="tag tag-blue">IT之家</span>
+    </div>
+    <div class="news-title">DeepSeek"打标签"引隐私争议，AI拟人化表达考验用户信任边界</div>
+    
+    <div class="news-desc">用户发现DeepSeek在推理中给用户贴"墨墨"等标签，官方解释为临时上下文占位符且不存储。此事折射AI拟人化交互的透明度问题，企业需警惕算法黑箱引发的信任危机，或推动行业标注规范。</div>
+    
+    <div class="card-bottom-row">
+      <span class="source-badge"><span class="source-dot"></span>IT之家</span>
+      <a class="read-more" href="https://www.ithome.com/0/988/136.htm" target="_blank" rel="noopener">阅读原文 →</a>
+    </div>
+  </div>
+  
+
+  
+
+  
+  <div class="section-divider"></div>
+
+  <div class="section-header paper-header">
+    <div class="section-icon">📄</div>
+    <div class="section-text">
+      <h2>AI 论文解读</h2>
+      <p>前沿研究与论文精选，5 篇</p>
+    </div>
+  </div>
+
+  
+  <div class="paper-card">
+    <div class="paper-title">
+      <span class="paper-idx">1</span>
+      <a href="https://www.qbitai.com/2026/08/469795.html" target="_blank" rel="noopener">AI查百年论文，99.2%顶刊存疑，新研究机会来了</a>
+    </div>
+    
+    <div class="paper-desc">这篇研究用AI扫描了百年学术论文，发现绝大多数顶刊文章存在数据或方法问题。对企业来说，这提示AI能高效审计海量信息，也意味着严谨性审查可能成为新市场。</div>
+    
+    
+    <div class="paper-source">来源：量子位</div>
+    
+  </div>
+  
+  <div class="paper-card">
+    <div class="paper-title">
+      <span class="paper-idx">2</span>
+      <a href="https://www.qbitai.com/2026/08/469721.html" target="_blank" rel="noopener">论文新革命：AI原生格式将取代PDF，让机器读懂研究</a>
+    </div>
+    
+    <div class="paper-desc">这篇研究提出用AI友好的新格式替代传统PDF，让论文能直接被智能体解析。未来，AI将成为论文第一读者，加速知识传播与创新。</div>
+    
+    
+    <div class="paper-source">来源：量子位</div>
+    
+  </div>
+  
+  <div class="paper-card">
+    <div class="paper-title">
+      <span class="paper-idx">3</span>
+      <a href="https://www.qbitai.com/2026/08/469860.html" target="_blank" rel="noopener">五大高校发布机器人三视角世界模型首份评测榜单</a>
+    </div>
+    
+    <div class="paper-desc">这项研究联合多所高校，首次系统评估了机器人理解三维世界的模型能力，帮企业选型更靠谱的技术方案，榜单还会持续更新，方便跟踪进展。</div>
+    
+    
+    <div class="paper-source">来源：量子位</div>
+    
+  </div>
+  
+  <div class="paper-card">
+    <div class="paper-title">
+      <span class="paper-idx">4</span>
+      <a href="https://www.qbitai.com/2026/08/469544.html" target="_blank" rel="noopener">物理AI新瓶颈显现，模型趋同后胜负手已变</a>
+    </div>
+    
+    <div class="paper-desc">这篇研究指出，当AI模型能力接近后，物理AI（如机器人）的竞争关键不再是算法，而是硬件、数据或场景等新因素，企业需调整策略。</div>
+    
+    
+    <div class="paper-source">来源：量子位</div>
+    
+  </div>
+  
+  <div class="paper-card">
+    <div class="paper-title">
+      <span class="paper-idx">5</span>
+      <a href="https://www.qbitai.com/2026/08/469493.html" target="_blank" rel="noopener">Meoo秒悟团队版上线，接入Qwen-3.8-Max，企业可订阅</a>
+    </div>
+    
+    <div class="paper-desc">这款AI工具从个人创作扩展到团队协作，企业可直接订阅使用。它接入强大模型，帮团队提升效率，适合管理者快速部署。</div>
+    
+    
+    <div class="paper-source">来源：量子位</div>
+    
+  </div>
+  
+  
+
+  <a href="/ai-daily-push/index.html" class="archive-btn">📅 查看往期日报</a>
+</div>
+
+<div class="footer">
+  <p>AI 日报 · 自动生成于 2026-08-11 10:11 · 数据来源：36氪 / 虎嗅 / 钛媒体 / 猎云网 / 机器之心 / IT之家</p>
+</div>
+
+
+<script>
+(function(){
+  var audio = document.getElementById('dailyAudio');
+  var playBtn = document.getElementById('playBtn');
+  var progressBar = document.getElementById('progressBar');
+  var currentTimeEl = document.getElementById('currentTime');
+  var totalTimeEl = document.getElementById('totalTime');
+  var speedBtn = document.getElementById('speedBtn');
+  var speeds = [1, 1.25, 1.5, 2];
+  var speedIdx = 0;
+
+  function fmt(s) {
+    var m = Math.floor(s / 60);
+    var sec = Math.floor(s % 60);
+    return (m < 10 ? '0' : '') + m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  audio.addEventListener('loadedmetadata', function() { totalTimeEl.textContent = fmt(audio.duration); });
+  audio.addEventListener('timeupdate', function() {
+    if (audio.duration) {
+      progressBar.value = (audio.currentTime / audio.duration) * 100;
+      currentTimeEl.textContent = fmt(audio.currentTime);
+    }
+  });
+  audio.addEventListener('ended', function() { playBtn.textContent = '▶'; });
+
+  window.togglePlay = function() {
+    if (audio.paused) { audio.play(); playBtn.textContent = '⏸'; }
+    else { audio.pause(); playBtn.textContent = '▶'; }
+  };
+  window.seekAudio = function(val) {
+    if (audio.duration) audio.currentTime = (val / 100) * audio.duration;
+  };
+  window.cycleSpeed = function() {
+    speedIdx = (speedIdx + 1) % speeds.length;
+    audio.playbackRate = speeds[speedIdx];
+    speedBtn.textContent = speeds[speedIdx] + 'x';
+  };
+})();
+</script>
+
+
+</body>
+</html>
